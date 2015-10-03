@@ -1,0 +1,16 @@
+{
+    "version": "1.6.2",
+    "compilerOptions": {
+        "outDir": "built/es6",
+        "target": "es6",
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "noImplicitAny": true
+    },
+    "exclude": [
+        "built",
+        "node_modules"
+    ]
+}

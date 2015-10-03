@@ -1,0 +1,120 @@
+import {DocumentSchema} from "../../schema/DocumentSchema";
+import {Connection} from "../../connection/Connection";
+import {RelationSchema} from "../../schema/RelationSchema";
+import {CascadeOption, DynamicCascadeOptions} from "./../cascade/CascadeOption";
+import {RelationMetadata} from "../../metadata-builder/metadata/RelationMetadata";
+import {DocumentToDbObjectTransformer} from "./DocumentToDbObjectTransformer";
+import {PersistOperation} from "./../operation/PersistOperation";
+import {InverseSideUpdateOperation} from "./../operation/InverseSideUpdateOperation";
+import {PersistOperationGrouppedByDeepness} from "../operation/PersistOperationGrouppedByDeepness";
+
+export class DocumentPersister<Document> {
+
+    // -------------------------------------------------------------------------
+    // Properties
+    // -------------------------------------------------------------------------
+
+    private connection: Connection;
+
+    // -------------------------------------------------------------------------
+    // Constructor
+    // -------------------------------------------------------------------------
+
+    constructor(connection: Connection) {
+        this.connection = connection;
+    }
+
+    // -------------------------------------------------------------------------
+    // Public Methods
+    // -------------------------------------------------------------------------
+
+    persist(schema: DocumentSchema, document: Document, cascadeOptions?: DynamicCascadeOptions<Document>): Promise<Document> {
+        var transformer = new DocumentToDbObjectTransformer<Document>(this.connection);
+        let dbObject = transformer.transform(schema, document, cascadeOptions);
+        let groupedPersistOperations = this.groupPersistOperationsByDeepness(transformer.persistOperations);
+        groupedPersistOperations = groupedPersistOperations.sort(groupedOperation => groupedOperation.deepness * -1);
+
+        let pendingPromise: Promise<any>;
+        let relationWithOneDocumentIdsToBeUpdated: InverseSideUpdateOperation[] = [];
+        groupedPersistOperations.map(groupedPersistOperation => {
+            pendingPromise = Promise.all([pendingPromise]).then(() => {
+                return Promise.all(groupedPersistOperation.operations.filter(persistOperation => !!persistOperation.allowedPersist).map((persistOperation: PersistOperation) =>
+                    this.save(persistOperation.schema, persistOperation.document, persistOperation.dbObject).then(document => {
+                        if (persistOperation.afterExecution) {
+                            persistOperation.afterExecution.forEach(afterExecution => {
+                                relationWithOneDocumentIdsToBeUpdated.push(afterExecution(document));
+                            })
+                        }
+                        return document;
+                    })
+                ));
+            });
+        });
+
+        transformer.postPersistOperations.forEach(postPersistOperation => postPersistOperation());
+
+        return Promise.all([pendingPromise])
+            .then(result => this.save(schema, document, dbObject))
+            .then(result => this.updateRelationInverseSideIds(relationWithOneDocumentIdsToBeUpdated))
+            .then(result => document);
+    }
+
+    // -------------------------------------------------------------------------
+    // Private Methods
+    // -------------------------------------------------------------------------
+
+    private groupPersistOperationsByDeepness(persistOperations: PersistOperation[]): PersistOperationGrouppedByDeepness[] {
+        let groupedOperations: PersistOperationGrouppedByDeepness[] = [];
+        persistOperations.forEach(persistOperation => {
+            let groupedOperation = groupedOperations.reduce((found, groupedOperation) => groupedOperation.deepness === persistOperation.deepness ? groupedOperation : found, null);
+            if (!groupedOperation) {
+                groupedOperation = { deepness: persistOperation.deepness, operations: [] };
+                groupedOperations.push(groupedOperation);
+            }
+
+            groupedOperation.operations.push(persistOperation);
+        });
+        return groupedOperations;
+    }
+
+    private save(schema: DocumentSchema, document: Document|any, dbObject: Object): Promise<Document> {
+        let documentId = schema.getDocumentId(document);
+        let driver = this.connection.driver;
+        let broadcaster = this.connection.getBroadcaster(schema.documentClass);
+
+        if (documentId) {
+            let conditions = { [driver.getIdFieldName()]: driver.createObjectId(documentId) };
+            broadcaster.broadcastBeforeUpdate({ document: document, conditions: conditions });
+            return driver.replace(schema.name, conditions, dbObject).then(saved => {
+                broadcaster.broadcastAfterUpdate({ document: document, conditions: conditions });
+                return document;
+            });
+        } else {
+            broadcaster.broadcastBeforeInsert({ document: document });
+            return driver.insert(schema.name, dbObject).then(savedDocument => {
+                document[schema.idField.name] = String(savedDocument[driver.getIdFieldName()]);
+                broadcaster.broadcastAfterInsert({ document: document });
+                return document;
+            });
+        }
+    }
+
+    private updateRelationInverseSideIds(relationOperations: InverseSideUpdateOperation[]): Promise<any> {
+        let updateInverseSideWithIdPromises = relationOperations
+            .filter(relationOperation => !!relationOperation.inverseSideDocumentProperty)
+            .map(relationOperation => {
+
+                let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
+                let inverseSideProperty = relationOperation.inverseSideDocumentProperty;
+                let id = this.connection.driver.createObjectId(relationOperation.documentId);
+
+                if (inverseSideSchema.hasRelationWithOneWithPropertyName(inverseSideProperty))
+                    return this.connection.driver.setOneRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
+                if (inverseSideSchema.hasRelationWithManyWithPropertyName(inverseSideProperty))
+                    return this.connection.driver.setManyRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
+            });
+
+        return Promise.all(updateInverseSideWithIdPromises);
+    }
+
+}
