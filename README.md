@@ -1,6 +1,6 @@
 # TypeODM
 
-ORM for MongoDB that works in Typescript.
+ODM for MongoDB that works in Typescript.
 
 ## Usage
 
