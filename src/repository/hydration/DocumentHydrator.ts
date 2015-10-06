@@ -36,9 +36,26 @@ export class DocumentHydrator<Document> {
         let document: Document|any = schema.create();
         let isDocumentSkipped = false;
 
-        document[schema.idField.name] = schema.getIdValue(dbObject[this.connection.driver.getIdFieldName()]);
+        if (schema.idField) // remember that id field cannot be in embed documents
+            document[schema.idField.name] = schema.getIdValue(dbObject[this.connection.driver.getIdFieldName()]);
         schema.fields.filter(field => !!dbObject[field.name]).forEach(fieldForThisKey => {
-            document[fieldForThisKey.propertyName] = dbObject[fieldForThisKey.name];
+
+            if (dbObject[fieldForThisKey.name] instanceof Array) {
+                let embedTypeSchema = this.connection.getSchema(<Function> fieldForThisKey.type);
+                let subCondition = this.getSubFieldCondition(joinFields, fieldForThisKey.name);
+                let promises = dbObject[fieldForThisKey.name].map((i: any) => this.hydrate(embedTypeSchema, i, subCondition));
+                allPromises.push(Promise.all(promises).then((subDocuments: any[]) => {
+                    document[fieldForThisKey.propertyName] = subDocuments;
+                }));
+            } else if (dbObject[fieldForThisKey.name] instanceof Object) {
+                let embedTypeSchema = this.connection.getSchema(<Function> fieldForThisKey.type);
+                let subCondition = this.getSubFieldCondition(joinFields, fieldForThisKey.name);
+                allPromises.push(this.hydrate(embedTypeSchema, dbObject[fieldForThisKey.name], subCondition).then(subDocument => {
+                    document[fieldForThisKey.propertyName] = subDocument;
+                }));
+            } else {
+                document[fieldForThisKey.propertyName] = dbObject[fieldForThisKey.name];
+            }
         });
 
         schema.relationWithOnes.forEach(relation => {

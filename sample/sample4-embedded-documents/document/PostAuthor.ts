@@ -8,6 +8,9 @@ import {ArrayField} from "../../../src/annotation/ArrayField";
 @EmbeddedDocument()
 export class PostAuthor {
 
+    @IdField()
+    id: string;
+
     @Field()
     firstName: string;
 

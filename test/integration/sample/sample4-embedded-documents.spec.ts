@@ -76,9 +76,10 @@ describe('sample4-embedded-documents', function() {
         });
 
         it('should insert a post and it should exist in db', function () {
-            let id: string;
+            let id: string, authorId: string;
             return postRepository.persist(newPost).then(savedPost => {
                 id = savedPost.id;
+                authorId = savedPost.author.id;
                 return postRepository.findOne({
                     title: 'New version of odm is available'
                 });
@@ -88,6 +89,7 @@ describe('sample4-embedded-documents', function() {
                     title: 'New version of odm is available',
                     text: 'See details on our site',
                     author: {
+                        id: authorId,
                         firstName: 'David',
                         lastName: 'Superman'
                     },

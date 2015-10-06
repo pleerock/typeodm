@@ -41,7 +41,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     postRepository.persist(post).then(savedPost => {
         console.log('Post saved successfully: ');
         console.log(savedPost);
-        return postRepository.findOne({ title: 'Hello I am a new post' });
+        return postRepository.findById(savedPost.id);
 
     }).then(foundPost => {
         console.log('Found a saved post:');
