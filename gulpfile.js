@@ -84,6 +84,20 @@ gulp.task('toes5', function () {
         .pipe(gulp.dest('./built/es5'));
 });
 
+gulp.task('run-sample11', function() {
+    return gulp.src('./')
+        .pipe(exec('node ./built/es5/sample/sample11-using-container/app.js'))
+        .pipe(exec.reporter());
+});
+
+gulp.task('run:sample11', function (cb) {
+    return runSequence(
+        'build',
+        'run-sample11',
+        cb
+    );
+});
+
 gulp.task('build', function(cb) {
     return runSequence(
         'clean',
