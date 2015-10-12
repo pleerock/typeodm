@@ -12,7 +12,7 @@ export class RelationSchema {
 
     private _name: string;
     private _propertyName: string;
-    private _type: string|Function;
+    private _type: Function;
     private _inverseSideProperty: string;
     private _isCascadeInsert: boolean;
     private _isCascadeUpdate: boolean;
@@ -25,7 +25,7 @@ export class RelationSchema {
     // -------------------------------------------------------------------------
 
     constructor(name: string,
-                type: string|Function,
+                type: Function, // todo: can it really be a string?
                 propertyName: string,
                 inverseSidePropertyName: string,
                 isCascadeInsert: boolean,
@@ -56,7 +56,7 @@ export class RelationSchema {
         return this._propertyName;
     }
 
-    get type(): string|Function {
+    get type(): Function {
         return this._type;
     }
 

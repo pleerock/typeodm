@@ -142,6 +142,26 @@ export class DocumentSchema {
         return this.documentClass instanceof Function && document instanceof this.documentClass;
     }
 
+    hasFieldOrRelationWithPropertyName(propertyName: string): boolean {
+        return this.hasFieldWithPropertyName(propertyName) ||
+            this.hasRelationWithOneWithPropertyName(propertyName) ||
+            this.hasRelationWithManyWithPropertyName(propertyName);
+    }
+
+    getFunctionTypeForFieldOrRelationWithPropertyName(propertyName: string): Function {
+        let field = this.findFieldByPropertyName(propertyName);
+        if (field && field.type instanceof Function)
+            return <Function> field.type;
+
+        let relationWithOne = this.findRelationWithOneByPropertyName(propertyName);
+        if (relationWithOne)
+            return relationWithOne.type;
+
+        let relationWithMany = this.findRelationWithManyByPropertyName(propertyName);
+        if (relationWithMany)
+            return relationWithMany.type;
+    }
+
     getIdValue(value: any): string { // todo: implement
         return String(value);
     }

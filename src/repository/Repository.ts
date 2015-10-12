@@ -9,6 +9,9 @@ import {DocumentRemover} from "./removement/DocumentRemover";
 import {CascadeOption, DynamicCascadeOptions} from "./cascade/CascadeOption";
 import {BadDocumentInstanceException} from "./exception/BadDocumentInstanceException";
 import {CascadeOptionUtils} from "./cascade/CascadeOptionUtils";
+import {FieldSchema} from "../schema/FieldSchema";
+import {RelationSchema} from "../schema/RelationSchema";
+import {DocumentInitializer} from "./initializer/DocumentInitializer";
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -54,6 +57,15 @@ export class Repository<Document> {
      */
     create(): Document {
         return <Document> this.schema.create();
+    }
+
+    /**
+     * Creates a document from the given json data. If fetchAllData param is specified then document data will be
+     * loaded from the database first, then filled with given json data.
+     */
+    initialize(json: any, fetchAllData: boolean = false/*, fetchCascadeOptions?: any*/): Promise<Document> {
+        let initializer = new DocumentInitializer<Document>(this.connection);
+        return initializer.initialize(json, this.schema, fetchAllData);
     }
 
     /**

@@ -80,7 +80,7 @@ export class SchemaBuilder {
     }
 
     private createRelationSchemaFromMetadata(aggregatedMetadata: MetadataAggregation[], metadata: RelationMetadata): RelationSchema {
-        let type = this.convertType(metadata.type);
+        let type = metadata.type();
         let relatedDocument = aggregatedMetadata.reduce((found, metadata) => metadata.documentMetadata.objectConstructor === type ? metadata : found, null);
         let documentPropertiesMap = this.createPropertiesMirror(relatedDocument);
         return new RelationSchema(
