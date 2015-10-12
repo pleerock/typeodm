@@ -177,7 +177,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 detailsId = savedPost.details.id;
                 return postRepository.findOne({
                     title: 'Hello I am a new post'
-                }, postProperties => [{
+                }, null, postProperties => [{
                     field: postProperties.details
                 }]);
             }).then(foundPost => {
@@ -244,7 +244,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 detailsId = savedQuestion.details.id;
                 return questionRepository.findOne({
                     title: 'Hello I am a new question'
-                }, questionProperties => [{
+                }, null, questionProperties => [{
                     field: questionProperties.details
                 }]);
             }).then(foundQuestion => {
@@ -273,7 +273,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 detailsId = savedQuestion.details.id;
                 return questionRepository.findOne({
                     title: 'Hello I am a new question'
-                }, questionProperties => [{
+                }, null, questionProperties => [{
                     field: questionProperties.details
                 }]);
             }).then(foundQuestion => {
@@ -320,7 +320,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should load a post with details if cascade options are specified', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.details
             }]).then(post => {
                 post.details.should.be.eql({
@@ -369,7 +369,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should load the post that don\'t have details if standard (left) join is used', function () {
-            return postRepository.findById(postWithoutDetailsId, postParameters => [{
+            return postRepository.findById(postWithoutDetailsId, null, postParameters => [{
                 field: postParameters.details
             }]).then(post => {
                 post.should.not.be.empty;
@@ -378,7 +378,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should not load the post that don\'t have details if inner join is used', function () {
-            return postRepository.findById(postWithoutDetailsId, postParameters => [{
+            return postRepository.findById(postWithoutDetailsId, null, postParameters => [{
                 field: postParameters.details,
                 inner: true
             }]).then(post => {
@@ -387,7 +387,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should load the post that have details if inner join is used', function () {
-            return postRepository.findById(postWithDetailsId, postParameters => [{
+            return postRepository.findById(postWithDetailsId, null, postParameters => [{
                 field: postParameters.details,
                 inner: true
             }]).then(post => {
@@ -427,7 +427,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should load the post that don\'t have details if no condition is used', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.details
             }]).then(post => {
                 post.should.not.be.empty;
@@ -435,7 +435,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should load the post and its details if condition is used and condition matches', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.details,
                 condition: {
                     searchDescription: 'Great post where you find everything you want'
@@ -447,7 +447,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should load the post but don\'t load its details if condition is used and condition doesn\'t match', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.details,
                 condition: {
                     searchDescription: 'Bad post where you don\'t find anything'
@@ -459,7 +459,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should not load the post and its details if condition doesn\'t match and inner join is used', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.details,
                 inner: true,
                 condition: {
@@ -540,7 +540,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 field: videoDetailsProperties.video,
                 insert: true
             }]).then(() => {
-                return videoDetailsRepository.findById(videoDetails.id, videoDetailsProperties => [{
+                return videoDetailsRepository.findById(videoDetails.id, null, videoDetailsProperties => [{
                     field: videoDetailsProperties.video
                 }]);
             }).then(videoDetails => {
@@ -579,7 +579,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 field: videoProperties.details,
                 insert: true
             }]).then(() => {
-                return videoRepository.findById(video.id, videoParameters => [{
+                return videoRepository.findById(video.id, null, videoParameters => [{
                     field: videoParameters.details
                 }]);
             }).then(video => {
@@ -594,7 +594,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 field: videoProperties.details,
                 update: true
             }]).then(() => {
-                return videoRepository.findById(video.id, videoParameters => [{
+                return videoRepository.findById(video.id, null, videoParameters => [{
                     field: videoParameters.details
                 }]);
             }).then(video => {
@@ -650,7 +650,7 @@ describe('sample5-document-having-relation-with-one', function() {
         it('should update vote details because annotation is set', function () {
             vote.details.searchDescription = 'I am updated vote description';
             return voteRepository.persist(vote).then(() => {
-                return voteRepository.findById(vote.id, videoParameters => [{
+                return voteRepository.findById(vote.id, null, videoParameters => [{
                     field: videoParameters.details
                 }]);
             }).then(vote => {
@@ -665,7 +665,7 @@ describe('sample5-document-having-relation-with-one', function() {
                 field: voteProperties.details,
                 update: false
             }]).then(() => {
-                return voteRepository.findById(vote.id, voteParameters => [{
+                return voteRepository.findById(vote.id, null, voteParameters => [{
                     field: voteParameters.details
                 }]);
             }).then(vote => {

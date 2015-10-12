@@ -1,5 +1,7 @@
 import {Driver} from "./Driver";
 import {ConnectionOptions} from "../connection/ConnectionOptions";
+import * as mongodb from "mongodb";
+import {Server, MongoClient, ObjectID} from "mongodb";
 
 /**
  * This driver organizes work with mongodb database.
@@ -10,23 +12,14 @@ export class MongodbDriver implements Driver {
     // Properties
     // -------------------------------------------------------------------------
 
-    private mongodb: any;
     private db: any;
-
-    // -------------------------------------------------------------------------
-    // Constructor
-    // -------------------------------------------------------------------------
-
-    constructor(mongodb: any) {
-        this.mongodb = mongodb;
-    }
 
     // -------------------------------------------------------------------------
     // Getter Methods
     // -------------------------------------------------------------------------
 
     get native(): any {
-        return this.mongodb;
+        return mongodb;
     }
 
     // -------------------------------------------------------------------------
@@ -35,7 +28,7 @@ export class MongodbDriver implements Driver {
 
     connect(options: ConnectionOptions): Promise<any> {
         return new Promise<Object>((ok, fail) => {
-            this.mongodb.MongoClient.connect(options.url, (err: any, db: any) => {
+            MongoClient.connect(options.url, (err: any, db: any) => {
                 if (err) {
                     fail(err);
                     return;
@@ -94,19 +87,19 @@ export class MongodbDriver implements Driver {
         });
     }
 
-    find(collection: string, conditions: Object): Promise<Object[]> {
+    find(collection: string, conditions: Object, options?: Object): Promise<Object[]> {
         return new Promise<Object[]>((ok, fail) => {
             this.db.collection(collection).find(conditions).toArray((err: any, result: any) => err ? fail(err) : ok(result));
         });
     }
 
-    findOne(collection: string, conditions: Object): Promise<Object> {
+    findOne(collection: string, conditions: Object, options?: Object): Promise<Object> {
         return new Promise<Object>((ok, fail) => {
             this.db.collection(collection).findOne(conditions, (err: any, result: any) => err ? fail(err) : ok(result));
         });
     }
 
-    findById(collection: string, id: string): Promise<Object> {
+    findById(collection: string, id: string, options?: Object): Promise<Object> {
         let idCondition = { [this.getIdFieldName()]: this.createObjectId(id) };
         return new Promise<Object>((ok, fail) => {
             this.db.collection(collection).findOne(idCondition, (err: any, result: any) => err ? fail(err) : ok(result));
@@ -114,11 +107,11 @@ export class MongodbDriver implements Driver {
     }
 
     createObjectId(id?: string): any {
-        return new this.mongodb.ObjectId(id);
+        return new ObjectID(id);
     }
 
     isObjectId(id: any): boolean {
-        return id instanceof this.mongodb.ObjectId;
+        return id instanceof ObjectID;
     }
 
     aggregate(collection: string, stages: any[]): Promise<any> {
@@ -169,6 +162,12 @@ export class MongodbDriver implements Driver {
     createIndex(collection: string, keys: any, options: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             this.db.collection(collection).createIndex(keys, options, (err: any, result: any) => err ? fail(err) : ok());
+        });
+    }
+
+    count(collection: string, criteria: any): Promise<number> {
+        return new Promise<number>((ok, fail) => {
+            this.db.collection(collection).count(criteria, (err: any, result: number) => err ? fail(err) : ok(result));
         });
     }
 

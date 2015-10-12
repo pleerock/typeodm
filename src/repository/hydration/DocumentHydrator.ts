@@ -78,7 +78,7 @@ export class DocumentHydrator<Document> {
             if (subCondition)
                 Object.keys(subCondition).forEach(key => conditions[key] = subCondition[key]);
 
-            allPromises.push(relatedRepo.findOne(conditions, subFields).then(foundRelation => {
+            allPromises.push(relatedRepo.findOne(conditions, null, subFields).then(foundRelation => {
                 if (!foundRelation && isLoadInnerTyped) {
                     isDocumentSkipped = true;
                 } else if (foundRelation) {
@@ -108,7 +108,7 @@ export class DocumentHydrator<Document> {
                 let subCondition = this.getSubFieldCondition(joinFields, relation.name);
                 if (subCondition)
                     Object.keys(subCondition).forEach(key => conditions[key] = subCondition[key]);
-                return relatedRepo.findOne(conditions, subFields)
+                return relatedRepo.findOne(conditions, null, subFields)
             });
 
             allPromises.push(Promise.all(findPromises).then(foundRelations => {

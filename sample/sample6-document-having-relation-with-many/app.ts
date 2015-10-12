@@ -132,7 +132,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
 
         // but we want to load post with category. How to do that? Simply using joins syntax:
 
-        return postRepository.findOne({ title: 'Hello I am a new post' }, postParameters => [{
+        return postRepository.findOne({ title: 'Hello I am a new post' }, null, postParameters => [{
             field: postParameters.categories
         }]);
 
@@ -143,7 +143,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // good, now we can use joins and load our posts with related documents
         // what about "inner join" ability? YES, you can do it, just by adding "inner": true to the join field option:
 
-        return questionRepository.findOne({ title: 'Hello I am a second question' }, questionParameters => [{
+        return questionRepository.findOne({ title: 'Hello I am a second question' }, null, questionParameters => [{
             field: questionParameters.categories,
             inner: true
         }]);
@@ -156,7 +156,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // nice, feel yourself like working with powerful relation database, hah?
         // now lets try to add condition to our joined relation
 
-        return questionRepository.findOne({ text: 'My name is question and I am glad to see you' }, questionParameters => [{
+        return questionRepository.findOne({ text: 'My name is question and I am glad to see you' }, null, questionParameters => [{
             field: questionParameters.categories,
             condition: {
                 name: 'Wow!!!'
@@ -219,7 +219,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
 
         // you can load video category and join its category now:
 
-        return categoryRepository.findById(category.id, categoryProperties => [{
+        return categoryRepository.findById(category.id, null, categoryProperties => [{
             field: categoryProperties.videos
         }]);
 
@@ -252,7 +252,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     }).then(updatedVideo => {
 
         // now lets try to reload to make sure video category are updated
-        return videoRepository.findById(updatedVideo.id, videoProperties => [{
+        return videoRepository.findById(updatedVideo.id, null, videoProperties => [{
             field: videoProperties.categories
         }]);
 
@@ -295,7 +295,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     }).then(updatedVote => {
 
         // now lets try to reload to make sure vote category are updated
-        return voteRepository.findById(updatedVote.id, voteProperties => [{
+        return voteRepository.findById(updatedVote.id, null, voteProperties => [{
             field: voteProperties.categories
         }]);
 

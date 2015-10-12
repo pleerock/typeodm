@@ -12,6 +12,7 @@ import {CascadeOptionUtils} from "./cascade/CascadeOptionUtils";
 import {FieldSchema} from "../schema/FieldSchema";
 import {RelationSchema} from "../schema/RelationSchema";
 import {DocumentInitializer} from "./initializer/DocumentInitializer";
+import {FindOptions} from "./FindOptions";
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -63,17 +64,19 @@ export class Repository<Document> {
      * Creates a document from the given json data. If fetchAllData param is specified then document data will be
      * loaded from the database first, then filled with given json data.
      */
-    initialize(json: any, fetchAllData: boolean = false/*, fetchCascadeOptions?: any*/): Promise<Document> {
+    initialize(json: any, fetchProperty?: boolean): Promise<Document>;
+    initialize(json: any, fetchProperty?: Object): Promise<Document>;
+    initialize(json: any, fetchOption?: boolean|Object/*, fetchCascadeOptions?: any*/): Promise<Document> {
         let initializer = new DocumentInitializer<Document>(this.connection);
-        return initializer.initialize(json, this.schema, fetchAllData);
+        return initializer.initialize(json, this.schema, fetchOption);
     }
 
     /**
      * Finds a documents that match given conditions.
      */
-    find(conditions?: Object, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document[]> {
+    find(conditions?: Object, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document[]> {
         let joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
-        return this.connection.driver.find(this.schema.name, conditions)
+        return this.connection.driver.find(this.schema.name, conditions, options)
             .then(objects => objects ? Promise.all(objects.map(object => this.dbObjectToDocument(object, joinFields))) : objects)
             .then(documents => {
                 this.broadcaster.broadcastAfterLoadedAll(documents);
@@ -84,9 +87,9 @@ export class Repository<Document> {
     /**
      * Finds one document that matches given condition.
      */
-    findOne(conditions: Object, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
+    findOne(conditions: Object, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
         let joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
-        return this.connection.driver.findOne(this.schema.name, conditions)
+        return this.connection.driver.findOne(this.schema.name, conditions, options)
             .then(i => i ? this.dbObjectToDocument(i, joinFields) : i)
             .then(document => {
                 this.broadcaster.broadcastAfterLoaded(document);
@@ -97,9 +100,9 @@ export class Repository<Document> {
     /**
      * Finds a document with given id.
      */
-    findById(id: string, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
+    findById(id: string, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
         let joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
-        return this.connection.driver.findOne(this.schema.name, this.createIdObject(id))
+        return this.connection.driver.findOne(this.schema.name, this.createIdObject(id), options)
             .then(i => i ? this.dbObjectToDocument(i, joinFields) : i)
             .then(document => {
                 this.broadcaster.broadcastAfterLoaded(document);
@@ -199,6 +202,30 @@ export class Repository<Document> {
      */
     hasId(document: Document): boolean {
         return document && document.hasOwnProperty(this.schema.idField.name);
+    }
+
+    /**
+     * Gives number of rows found by a given criteria.
+     */
+    count(criteria: any): Promise<number> {
+        return this.connection.driver.count(this.schema.name, criteria);
+    }
+
+    /**
+     * Finds documents by given criteria and returns them with the total number of
+     */
+    findAndCount(criteria?: any, findOptions?: FindOptions): Promise<{ documents: Document[], count: number }> {
+        let documents: Document[];
+        return this.find(criteria, findOptions).then(loadedDocuments => {
+            documents = loadedDocuments;
+            return this.count(criteria);
+
+        }).then(count => {
+            return {
+                documents: documents,
+                count: count
+            };
+        });
     }
 
     // -------------------------------------------------------------------------

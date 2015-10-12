@@ -168,7 +168,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
 
         // but we want to load post with details. How to do that? Simply using joins syntax:
 
-        return postRepository.findOne({ title: 'Hello I am a new post' }, postParameters => [{
+        return postRepository.findOne({ title: 'Hello I am a new post' }, null, postParameters => [{
             field: postParameters.details
         }]);
 
@@ -179,7 +179,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // good, now we can use joins and load our posts with related documents
         // what about "inner join" ability? YES, you can do it, just by adding "inner": true to the join field option:
 
-        return questionRepository.findOne({ title: 'Hello I am a second question' }, questionParameters => [{
+        return questionRepository.findOne({ title: 'Hello I am a second question' }, null, questionParameters => [{
             field: questionParameters.details,
             inner: true
         }]);
@@ -192,7 +192,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // nice, feel yourself like working with powerful relation database, hah?
         // now lets try to add condition to our joined relation
 
-        return questionRepository.findOne({ text: 'My name is question and I am glad to see you' }, questionParameters => [{
+        return questionRepository.findOne({ text: 'My name is question and I am glad to see you' }, null, questionParameters => [{
             field: questionParameters.details,
             condition: {
                 title: 'Hello I am a third question'
@@ -272,7 +272,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
 
         // you can load video details and join its details now:
 
-        return videoDetailsRepository.findById(videoDetails.id, videoDetailsProperties => [{
+        return videoDetailsRepository.findById(videoDetails.id, null, videoDetailsProperties => [{
             field: videoDetailsProperties.video
         }]);
 
@@ -313,7 +313,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     }).then(updatedVideo => {
 
         // now lets try to reload to make sure video details are updated
-        return videoRepository.findById(updatedVideo.id, videoProperties => [{
+        return videoRepository.findById(updatedVideo.id, null, videoProperties => [{
             field: videoProperties.details
         }]);
 
@@ -363,7 +363,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     }).then(updatedVote => {
 
         // now lets try to reload to make sure vote details are updated
-        return voteRepository.findById(updatedVote.id, voteProperties => [{
+        return voteRepository.findById(updatedVote.id, null, voteProperties => [{
             field: voteProperties.details
         }]);
 

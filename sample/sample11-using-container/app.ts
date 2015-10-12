@@ -11,7 +11,7 @@ import {PostController} from "./PostController";
 
 let connectionManager = Container.get<ConnectionManager>(ConnectionManager);
 connectionManager.container = Container;
-connectionManager.addConnection(new MongodbDriver(require('mongodb')));
+connectionManager.addConnection(new MongodbDriver());
 connectionManager.importDocumentsFromDirectories([__dirname + '/document']);
 console.log('connection is added!');
 

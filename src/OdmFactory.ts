@@ -23,7 +23,7 @@ export class OdmFactory {
             configuration = { url: <string> configuration };
         }
 
-        this.mongodbConnectionManager.addConnection(new MongodbDriver(require('mongodb')));
+        this.mongodbConnectionManager.addConnection(new MongodbDriver());
         this.mongodbConnectionManager.importDocumentsFromDirectories(documentDirectories);
         if (subscriberDirectories && subscriberDirectories.length > 0)
             this.mongodbConnectionManager.importSubscribersFromDirectories(subscriberDirectories);

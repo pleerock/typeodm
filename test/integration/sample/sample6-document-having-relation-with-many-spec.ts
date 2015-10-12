@@ -154,7 +154,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 categoryId = savedPost.categories[0].id;
                 return postRepository.findOne({
                     title: 'Hello I am a new post'
-                }, postProperties => [{
+                }, null, postProperties => [{
                     field: postProperties.categories
                 }]);
             }).then(foundPost => {
@@ -211,7 +211,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 categoryId = savedQuestion.categories[0].id;
                 return questionRepository.findOne({
                     title: 'Hello I am a new question'
-                }, questionProperties => [{
+                }, null, questionProperties => [{
                     field: questionProperties.categories
                 }]);
             }).then(foundQuestion => {
@@ -238,7 +238,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 categoryId = savedQuestion.categories[0].id;
                 return questionRepository.findOne({
                     title: 'Hello I am a new question'
-                }, questionProperties => [{
+                }, null, questionProperties => [{
                     field: questionProperties.categories
                 }]);
             }).then(foundQuestion => {
@@ -278,7 +278,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should load a post with categories if cascade options are specified', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.categories
             }]).then(post => {
                 post.categories[0].should.be.eql({
@@ -314,7 +314,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should load the post that don\'t have categories if standard (left) join is used', function () {
-            return postRepository.findById(postWithoutCategoriesId, postParameters => [{
+            return postRepository.findById(postWithoutCategoriesId, null, postParameters => [{
                 field: postParameters.categories
             }]).then(post => {
                 post.should.not.be.empty;
@@ -323,7 +323,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should not load the post that don\'t have categories if inner join is used', function () {
-            return postRepository.findById(postWithoutCategoriesId, postParameters => [{
+            return postRepository.findById(postWithoutCategoriesId, null, postParameters => [{
                 field: postParameters.categories,
                 inner: true
             }]).then(post => {
@@ -332,7 +332,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should load the post that have categories if inner join is used', function () {
-            return postRepository.findById(postWithCategoriesId, postParameters => [{
+            return postRepository.findById(postWithCategoriesId, null, postParameters => [{
                 field: postParameters.categories,
                 inner: true
             }]).then(post => {
@@ -364,7 +364,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should load the post that don\'t have categories if no condition is used', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.categories
             }]).then(post => {
                 post.should.not.be.empty;
@@ -372,7 +372,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should load the post and its categories if condition is used and condition matches', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.categories,
                 condition: {
                     name: 'Hello'
@@ -384,7 +384,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should load the post but don\'t load its categories if condition is used and condition doesn\'t match', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.categories,
                 condition: {
                     name: 'Good bye'
@@ -396,7 +396,7 @@ describe('sample6-document-having-relation-with-many', function() {
         });
 
         it('should not load the post and its categories if condition doesn\'t match and inner join is used', function () {
-            return postRepository.findById(postId, postParameters => [{
+            return postRepository.findById(postId, null, postParameters => [{
                 field: postParameters.categories,
                 inner: true,
                 condition: {
@@ -462,7 +462,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 field: categoryProperties.videos,
                 insert: true
             }]).then(() => {
-                return categoryRepository.findById(category.id, categoryProperties => [{
+                return categoryRepository.findById(category.id, null, categoryProperties => [{
                     field: categoryProperties.videos
                 }]);
             }).then(category => {
@@ -493,7 +493,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 field: videoProperties.categories,
                 insert: true
             }]).then(() => {
-                return videoRepository.findById(video.id, videoParameters => [{
+                return videoRepository.findById(video.id, null, videoParameters => [{
                     field: videoParameters.categories
                 }]);
             }).then(video => {
@@ -507,7 +507,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 field: videoProperties.categories,
                 update: true
             }]).then(() => {
-                return videoRepository.findById(video.id, videoParameters => [{
+                return videoRepository.findById(video.id, null, videoParameters => [{
                     field: videoParameters.categories
                 }]);
             }).then(video => {
@@ -555,7 +555,7 @@ describe('sample6-document-having-relation-with-many', function() {
         it('should update vote details because annotation is set', function () {
             vote.categories[0].name = 'Not funny at all';
             return voteRepository.persist(vote).then(() => {
-                return voteRepository.findById(vote.id, voteParameters => [{
+                return voteRepository.findById(vote.id, null, voteParameters => [{
                     field: voteParameters.categories
                 }]);
             }).then(vote => {
@@ -570,7 +570,7 @@ describe('sample6-document-having-relation-with-many', function() {
                 field: voteProperties.categories,
                 update: false
             }]).then(() => {
-                return voteRepository.findById(vote.id, voteParameters => [{
+                return voteRepository.findById(vote.id, null, voteParameters => [{
                     field: voteParameters.categories
                 }]);
             }).then(vote => {

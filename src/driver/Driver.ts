@@ -53,17 +53,17 @@ export interface Driver {
     /**
      * Finds the documents in the given collection by the given conditions.
      */
-    find(collection: string, conditions: Object): Promise<any[]>;
+    find(collection: string, conditions: Object, options?: Object): Promise<any[]>;
 
     /**
      * Finds one document in the given collection by the given conditions.
      */
-    findOne(collection: string, conditions: Object): Promise<any>;
+    findOne(collection: string, conditions: Object, options?: Object): Promise<any>;
 
     /**
      * Finds one document by a given document id.
      */
-    findById(collection: string, id: string): Promise<any>;
+    findById(collection: string, id: string, options?: Object): Promise<any>;
 
     /**
      * Runs a multiple aggregated stages function in the given collection.
@@ -114,5 +114,10 @@ export interface Driver {
      * Creates index with given options for the given collection.
      */
     createIndex(collection: string, keys: any, options: any): Promise<void>;
+
+    /**
+     * Counts number of documents that match given criteria.
+     */
+    count(collection: string, criteria: any): Promise<number>;
 
 }

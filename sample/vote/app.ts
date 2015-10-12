@@ -12,7 +12,7 @@ import {CascadeOptionUtils} from "../../src/repository/cascade/CascadeOptionUtil
 
 //let typeOdmConnectionManager: ConnectionManager = Container.get(ConnectionManager);
 let mongodbConnectionManager: ConnectionManager = new ConnectionManager();
-mongodbConnectionManager.addConnection(new MongodbDriver(require('mongodb')));
+mongodbConnectionManager.addConnection(new MongodbDriver());
 mongodbConnectionManager.importDocumentsFromDirectories([__dirname + '/document']);
 mongodbConnectionManager.importSubscribersFromDirectories([__dirname + '/subscriber']);
 mongodbConnectionManager.getConnection().connect({
