@@ -1,6 +1,6 @@
 {
   "name": "typeodm",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ODM for MongoDB used Typescript",
   "license": "Apache-2.0",
   "readmeFilename": "README.md",
@@ -47,11 +47,11 @@
     "typescript": "^1.6.2"
   },
   "dependencies": {
-    "fs": "0.0.2",
-    "mongodb": "^2.0.43",
+    "fs": "^0.0.2",
+    "mongodb": "^2.x.x",
     "path": "^0.11.14",
     "reflect-metadata": "^0.1.0",
-    "typedi": "^0.0.4"
+    "typedi": "^0.0.x"
   },
   "scripts": {
     "postversion": "./node_modules/.bin/gulp package",
