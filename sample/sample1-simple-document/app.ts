@@ -24,16 +24,6 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     // get a post repository
     let postRepository = connection.getRepository<Post>(Post);
 
-    let post1 = new Post();
-    post1.text = 'hello';
-    post1.title = 'yahoo';
-
-    postRepository
-        .persist(post1)
-        .then(savedPost => console.log(savedPost));
-
-    return;
-
     // create a new post
     let post = postRepository.create(); // alternatively you can use: let post = new Post();
     post.title = 'Hello I am a new post';

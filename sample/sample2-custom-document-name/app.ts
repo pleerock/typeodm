@@ -37,6 +37,8 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         console.log(foundPost);
         // now go to your mongodb explorer and check how your collection is named and raw data is stored
 
-    }).catch(error => console.log('Error: ' + error));
+    })
+        .then(_ => connection.close())
+        .catch(error => console.log('Error: ' + error));
 
 }).catch(e => console.log('Error during connection to mongodb: ' + e));
