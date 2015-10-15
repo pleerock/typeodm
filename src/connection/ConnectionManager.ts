@@ -19,7 +19,7 @@ export class ConnectionManager {
     // Properties
     // -------------------------------------------------------------------------
 
-    connections: Connection[] = [];
+    private connections: Connection[] = [];
     private schemaBuilder: SchemaBuilder;
     private metadataAggregator: MetadataAggregationBuilder;
     private _container: { get(someClass: Function): any };

@@ -95,6 +95,13 @@ export class Connection {
     }
 
     /**
+     * Closes this connection.
+     */
+    close() {
+        return this._driver.closeConnection();
+    }
+
+    /**
      * Adds a new document schemas.
      */
     addSchemas(schemas: DocumentSchema[]) {
