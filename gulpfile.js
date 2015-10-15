@@ -96,6 +96,28 @@ gulp.task('run:sample2', function (cb) {
     return runSequence('build', 'run-sample2', cb);
 });
 
+gulp.task('run-sample3', function() {
+    return gulp.src('*.js', { read: false })
+        .pipe(shell([
+            'node ./built/es5/sample/sample3-working-with-documents/app.js'
+        ]));
+});
+
+gulp.task('run:sample3', function (cb) {
+    return runSequence('build', 'run-sample3', cb);
+});
+
+gulp.task('run-sample4', function() {
+    return gulp.src('*.js', { read: false })
+        .pipe(shell([
+            'node ./built/es5/sample/sample4-embedded-documents/app.js'
+        ]));
+});
+
+gulp.task('run:sample4', function (cb) {
+    return runSequence('build', 'run-sample4', cb);
+});
+
 gulp.task('run-sample7', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([

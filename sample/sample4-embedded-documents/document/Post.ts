@@ -25,4 +25,7 @@ export class Post {
     @ArrayField(type => PostTag)
     tags: PostTag[] = [];
 
+    @ArrayField(type => 'string')
+    links: string[] = [];
+
 }

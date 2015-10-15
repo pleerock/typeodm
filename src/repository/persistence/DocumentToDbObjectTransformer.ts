@@ -98,13 +98,16 @@ export class DocumentToDbObjectTransformer<Document> {
 
         if (dbField.isArray && document[propertyName] instanceof Array) {
 
-
-            if (DbObjectFieldValidator.isTypeSupported(<string>dbField.type) && DbObjectFieldValidator.validateArray(document[propertyName], dbField.type))
-                throw new WrongFieldTypeInDocumentException(dbField.type + '[]', propertyName, document);
-
             if (dbField.isTypeDocument()) {
                 dbObject[propertyName] = document[propertyName].map((item: any) => this.parseEmbedType(deepness, fieldTypeSchema, item));
             } else {
+
+                if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
+                    throw new FieldTypeNotSupportedException(dbField.type + '[]', propertyName, document);
+
+                if (!DbObjectFieldValidator.validateArray(document[propertyName], <string> dbField.type))
+                    throw new WrongFieldTypeInDocumentException(dbField.type + '[]', propertyName, document);
+
                 dbObject[propertyName] = document[propertyName];
             }
 
@@ -116,9 +119,8 @@ export class DocumentToDbObjectTransformer<Document> {
             if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
                 throw new FieldTypeNotSupportedException(dbField.type, propertyName, document);
 
-            if (!DbObjectFieldValidator.validate(document[propertyName], dbField.type)){
+            if (!DbObjectFieldValidator.validate(document[propertyName], <string> dbField.type))
                 throw new WrongFieldTypeInDocumentException(dbField.type, propertyName, document);
-            }
 
             dbObject[dbField.name] = document[propertyName];
         }

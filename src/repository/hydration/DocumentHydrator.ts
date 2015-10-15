@@ -38,23 +38,23 @@ export class DocumentHydrator<Document> {
 
         if (schema.idField) // remember that id field cannot be in embed documents
             document[schema.idField.name] = schema.getIdValue(dbObject[this.connection.driver.getIdFieldName()]);
-        schema.fields.filter(field => !!dbObject[field.name]).forEach(fieldForThisKey => {
+        schema.fields.filter(field => !!dbObject[field.name]).forEach(field => {
 
-            if (dbObject[fieldForThisKey.name] instanceof Array) {
-                let embedTypeSchema = this.connection.getSchema(<Function> fieldForThisKey.type);
-                let subCondition = this.getSubFieldCondition(joinFields, fieldForThisKey.name);
-                let promises = dbObject[fieldForThisKey.name].map((i: any) => this.hydrate(embedTypeSchema, i, subCondition));
+            if (dbObject[field.name] instanceof Array && field.isTypeDocument()) {
+                let embedTypeSchema = this.connection.getSchema(<Function> field.type);
+                let subCondition = this.getSubFieldCondition(joinFields, field.name);
+                let promises = dbObject[field.name].map((i: any) => this.hydrate(embedTypeSchema, i, subCondition));
                 allPromises.push(Promise.all(promises).then((subDocuments: any[]) => {
-                    document[fieldForThisKey.propertyName] = subDocuments;
+                    document[field.propertyName] = subDocuments;
                 }));
-            } else if (dbObject[fieldForThisKey.name] instanceof Object) {
-                let embedTypeSchema = this.connection.getSchema(<Function> fieldForThisKey.type);
-                let subCondition = this.getSubFieldCondition(joinFields, fieldForThisKey.name);
-                allPromises.push(this.hydrate(embedTypeSchema, dbObject[fieldForThisKey.name], subCondition).then(subDocument => {
-                    document[fieldForThisKey.propertyName] = subDocument;
+            } else if (dbObject[field.name] instanceof Object && field.isTypeDocument()) {
+                let embedTypeSchema = this.connection.getSchema(<Function> field.type);
+                let subCondition = this.getSubFieldCondition(joinFields, field.name);
+                allPromises.push(this.hydrate(embedTypeSchema, dbObject[field.name], subCondition).then(subDocument => {
+                    document[field.propertyName] = subDocument;
                 }));
             } else {
-                document[fieldForThisKey.propertyName] = dbObject[fieldForThisKey.name];
+                document[field.propertyName] = dbObject[field.name];
             }
         });
 

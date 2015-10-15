@@ -36,6 +36,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     post.text = 'My name is Post and I am glad to see you';
     post.author = author;
     post.tags = [firstTag, secondTag];
+    post.links = ['http://google.com', 'http://github.com'];
 
     // save a post
     postRepository.persist(post).then(savedPost => {

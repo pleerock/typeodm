@@ -8,12 +8,12 @@ export class DbObjectFieldValidator {
         return this.supportedTypes.indexOf(type) !== -1;
     }
 
-    static validateArray(array: any[], type: string|Function): boolean {
-        return array.filter(item => this.validate(item, type)).length === 0;
+    static validateArray(array: any[], type: string): boolean {
+        return array.filter(item => !this.validate(item, type)).length === 0;
     }
 
-    static validate(value: any, type: string|Function): boolean {
-        let foundTypeToCheckIndex = this.supportedTypes.indexOf(<string> type);
+    static validate(value: any, type: string): boolean {
+        let foundTypeToCheckIndex = this.supportedTypes.indexOf(type);
         return typeof value === this.supportedTypes[foundTypeToCheckIndex] ||
             (type === 'date' && value instanceof Date);
     }
