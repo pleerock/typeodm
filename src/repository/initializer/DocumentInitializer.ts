@@ -34,6 +34,9 @@ export class DocumentInitializer<Document> {
     private objectToDocument(object: any, schema: DocumentSchema, doFetchProperties?: boolean): Promise<any>;
     private objectToDocument(object: any, schema: DocumentSchema, fetchConditions?: Object): Promise<any>;
     private objectToDocument(object: any, schema: DocumentSchema, fetchOption?: boolean|Object): Promise<any> {
+        if (!object)
+            throw new Error('Given object is empty, cannot initialize empty object.');
+
         let doFetch = !!fetchOption;
         let repository = this.connection.getRepository(schema.documentClass);
         let documentPromise: Promise<any>, documentId: string, documentConditions: Object;
@@ -41,7 +44,7 @@ export class DocumentInitializer<Document> {
         if (doFetch && fetchOption instanceof Object) {
             documentConditions = <Object> fetchOption;
             documentPromise = repository.findOne(documentConditions);
-        } else if (doFetch) {
+        } else if (doFetch && repository.hasId(object)) {
             documentId = object[schema.idField.name];
             documentPromise = repository.findById(documentId);
         } else {
