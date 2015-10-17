@@ -140,6 +140,10 @@ gulp.task('run:sample11', function (cb) {
     return runSequence('build', 'run-sample11', cb);
 });
 
+gulp.task('run:tests', function (cb) {
+    return runSequence('build', 'tests-unit', 'tests-integration', cb);
+});
+
 gulp.task('build', function(cb) {
     return runSequence('compile', 'toes5', cb);
 });

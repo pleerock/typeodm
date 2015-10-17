@@ -46,7 +46,7 @@ export class DocumentRemover<Document> {
             return Promise.resolve();
 
         // load original document so we can compare and calculate changed set
-        return this.connection.driver.findById(schema.name, documentId).then(dbObject => {
+        return this.connection.driver.findOneById(schema.name, documentId).then((dbObject: any) => {
             if (!dbObject)
                 throw new NoDocumentWithSuchIdException(documentId, schema.name);
 
@@ -78,7 +78,7 @@ export class DocumentRemover<Document> {
         return Promise.all(this.removeOperations.map(operation => {
             let broadcaster = this.connection.getBroadcaster(operation.schema.documentClass);
             broadcaster.broadcastBeforeRemove({ documentId: operation.id });
-            return this.connection.driver.removeById(operation.schema.name, operation.id).then(result => {
+            return this.connection.driver.deleteOneById(operation.schema.name, operation.id).then(result => {
                 broadcaster.broadcastAfterRemove({ documentId: operation.id });
             });
         })).then(function() {});
@@ -115,7 +115,7 @@ export class DocumentRemover<Document> {
         let cascadeOptions = CascadeOptionUtils.prepareCascadeOptions(schema, dynamicCascadeOptions);
 
         // load original document so we can compare and calculate which of its relations to remove by cascades
-        return this.connection.driver.findById(schema.name, documentId).then(dbObject => {
+        return this.connection.driver.findOneById(schema.name, documentId).then((dbObject: any) => {
             if (!dbObject)
                 throw new NoDocumentWithSuchIdException(documentId, schema.name);
 

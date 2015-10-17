@@ -29,9 +29,13 @@ describe('sample5-document-having-relation-with-one', function() {
         }).catch(e => console.log('Error during connection to mongodb: ' + e));
     });
 
+    after(function() {
+        connection.close();
+    });
+
     // drop database before each test
     beforeEach(function() {
-        return connection.driver.drop();
+        return connection.driver.dropDatabase();
     });
 
     let postRepository: Repository<Post>,

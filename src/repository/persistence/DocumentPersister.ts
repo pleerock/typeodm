@@ -85,14 +85,15 @@ export class DocumentPersister<Document> {
         if (documentId) {
             let conditions = { [driver.getIdFieldName()]: driver.createObjectId(documentId) };
             broadcaster.broadcastBeforeUpdate({ document: document, conditions: conditions });
-            return driver.replace(schema.name, conditions, dbObject).then(saved => {
+            return driver.replaceOne(schema.name, conditions, dbObject).then(saved => {
                 broadcaster.broadcastAfterUpdate({ document: document, conditions: conditions });
                 return document;
             });
         } else {
             broadcaster.broadcastBeforeInsert({ document: document });
-            return driver.insert(schema.name, dbObject).then(savedDocument => {
-                document[schema.idField.name] = String(savedDocument[driver.getIdFieldName()]);
+            return driver.insertOne(schema.name, dbObject).then(result => {
+                if (result.insertedId)
+                    document[schema.idField.name] = String(result.insertedId);
                 broadcaster.broadcastAfterInsert({ document: document });
                 return document;
             });
