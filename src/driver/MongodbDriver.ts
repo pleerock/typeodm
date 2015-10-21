@@ -62,11 +62,8 @@ export class MongodbDriver implements Driver {
 
     closeConnection(): Promise<any> {
         return new Promise<any>((ok, fail) => {
-            if (!this.db) {
-                fail('No connection is opened');
-                return;
-            }
-            this.db.close();
+            if (this.db)
+                this.db.close();
             ok();
         });
     }
