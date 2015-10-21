@@ -22,7 +22,7 @@ export class ConnectionManager {
     private connections: Connection[] = [];
     private schemaBuilder: SchemaBuilder;
     private metadataAggregator: MetadataAggregationBuilder;
-    private _container: { get(someClass: Function): any };
+    private _container: { get(someClass: any): any };
 
     // -------------------------------------------------------------------------
     // Constructor
@@ -46,7 +46,7 @@ export class ConnectionManager {
      * Sets a container that can be used in your custom subscribers. This allows you to inject services in your
      * classes.
      */
-    set container(container: { get(someClass: Function): any }) {
+    set container(container: { get(someClass: any): any }) {
         this._container = container;
     }
 
