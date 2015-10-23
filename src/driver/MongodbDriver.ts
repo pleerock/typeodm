@@ -89,9 +89,9 @@ export class MongodbDriver implements Driver {
         });
     }
 
-    dropCollection(collection: string): Promise<void> {
-        return new Promise<void>((ok, fail) => {
-            this.db.collection(collection).drop((err: any, result: any) => err ? fail(err) : ok());
+    drop(collection: string): Promise<boolean> {
+        return new Promise<boolean>((ok, fail) => {
+            this.db.collection(collection).drop((err: any, result: boolean) => err ? fail(err) : ok(result));
         });
     }
 

@@ -84,7 +84,7 @@ export interface Driver {
     /**
      * Drops the given collection.
      */
-    dropCollection(collection: string): Promise<void>;
+    drop(collection: string): Promise<boolean>;
 
     /**
      * Sets relation of the given document in a given collection with specific related value.
