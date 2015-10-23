@@ -8,7 +8,7 @@ import {MetadataAlreadyExistsException} from "../metadata-builder/exception/Meta
 export function Document(name?: string) {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name || !(objectConstructor instanceof Function))
+        if (!objectConstructor || !objectConstructor.name)
             throw new WrongAnnotationUsageException('Document', 'class', objectConstructor);
 
         defaultMetadataStorage.addDocumentMetadata({

@@ -8,7 +8,7 @@ import {WrongAnnotationUsageException} from "./exception/WrongAnnotationUsageExc
 export function AbstractDocument() {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name || !(objectConstructor instanceof Function))
+        if (!objectConstructor || !objectConstructor.name)
             throw new WrongAnnotationUsageException('AbstractDocument', 'class', objectConstructor);
 
         defaultMetadataStorage.addAbstractDocumentMetadata({

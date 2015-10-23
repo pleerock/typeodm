@@ -8,7 +8,7 @@ import {IndexOptions} from "./options/IndexOptions";
 export function CompoundIndex(fields: any, options?: IndexOptions) {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name || !(objectConstructor instanceof Function))
+        if (!objectConstructor || !objectConstructor.name)
             throw new WrongAnnotationUsageException('CompoundIndex', 'class', objectConstructor);
 
         defaultMetadataStorage.addCompoundIndexMetadata({

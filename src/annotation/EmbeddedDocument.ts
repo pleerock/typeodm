@@ -7,7 +7,7 @@ import {WrongAnnotationUsageException} from "./exception/WrongAnnotationUsageExc
 export function EmbeddedDocument() {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name || !(objectConstructor instanceof Function))
+        if (!objectConstructor || !objectConstructor.name)
             throw new WrongAnnotationUsageException('EmbeddedDocument', 'class', objectConstructor);
 
         defaultMetadataStorage.addDocumentMetadata({
