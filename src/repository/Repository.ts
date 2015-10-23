@@ -485,6 +485,16 @@ export class Repository<Document> {
             .then(results => results && results.length ? results.map((i: any) => this.dbObjectToDocument(i)) : null);
     }
 
+    /**
+     * Drop the collection from the database, removing it permanently. New accesses will create a new collection.
+     *
+     * @returns {Promise<T><boolean>} true when successfully drops a collection.
+     *                                false when collection to drop does not exist.
+     */
+    drop(): Promise<boolean> {
+        return this.connection.driver.drop(this.schema.name);
+    }
+
     // -------------------------------------------------------------------------
     // Private Methods
     // -------------------------------------------------------------------------
