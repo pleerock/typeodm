@@ -106,7 +106,9 @@ export class Repository<Document> {
     initializeMany(objects: any[], fetchProperties?: boolean[]): Promise<Document[]>;
     initializeMany(objects: any[], fetchConditions?: Object[]): Promise<Document[]>;
     initializeMany(objects: any[], fetchOption?: boolean[]|Object[]/*, fetchCascadeOptions?: any*/): Promise<Document[]> {
-        return Promise.all(objects.map((object, key) => this.initialize(object, fetchOption[key] ? fetchOption[key] : undefined)));
+        return Promise.all(objects.map((object, key) => {
+            return this.initialize(object, (fetchOption && fetchOption[key]) ? fetchOption[key] : undefined);
+        }));
     }
 
     /**
@@ -193,19 +195,6 @@ export class Repository<Document> {
             .updateOne(this.schema.name, selectConditions, updateOptions)
             .then(result => {
                 this.broadcaster.broadcastAfterUpdate({ conditions: selectConditions, options: updateOptions });
-                return result;
-            });
-    }
-
-    /**
-     * Updates a document found by applying given update options.
-     */
-    updateByConditions(conditions: Object, updateOptions?: Object): Promise<UpdateResult> {
-        this.broadcaster.broadcastBeforeUpdate({ conditions: conditions, options: updateOptions });
-        return this.connection.driver
-            .updateOne(this.schema.name, conditions, updateOptions)
-            .then(result => {
-                this.broadcaster.broadcastAfterUpdate({ conditions: conditions, options: updateOptions });
                 return result;
             });
     }
