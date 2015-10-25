@@ -23,6 +23,8 @@ import {UpdateResult} from "./results/UpdateResult";
 import {InsertOneResult} from "./results/InsertOneResult";
 import {InsertResult} from "./results/InsertResult";
 import {DeleteResult} from "./results/DeleteResult";
+import {BulkWriteOptions} from "./options/BulkWriteOptions";
+import {BulkWriteOperations} from "./operations/BulkWriteOperations";
 
 /**
  * This driver organizes work with mongodb database.
@@ -40,7 +42,7 @@ export class MongodbDriver implements Driver {
     // -------------------------------------------------------------------------
 
     get native(): any {
-        return mongodb;
+        return this.db;
     }
 
     // -------------------------------------------------------------------------
@@ -289,6 +291,12 @@ export class MongodbDriver implements Driver {
         return new Promise<BulkWriteResult>((ok, fail) => {
             batch.execute((err: any, result: BulkWriteResult) => err ? fail(err) : ok(result));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/BulkWriteResult.html
+    }
+
+    bulkWrite(collection: string, operations: BulkWriteOperations, options?: BulkWriteOptions): Promise<any> {
+        return new Promise<any>((ok, fail) => {
+            this.db.collection(collection).bulkWrite(operations, options, (err: any, result: any) => err ? fail(err) : ok(result));
+        }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~bulkWriteOpCallback
     }
 
     mapReduce(collection: string, map: Function, reduce: Function, options?: MapReduceOptions): Promise<any> {

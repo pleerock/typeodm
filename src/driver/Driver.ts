@@ -20,6 +20,8 @@ import {InsertOneResult} from "./results/InsertOneResult";
 import {InsertResult} from "./results/InsertResult";
 import {UpdateResult} from "./results/UpdateResult";
 import {DeleteResult} from "./results/DeleteResult";
+import {BulkWriteOptions} from "./options/BulkWriteOptions";
+import {BulkWriteOperations} from "./operations/BulkWriteOperations";
 
 /**
  * Driver communicates with specific database.
@@ -27,7 +29,7 @@ import {DeleteResult} from "./results/DeleteResult";
 export interface Driver {
 
     /**
-     * Access to the native implementation of the driver.
+     * Access to the native implementation of the database.
      */
     native: any;
 
@@ -263,6 +265,7 @@ export interface Driver {
      *
      * @param operations Function where all operations are being runned
      * @param options Optional settings.
+     * @deprecated
      */
     executeOrderedOperations(collection: string, operations: Function, options?: BulkOperationOptions): Promise<BulkWriteResult>;
 
@@ -272,8 +275,18 @@ export interface Driver {
      *
      * @param operations Function where all operations are being runned
      * @param options Optional settings.
+     * @deprecated
      */
     executeUnorderedOperations(collection: string, operations: Function, options?: BulkOperationOptions): Promise<BulkWriteResult>;
+
+    /**
+     * Perform a bulkWrite operation without a fluent API
+     *
+     * @param collection Collection name.
+     * @param operations Bulk operations to perform.
+     * @param options Optional settings.
+     */
+    bulkWrite(collection: string, operations: BulkWriteOperations, options?: BulkWriteOptions): Promise<BulkWriteResult>;
 
     /**
      * Run Map Reduce across a collection.

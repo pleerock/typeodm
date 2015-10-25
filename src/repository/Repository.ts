@@ -28,6 +28,12 @@ import {MapReduceOptions} from "mongodb";
 import {ReplaceOptions} from "../driver/options/ReplaceOptions";
 import {UpdateOptions} from "../driver/options/UpdateOptions";
 import {BulkOperationOptions} from "../driver/options/OrderedBulkOperationOptions";
+import {BulkWriteOperations} from "../driver/operations/BulkWriteOperations";
+import {BulkWriteOptions} from "../driver/options/BulkWriteOptions";
+import {BulkWriteResult} from "../driver/results/BulkWriteResult";
+import {DeleteResult} from "../driver/results/DeleteResult";
+import {UpdateResult} from "../driver/results/UpdateResult";
+import {InsertResult} from "../driver/results/InsertResult";
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -87,10 +93,20 @@ export class Repository<Document> {
      * loaded from the database first, then filled with given json data.
      */
     initialize(json: any, fetchProperty?: boolean): Promise<Document>;
-    initialize(json: any, fetchProperty?: Object): Promise<Document>;
+    initialize(json: any, fetchConditions?: Object): Promise<Document>;
     initialize(json: any, fetchOption?: boolean|Object/*, fetchCascadeOptions?: any*/): Promise<Document> {
         let initializer = new DocumentInitializer<Document>(this.connection);
         return initializer.initialize(json, this.schema, fetchOption);
+    }
+
+    /**
+     * Creates a documents from the given array of plain javascript objects. If fetchAllData param is specified then
+     * documents data will be loaded from the database first, then filled with given json data.
+     */
+    initializeMany(objects: any[], fetchProperties?: boolean[]): Promise<Document[]>;
+    initializeMany(objects: any[], fetchConditions?: Object[]): Promise<Document[]>;
+    initializeMany(objects: any[], fetchOption?: boolean[]|Object[]/*, fetchCascadeOptions?: any*/): Promise<Document[]> {
+        return Promise.all(objects.map((object, key) => this.initialize(object, fetchOption[key] ? fetchOption[key] : undefined)));
     }
 
     /**
@@ -169,7 +185,7 @@ export class Repository<Document> {
     /**
      * Updates a document with given id by applying given update options.
      */
-    updateById(id: string, updateOptions?: Object): Promise<void> {
+    updateById(id: string, updateOptions?: Object): Promise<UpdateResult> {
         let selectConditions = this.createIdObject(id);
         this.broadcaster.broadcastBeforeUpdate({ conditions: selectConditions, options: updateOptions });
 
@@ -177,31 +193,34 @@ export class Repository<Document> {
             .updateOne(this.schema.name, selectConditions, updateOptions)
             .then(result => {
                 this.broadcaster.broadcastAfterUpdate({ conditions: selectConditions, options: updateOptions });
+                return result;
             });
     }
 
     /**
      * Updates a document found by applying given update options.
      */
-    updateByConditions(conditions: Object, updateOptions?: Object): Promise<void> {
+    updateByConditions(conditions: Object, updateOptions?: Object): Promise<UpdateResult> {
         this.broadcaster.broadcastBeforeUpdate({ conditions: conditions, options: updateOptions });
         return this.connection.driver
             .updateOne(this.schema.name, conditions, updateOptions)
-            .then(document => {
+            .then(result => {
                 this.broadcaster.broadcastAfterUpdate({ conditions: conditions, options: updateOptions });
+                return result;
             });
     }
 
     /**
      * Removes document by a given id.
      */
-    removeById(id: string): Promise<void> {
+    removeById(id: string): Promise<DeleteResult> {
         let conditions = this.createIdObject(id);
         this.broadcaster.broadcastBeforeRemove({ documentId: id, conditions: conditions });
         return this.connection.driver
             .deleteOne(this.schema.name, conditions)
             .then(result => {
                 this.broadcaster.broadcastAfterRemove({ documentId: id, conditions: conditions });
+                return result;
             });
     }
 
@@ -270,12 +289,13 @@ export class Repository<Document> {
      * @param document Document to insert.
      * @param options Optional settings.
      */
-    insertOne(document: Document, options?: InsertOptions): Promise<void> {
+    insertOne(document: Document, options?: InsertOptions): Promise<InsertResult> {
         return this.connection.driver
             .insertOne(this.schema.name, document, options)
             .then(result => {
                 if (result.insertedId)
                     (<any>document)[this.schema.idField.name] = String(result.insertedId);
+                return result;
             });
     }
 
@@ -285,12 +305,15 @@ export class Repository<Document> {
      * @param documents Documents to insert.
      * @param options Optional settings.
      */
-    insertMany(documents: Document[], options?: InsertOptions): Promise<void> {
+    insertMany(documents: Document[], options?: InsertOptions): Promise<InsertResult> {
         return this.connection.driver
             .insertMany(this.schema.name, documents, options)
-            .then(result => result.insertedIds.forEach((id, index) => {
-                (<any>documents[index])[this.schema.idField.name] = String(id);
-            }));
+            .then(result => {
+                result.insertedIds.forEach((id, index) => {
+                    (<any>documents[index])[this.schema.idField.name] = String(id);
+                });
+                return result;
+            });
     }
 
     /**
@@ -300,10 +323,8 @@ export class Repository<Document> {
      * @param update The update operations to be applied to the document
      * @param options Optional settings.
      */
-    updateOne(query: Object, update: Object, options?: UpdateOptions): Promise<void> {
-        return this.connection.driver
-            .updateOne(this.schema.name, query, update, options)
-            .then(() => {});
+    updateOne(query: Object, update: Object, options?: UpdateOptions): Promise<UpdateResult> {
+        return this.connection.driver.updateOne(this.schema.name, query, update, options);
     }
 
     /**
@@ -313,10 +334,8 @@ export class Repository<Document> {
      * @param update The update operations to be applied to the document
      * @param options Optional settings.
      */
-    updateMany(query: Object, update: Object, options?: UpdateOptions): Promise<void> {
-        return this.connection.driver
-            .updateMany(this.schema.name, query, update, options)
-            .then(() => {});
+    updateMany(query: Object, update: Object, options?: UpdateOptions): Promise<UpdateResult> {
+        return this.connection.driver.updateMany(this.schema.name, query, update, options);
     }
 
     /**
@@ -326,10 +345,8 @@ export class Repository<Document> {
      * @param document The Document that replaces the matching document
      * @param options Optional settings.
      */
-    replaceOne(query: Object, document: Document, options?: ReplaceOptions): Promise<void> {
-        return this.connection.driver
-            .replaceOne(this.schema.name, query, document, options)
-            .then(() => {});
+    replaceOne(query: Object, document: Document, options?: ReplaceOptions): Promise<UpdateResult> {
+        return this.connection.driver.replaceOne(this.schema.name, query, document, options);
     }
 
     /**
@@ -338,10 +355,8 @@ export class Repository<Document> {
      * @param query The Filter used to select the document to remove
      * @param options Optional settings.
      */
-    deleteOne(query: Object, options?: DeleteOptions): Promise<void> {
-        return this.connection.driver
-            .deleteOne(this.schema.name, query, options)
-            .then(() => {});
+    deleteOne(query: Object, options?: DeleteOptions): Promise<DeleteResult> {
+        return this.connection.driver.deleteOne(this.schema.name, query, options);
     }
 
     /**
@@ -350,10 +365,8 @@ export class Repository<Document> {
      * @param query The Filter used to select the documents to remove
      * @param options
      */
-    deleteMany(query: Object, options?: DeleteOptions): Promise<void> {
-        return this.connection.driver
-            .deleteMany(this.schema.name, query, options)
-            .then(() => {});
+    deleteMany(query: Object, options?: DeleteOptions): Promise<DeleteResult> {
+        return this.connection.driver.deleteMany(this.schema.name, query, options);
     }
 
     /**
@@ -439,26 +452,24 @@ export class Repository<Document> {
     /**
      * Initiate an In order bulk write operation .
      *
+     * @deprecated
      * @param operations Function where all operations are being runned
      * @param options Optional settings.
      */
-    executeOrderedOperations(operations: Function, options?: BulkOperationOptions): Promise<void> {
-        return this.connection.driver
-            .executeOrderedOperations(this.schema.name, operations, options)
-            .then(() => {});
+    executeOrderedOperations(operations: Function, options?: BulkOperationOptions): Promise<BulkWriteResult> {
+        return this.connection.driver.executeOrderedOperations(this.schema.name, operations, options);
     }
 
     /**
      * Initiate a Out of order batch write operation. All operations will be buffered into insert/update/remove
      * commands executed out of order.
      *
+     * @deprecated
      * @param operations Function where all operations are being runned
      * @param options Optional settings.
      */
-    executeUnorderedOperations(operations: Function, options?: BulkOperationOptions): Promise<void> {
-        return this.connection.driver
-            .executeUnorderedOperations(this.schema.name, operations, options)
-            .then(() => {});
+    executeUnorderedOperations(operations: Function, options?: BulkOperationOptions): Promise<BulkWriteResult> {
+        return this.connection.driver.executeUnorderedOperations(this.schema.name, operations, options);
     }
 
     /**
@@ -470,6 +481,16 @@ export class Repository<Document> {
      */
     mapReduce(map: Function, reduce: Function, options?: MapReduceOptions): Promise<any> {
         return this.connection.driver.mapReduce(this.schema.name, map, reduce, options);
+    }
+
+    /**
+     * Run Map Reduce across a collection.
+     *
+     * @param operations The operations to be executed in bulk.
+     * @param options Optional settings.
+     */
+    bulkWrite(operations: BulkWriteOperations, options?: BulkWriteOptions): Promise<BulkWriteResult> {
+        return this.connection.driver.bulkWrite(this.schema.name, operations, options);
     }
 
     /**
