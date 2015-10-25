@@ -38,7 +38,7 @@ export class DocumentHydrator<Document> {
 
         if (schema.idField) // remember that id field cannot be in embed documents
             document[schema.idField.name] = schema.getIdValue(dbObject[this.connection.driver.getIdFieldName()]);
-        schema.fields.filter(field => !!dbObject[field.name]).forEach(field => {
+        schema.fields.filter(field => dbObject[field.name] !== undefined).forEach(field => {
 
             if (dbObject[field.name] instanceof Array && field.isTypeDocument()) {
                 let embedTypeSchema = this.connection.getSchema(<Function> field.type);
