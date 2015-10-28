@@ -54,10 +54,13 @@ export class DocumentInitializer<Document> {
         // todo: this needs strong optimization. since repository.findById makes here multiple operations and each time loads lot of data by cascades
 
         return documentPromise.then((document: any) => {
-            if (!document && documentId)
-                throw new Error('Document ' + schema.name + ' with given id ' + documentId + ' was not found');
-            if (!document && documentConditions)
-                throw new Error('Document ' + schema.name + ' with given conditions ' + JSON.stringify(documentConditions) + ' was not found');
+
+            if (!document)
+                document = schema.create();
+            //if (!document && documentId)
+                //throw new Error('Document ' + schema.name + ' with given id ' + documentId + ' was not found');
+            //if (!document && documentConditions)
+                //throw new Error('Document ' + schema.name + ' with given conditions ' + JSON.stringify(documentConditions) + ' was not found');
 
             return Promise.all(Object.keys(object)
                 .filter(key => schema.hasFieldOrRelationWithPropertyName(key))

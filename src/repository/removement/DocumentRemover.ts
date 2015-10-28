@@ -48,7 +48,8 @@ export class DocumentRemover<Document> {
         // load original document so we can compare and calculate changed set
         return this.connection.driver.findOneById(schema.name, documentId).then((dbObject: any) => {
             if (!dbObject)
-                throw new NoDocumentWithSuchIdException(documentId, schema.name);
+                return Promise.resolve();
+                //throw new NoDocumentWithSuchIdException(documentId, schema.name);
 
             // iterate throw each key in the document and find relations to compute removals of
             let promises = Object.keys(dbObject).map(originalDocumentProperty => {
@@ -117,7 +118,8 @@ export class DocumentRemover<Document> {
         // load original document so we can compare and calculate which of its relations to remove by cascades
         return this.connection.driver.findOneById(schema.name, documentId).then((dbObject: any) => {
             if (!dbObject)
-                throw new NoDocumentWithSuchIdException(documentId, schema.name);
+                return Promise.resolve();
+                // throw new NoDocumentWithSuchIdException(documentId, schema.name);
 
             // iterate throw each key in the db document and find relations to compute removals of
             let promises = Object.keys(dbObject).map(originalDocumentProperty => {
