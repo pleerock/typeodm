@@ -115,12 +115,13 @@ export class DocumentToDbObjectTransformer<Document> {
             dbObject[propertyName] = this.parseEmbedType(deepness, fieldTypeSchema, document[propertyName]);
 
         } else {
+            if (document[propertyName] !== null && document[propertyName] !== undefined) { // skip validation for properties without value
+                if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
+                    throw new FieldTypeNotSupportedException(dbField.type, propertyName, document);
 
-            if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
-                throw new FieldTypeNotSupportedException(dbField.type, propertyName, document);
-
-            if (!DbObjectFieldValidator.validate(document[propertyName], <string> dbField.type))
-                throw new WrongFieldTypeInDocumentException(dbField.type, propertyName, document);
+                if (!DbObjectFieldValidator.validate(document[propertyName], <string> dbField.type))
+                    throw new WrongFieldTypeInDocumentException(dbField.type, propertyName, document);
+            }
 
             dbObject[dbField.name] = document[propertyName];
         }
