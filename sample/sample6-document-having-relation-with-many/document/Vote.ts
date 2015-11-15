@@ -7,7 +7,7 @@ import {Category} from "./Category";
 @Document()
 export class Vote {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

@@ -7,7 +7,7 @@ import {Category} from "./Category";
 @Document()
 export class Video {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

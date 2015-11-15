@@ -83,9 +83,9 @@ export class DocumentPersister<Document> {
         let broadcaster = this.connection.getBroadcaster(schema.documentClass);
 
         if (documentId) {
-            let conditions = { [driver.getIdFieldName()]: driver.createObjectId(documentId) };
+            let conditions = driver.createIdCondition(documentId, schema.idField.isObjectId);
             broadcaster.broadcastBeforeUpdate({ document: document, conditions: conditions });
-            return driver.replaceOne(schema.name, conditions, dbObject).then(saved => {
+            return driver.replaceOne(schema.name, conditions, dbObject, { upsert: true }).then(saved => {
                 broadcaster.broadcastAfterUpdate({ document: document, conditions: conditions });
                 return document;
             });
@@ -93,7 +93,7 @@ export class DocumentPersister<Document> {
             broadcaster.broadcastBeforeInsert({ document: document });
             return driver.insertOne(schema.name, dbObject).then(result => {
                 if (result.insertedId)
-                    document[schema.idField.name] = String(result.insertedId);
+                    document[schema.idField.name] = schema.getIdValue(result.insertedId);// String(result.insertedId);
                 broadcaster.broadcastAfterInsert({ document: document });
                 return document;
             });
@@ -107,7 +107,7 @@ export class DocumentPersister<Document> {
 
                 let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
                 let inverseSideProperty = relationOperation.inverseSideDocumentProperty;
-                let id = this.connection.driver.createObjectId(relationOperation.documentId);
+                let id = this.connection.driver.createObjectId(relationOperation.documentId, relationOperation.documentSchema.idField.isObjectId);
 
                 if (inverseSideSchema.hasRelationWithOneWithPropertyName(inverseSideProperty))
                     return this.connection.driver.setOneRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);

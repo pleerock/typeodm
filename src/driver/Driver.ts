@@ -44,9 +44,14 @@ export interface Driver {
     closeConnection(): Promise<any>;
 
     /**
-     * Creates a object id from the given id string. todo: check if we really allow types for ids
+     * Creates a object id from the given id string.
      */
-    createObjectId(id?: string): any;
+    createObjectId(id: any, isObjectId: boolean): any;
+
+    /**
+     * Creates condition that can be used to query something by id.
+     */
+    createIdCondition(id: any, isObjectId: boolean): any;
 
     /**
      * Checks if given thing is object id or not.
@@ -71,7 +76,7 @@ export interface Driver {
     /**
      * Finds one document by a given document id.
      */
-    findOneById(collection: string, id: string, options?: Object): Promise<Object>;
+    findOneById(collection: string, id: string, isObjectId: boolean, options?: Object): Promise<Object>;
 
     /**
      * Runs a multiple aggregated stages function in the given collection.
@@ -192,7 +197,7 @@ export interface Driver {
      * @param id Id of the document to be removed
      * @param options
      */
-    deleteOneById(collection: string, id: any, options?: DeleteOptions): Promise<DeleteResult>;
+    deleteOneById(collection: string, id: any, isObjectId: boolean, options?: DeleteOptions): Promise<DeleteResult>;
 
     /**
      * The distinct command returns returns a list of distinct values for the given key across a collection.

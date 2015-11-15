@@ -5,7 +5,7 @@ import {IdField} from "../../../src/annotation/IdField";
 @Document()
 export class PostDetails {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

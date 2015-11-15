@@ -28,21 +28,21 @@ export interface GeoNearOptions {
     /**
      * Filter the results by a query.
      */
-    query: Object;
+    query?: Object;
 
     /**
      * Perform query using a spherical model.
      */
-    spherical: boolean;
+    spherical?: boolean;
 
     /**
      * The closest location in a document to the center of the search region will always be returned MongoDB > 2.X.
      */
-    uniqueDocs: boolean;
+    uniqueDocs?: boolean;
 
     /**
      * Include the location data fields in the top level of the results MongoDB > 2.X.
      */
-    includeLocs: boolean;
+    includeLocs?: boolean;
 
 }

@@ -4,27 +4,17 @@ import {RelationWithOne} from "../../../src/annotation/RelationWithOne";
 import {RelationWithMany} from "../../../src/annotation/RelationWithMany";
 import {IdField} from "../../../src/annotation/IdField";
 import {ArrayField} from "../../../src/annotation/ArrayField";
-import {Video} from "./Video";
 
-@Document()
-export class VideoDetails {
+@Document('post_with_number_id')
+export class Post {
 
-    @IdField(true)
-    id: string;
-
-    @RelationWithOne(type => Video)
-    video: Video;
+    @IdField()
+    id: number;
 
     @Field()
-    createTime: number;
+    title: string;
 
     @Field()
-    updateTime: number;
-
-    @Field()
-    searchKeywords: string;
-
-    @Field()
-    searchDescription: string;
+    text: string;
 
 }

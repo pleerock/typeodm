@@ -8,7 +8,7 @@ import {VideoDetails} from "./VideoDetails";
 @Document()
 export class Video {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

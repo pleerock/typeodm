@@ -68,6 +68,7 @@ export class SchemaBuilder {
             this.convertType(metadata.type),
             metadata.propertyName,
             metadata.isId,
+            metadata.isObjectId,
             metadata.isArray,
             metadata.isCreateDate,
             metadata.isUpdateDate,

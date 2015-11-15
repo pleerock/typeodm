@@ -14,6 +14,7 @@ export class FieldSchema {
     private _propertyName: string;
     private _type: string|Function;
     private _isId: boolean;
+    private _isObjectId: boolean;
     private _isArray: boolean;
     private _isCreateDate: boolean;
     private _isUpdateDate: boolean;
@@ -27,6 +28,7 @@ export class FieldSchema {
                 type: string|Function,
                 propertyName: string,
                 isId: boolean,
+                isObjectId: boolean,
                 isArray: boolean,
                 isCreateDate: boolean,
                 isUpdateDate: boolean,
@@ -36,6 +38,7 @@ export class FieldSchema {
         this._type = type;
         this._propertyName = propertyName;
         this._isId = isId;
+        this._isObjectId = isObjectId;
         this._isArray = isArray;
         this._isCreateDate = isCreateDate;
         this._isUpdateDate = isUpdateDate;
@@ -60,6 +63,10 @@ export class FieldSchema {
 
     get isId(): boolean {
         return this._isId;
+    }
+
+    get isObjectId(): boolean {
+        return this._isObjectId;
     }
 
     get isArray(): boolean {
@@ -89,6 +96,5 @@ export class FieldSchema {
     isTypeDocument(): boolean {
         return this._type instanceof Function;
     }
-
 
 }

@@ -93,6 +93,10 @@ export class DocumentSchema {
         }
     }
 
+    createIdCondition(): any {
+        return {  };
+    }
+
     findFieldByPropertyName(propertyName: string): FieldSchema {
         return this.fields.reduce((found, field) => field.propertyName === propertyName ? field : found, null);
     }
@@ -134,7 +138,7 @@ export class DocumentSchema {
         return !!this.findRelationWithManyByPropertyName(propertyName);
     }
 
-    getDocumentId(document: Object|any): string {
+    getDocumentId(document: Object|any): any {
         return document[this.idField.name];
     }
 
@@ -162,8 +166,8 @@ export class DocumentSchema {
             return relationWithMany.type;
     }
 
-    getIdValue(value: any): string { // todo: implement
-        return String(value);
+    getIdValue(value: any): any { // todo: implement
+        return this.idField.isObjectId && this.idField.isTypePrimitive() ? String(value) : value;
     }
 
     createPropertiesMirror(): any {

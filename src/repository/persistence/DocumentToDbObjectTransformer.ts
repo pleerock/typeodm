@@ -131,7 +131,7 @@ export class DocumentToDbObjectTransformer<Document> {
         let idField = schema.idField;
         let embed: any = this.documentToDbObject(deepness + 1, schema, embeddedDocument);
         if (idField) {
-            embed[this.connection.driver.getIdFieldName()] = this.createObjectId(embeddedDocument[idField.name]);
+            embed[this.connection.driver.getIdFieldName()] = this.createObjectId(embeddedDocument[idField.name], schema);
             this._postPersistOperations.push(() => embeddedDocument[idField.name] = String(embed[this.connection.driver.getIdFieldName()]));
         }
         return embed;
@@ -178,7 +178,7 @@ export class DocumentToDbObjectTransformer<Document> {
         let relatedDocumentId = value ? relationTypeSchema.getDocumentId(value) : null;
 
         if (relatedDocumentId && !CascadeOptionUtils.isCascadeUpdate(relation, cascadeOption)) {
-            addFunction(this.createObjectId(relatedDocumentId));
+            addFunction(this.createObjectId(relatedDocumentId, relationTypeSchema));
 
         } else if (value) {
             // check if we already added this object for persist (can happen when object of the same instance is used in different places)
@@ -189,7 +189,7 @@ export class DocumentToDbObjectTransformer<Document> {
 
             let afterExecution = (insertedRelationDocument: any) => {
                 let id = relationTypeSchema.getDocumentId(insertedRelationDocument);
-                addFunction(this.createObjectId(id));
+                addFunction(this.createObjectId(id, relationTypeSchema));
                 return {
                     inverseSideDocumentId: id,
                     inverseSideDocumentSchema: relationTypeSchema,
@@ -217,8 +217,8 @@ export class DocumentToDbObjectTransformer<Document> {
         }
     }
 
-    private createObjectId(id: string): any {
-        return this.connection.driver.createObjectId(id);
+    private createObjectId(id: string, schema: DocumentSchema): any {
+        return this.connection.driver.createObjectId(id, schema.idField.isObjectId);
     }
 
 }

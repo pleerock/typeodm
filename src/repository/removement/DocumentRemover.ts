@@ -46,7 +46,7 @@ export class DocumentRemover<Document> {
             return Promise.resolve();
 
         // load original document so we can compare and calculate changed set
-        return this.connection.driver.findOneById(schema.name, documentId).then((dbObject: any) => {
+        return this.connection.driver.findOneById(schema.name, documentId, schema.idField.isObjectId).then((dbObject: any) => {
             if (!dbObject)
                 return Promise.resolve();
                 //throw new NoDocumentWithSuchIdException(documentId, schema.name);
@@ -79,7 +79,7 @@ export class DocumentRemover<Document> {
         return Promise.all(this.removeOperations.map(operation => {
             let broadcaster = this.connection.getBroadcaster(operation.schema.documentClass);
             broadcaster.broadcastBeforeRemove({ documentId: operation.id });
-            return this.connection.driver.deleteOneById(operation.schema.name, operation.id).then(result => {
+            return this.connection.driver.deleteOneById(operation.schema.name, operation.id, operation.schema.idField.isObjectId).then(result => {
                 broadcaster.broadcastAfterRemove({ documentId: operation.id });
             });
         })).then(function() {});
@@ -95,7 +95,7 @@ export class DocumentRemover<Document> {
 
             let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
             let inverseSideProperty = relationOperation.inverseSideDocumentProperty;
-            let id = this.connection.driver.createObjectId(relationOperation.documentId);
+            let id = this.connection.driver.createObjectId(relationOperation.documentId, relationOperation.documentSchema.idField.isObjectId);
 
             if (inverseSideSchema.hasRelationWithOneWithPropertyName(inverseSideProperty))
                 return this.connection.driver.unsetOneRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
@@ -116,7 +116,7 @@ export class DocumentRemover<Document> {
         let cascadeOptions = CascadeOptionUtils.prepareCascadeOptions(schema, dynamicCascadeOptions);
 
         // load original document so we can compare and calculate which of its relations to remove by cascades
-        return this.connection.driver.findOneById(schema.name, documentId).then((dbObject: any) => {
+        return this.connection.driver.findOneById(schema.name, documentId, schema.idField.isObjectId).then((dbObject: any) => {
             if (!dbObject)
                 return Promise.resolve();
                 // throw new NoDocumentWithSuchIdException(documentId, schema.name);

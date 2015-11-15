@@ -9,7 +9,7 @@ import {Vote} from "./Vote";
 @Document()
 export class VoteDetails {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @RelationWithOne(type => Vote)

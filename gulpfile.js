@@ -85,6 +85,17 @@ gulp.task('toes5', function () {
         .pipe(gulp.dest('./built/es5'));
 });
 
+gulp.task('run-sample1', function() {
+    return gulp.src('*.js', { read: false })
+        .pipe(shell([
+            'node ./built/es5/sample/sample1-simple-document/app.js'
+        ]));
+});
+
+gulp.task('run:sample1', function (cb) {
+    return runSequence('build', 'run-sample1', cb);
+});
+
 gulp.task('run-sample2', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
@@ -127,6 +138,17 @@ gulp.task('run-sample7', function() {
 
 gulp.task('run:sample7', function (cb) {
     return runSequence('build', 'run-sample7', cb);
+});
+
+gulp.task('run-sample8', function() {
+    return gulp.src('*.js', { read: false })
+        .pipe(shell([
+            'node ./built/es5/sample/sample8-document-with-custom-id/app.js'
+        ]));
+});
+
+gulp.task('run:sample8', function (cb) {
+    return runSequence('build', 'run-sample8', cb);
 });
 
 gulp.task('run-sample11', function() {

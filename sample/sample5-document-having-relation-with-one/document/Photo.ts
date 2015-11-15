@@ -8,7 +8,7 @@ import {PhotoDetails} from "./PhotoDetails";
 @Document()
 export class Photo {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

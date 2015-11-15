@@ -10,7 +10,7 @@ import {PostAuthor} from "./PostAuthor";
 @Document()
 export class Post {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

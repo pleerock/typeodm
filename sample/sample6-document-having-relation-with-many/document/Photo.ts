@@ -7,7 +7,7 @@ import {Category} from "./Category";
 @Document()
 export class Photo {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

@@ -70,8 +70,8 @@ export class MongodbDriver implements Driver {
         });
     }
 
-    createObjectId(id?: string): any {
-        return new ObjectID(id);
+    createObjectId(id: any, isObjectId: boolean): any {
+        return isObjectId && !this.isObjectId(id) ? new ObjectID(id) : id;
     }
 
     isObjectId(id: any): boolean {
@@ -80,6 +80,10 @@ export class MongodbDriver implements Driver {
 
     getIdFieldName(): string {
         return '_id';
+    }
+
+    createIdCondition(id: any, isObjectId: boolean): any {
+        return { [this.getIdFieldName()]: this.createObjectId(id, isObjectId) };
     }
 
     dropDatabase(): Promise<void> {
@@ -134,8 +138,8 @@ export class MongodbDriver implements Driver {
             .then(objects => objects && objects.length ? objects[0] : null);
     }
 
-    findOneById(collection: string, id: string, options?: FindOptions): Promise<Object> {
-        let idCondition = { [this.getIdFieldName()]: this.createObjectId(id) };
+    findOneById(collection: string, id: string, isObjectId: boolean, options?: FindOptions): Promise<Object> {
+        let idCondition = { [this.getIdFieldName()]: this.createObjectId(id, isObjectId) };
         return this.findOne(collection, idCondition, options);
     }
 
@@ -227,9 +231,9 @@ export class MongodbDriver implements Driver {
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~deleteWriteOpResult
     }
 
-    deleteOneById(collection: string, id: any, options?: DeleteOptions): Promise<DeleteResult> {
+    deleteOneById(collection: string, id: any, isObjectId: boolean, options?: DeleteOptions): Promise<DeleteResult> {
         return new Promise<DeleteResult>((ok, fail) => {
-            let idCondition = { [this.getIdFieldName()]: this.createObjectId(id) };
+            let idCondition = this.createIdCondition(id, isObjectId);
             this.db.collection(collection).deleteOne(idCondition, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~deleteWriteOpResult
     }

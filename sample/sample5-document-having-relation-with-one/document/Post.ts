@@ -8,7 +8,7 @@ import {PostDetails} from "./PostDetails";
 @Document()
 export class Post {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

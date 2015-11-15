@@ -8,7 +8,7 @@ import {ArrayField} from "../../../src/annotation/ArrayField";
 @Document()
 export class PhotoDetails {
 
-    @IdField()
+    @IdField(true)
     id: string;
 
     @Field()

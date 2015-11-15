@@ -53,5 +53,5 @@ export interface MapReduceOptions {
     /**
      * Allow driver to bypass schema validation in MongoDB 3.2 or higher.
      */
-    bypassDocumentValidation: boolean;
+    bypassDocumentValidation?: boolean;
 }
