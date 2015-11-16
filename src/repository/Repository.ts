@@ -34,6 +34,7 @@ import {BulkWriteResult} from "../driver/results/BulkWriteResult";
 import {DeleteResult} from "../driver/results/DeleteResult";
 import {UpdateResult} from "../driver/results/UpdateResult";
 import {InsertResult} from "../driver/results/InsertResult";
+import {ObjectID} from "mongodb";
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -503,6 +504,20 @@ export class Repository<Document> {
      */
     drop(): Promise<boolean> {
         return this.connection.driver.drop(this.schema.name);
+    }
+
+    /**
+     * Creates ObjectId object from a given objectId string.
+     */
+    createObjectIdFromString(objectId: string): ObjectID {
+        return this.connection.driver.createObjectId(objectId, true);
+    }
+
+    /**
+     * Creates array of ObjectId objects from a given objectId strings.
+     */
+    createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
+        return objectIds.map(id => this.connection.driver.createObjectId(id, true));
     }
 
     // -------------------------------------------------------------------------
