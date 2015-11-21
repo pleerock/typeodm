@@ -1,5 +1,5 @@
 import {Connection} from "./Connection";
-import {Utils} from "../util/Utils";
+import {OdmUtils} from "../util/Utils";
 import {defaultMetadataStorage} from "../metadata-builder/MetadataStorage";
 import {SchemaBuilder} from "../schema/SchemaBuilder";
 import {Driver} from "../driver/Driver";
@@ -89,7 +89,7 @@ export class ConnectionManager {
             connectionName = 'default';
         }
 
-        let documentsInFiles = Utils.requireAll(pathes);
+        let documentsInFiles = OdmUtils.requireAll(pathes);
         let allDocuments = documentsInFiles.reduce((allDocuments, documents) => {
             return allDocuments.concat(Object.keys(documents).map(key => documents[key]));
         }, []);
@@ -110,7 +110,7 @@ export class ConnectionManager {
             connectionName = 'default';
         }
 
-        let subscribersInFiles = Utils.requireAll(pathes);
+        let subscribersInFiles = OdmUtils.requireAll(pathes);
         let allSubscriberClasses = subscribersInFiles.reduce((all, subscriberInFile) => {
             return all.concat(Object.keys(subscriberInFile).map(key => subscriberInFile[key]));
         }, []);

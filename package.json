@@ -1,6 +1,6 @@
 {
   "name": "typeodm",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "ODM for MongoDB used Typescript",
   "license": "Apache-2.0",
   "readmeFilename": "README.md",

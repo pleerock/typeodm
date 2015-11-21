@@ -45,6 +45,7 @@ export interface Driver {
 
     /**
      * Creates a object id from the given id string.
+     * @deprecated use this method from utils
      */
     createObjectId(id: any, isObjectId: boolean): any;
 
@@ -55,6 +56,7 @@ export interface Driver {
 
     /**
      * Checks if given thing is object id or not.
+     * @deprecated use this method from utils
      */
     isObjectId(id: any): boolean;
 
