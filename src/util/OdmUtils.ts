@@ -30,6 +30,13 @@ export class OdmUtils {
     }
 
     /**
+     * Checks if given value is an object id.
+     */
+    isStringObjectId(value: string): boolean {
+        return !!String(value).match(/^[0-9a-fA-F]{24}$/);
+    }
+
+    /**
      * Makes "require()" all js files (or custom extension files) in the given directory.
      * @deprecated use npm module instead
      */

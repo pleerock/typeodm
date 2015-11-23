@@ -25,6 +25,10 @@ export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTyp
         if (typeFunction && !FieldTypes.validateTypeInFunction(typeFunction))
             throw new WrongFieldTypeException(typeFunction, object.constructor.name, propertyName);
 
+        const type = Reflect.getMetadata('design:type', object, propertyName);
+        if (type && type.name && !typeFunction)
+            typeFunction = () => type;
+
         // if type is not given then try to guess it using metadata
         if (!typeFunction)
             typeFunction = () => Reflect.getMetadata('design:type', object, propertyName);

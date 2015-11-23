@@ -1,5 +1,5 @@
 import {Connection} from "./Connection";
-import {OdmUtils} from "../util/Utils";
+import {OdmUtils} from "../util/OdmUtils";
 import {defaultMetadataStorage} from "../metadata-builder/MetadataStorage";
 import {SchemaBuilder} from "../schema/SchemaBuilder";
 import {Driver} from "../driver/Driver";
