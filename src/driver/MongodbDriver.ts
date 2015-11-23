@@ -145,7 +145,7 @@ export class MongodbDriver implements Driver {
 
     aggregate(collection: string, stages: any[], options?: AggergationOptions): Promise<any> {
         return new Promise<any>((ok, fail) => {
-            this.db.collection(collection).aggregate(stages, options, (err: any, result: any) => err ? fail(err) : ok(result));
+            this.db.collection(collection).aggregate(stages, options).toArray((err: any, result: any) => err ? fail(err) : ok(result));
         });
     }
 
