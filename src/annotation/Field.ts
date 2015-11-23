@@ -25,9 +25,10 @@ export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTyp
         if (typeFunction && !FieldTypes.validateTypeInFunction(typeFunction))
             throw new WrongFieldTypeException(typeFunction, object.constructor.name, propertyName);
 
+        // temporary fix for date type. need better implementation
         const type = Reflect.getMetadata('design:type', object, propertyName);
-        if (type && type.name && !typeFunction)
-            typeFunction = () => type;
+        if (!typeFunction && type && type.name && type.name.toLowerCase() === 'date')
+            typeFunction = () => 'date';
 
         // if type is not given then try to guess it using metadata
         if (!typeFunction)
