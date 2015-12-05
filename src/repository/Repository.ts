@@ -86,7 +86,7 @@ export class Repository<Document> {
      * Checks if document has id.
      */
     hasId(document: Document): boolean {
-        return document && document.hasOwnProperty(this.schema.idField.name);
+        return document && this.schema.idField && document.hasOwnProperty(this.schema.idField.name);
     }
 
     /**
