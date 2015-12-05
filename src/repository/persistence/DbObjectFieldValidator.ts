@@ -15,7 +15,7 @@ export class DbObjectFieldValidator {
     static validate(value: any, type: string): boolean {
         let foundTypeToCheckIndex = this.supportedTypes.indexOf(type);
         return typeof value === this.supportedTypes[foundTypeToCheckIndex] ||
-            (type === 'date' && value instanceof Date);
+            (type === 'date' && (value instanceof Date || !isNaN(Date.parse(value))));
     }
 
     // private static
