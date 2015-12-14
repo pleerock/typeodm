@@ -2,7 +2,7 @@ import {Document} from "../../../src/decorator/Document";
 import {Field} from "../../../src/decorator/Field";
 import {RelationWithOne} from "../../../src/decorator/RelationWithOne";
 import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
-import {IdField} from "../../../src/decorator/IdField";
+import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
@@ -12,7 +12,7 @@ import {PostDetails} from "./PostDetails";
 @Document()
 export class Post {
 
-    @IdField(true)
+    @ObjectIdField()
     id: string;
 
     @Field()

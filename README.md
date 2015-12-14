@@ -9,11 +9,10 @@ For now you can take a look on samples in `./sample` for more examples of usages
 
 ## Todos
 
-* make everything to work on older versions of node
+* determine minimal node version requirements
 * put proper exceptions everywhere
 * debug mode and logging
 * other types / check date support
-* check everything in es6/es5 and provide examples
 * deep checks on schema build
 * create query builder?
 * json and javascript schema providers

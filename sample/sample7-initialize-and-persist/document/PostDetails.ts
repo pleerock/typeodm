@@ -1,11 +1,11 @@
 import {Document} from "../../../src/decorator/Document";
 import {Field} from "../../../src/decorator/Field";
-import {IdField} from "../../../src/decorator/IdField";
+import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 
 @Document()
 export class PostDetails {
 
-    @IdField(true)
+    @ObjectIdField()
     id: string;
 
     @Field()
