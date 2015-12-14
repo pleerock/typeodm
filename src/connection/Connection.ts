@@ -4,9 +4,9 @@ import {ConnectionOptions} from "./ConnectionOptions";
 import {Repository} from "../repository/Repository";
 import {OdmSubscriber} from "../subscriber/OdmSubscriber";
 import {OdmBroadcaster} from "../subscriber/OdmBroadcaster";
-import {RepositoryNotFoundException} from "./exception/RepositoryNotFoundException";
-import {SchemaNotFoundException} from "./exception/SchemaNotFoundException";
-import {BroadcasterNotFoundException} from "./exception/BroadcasterNotFoundException";
+import {RepositoryNotFoundError} from "./error/RepositoryNotFoundError";
+import {SchemaNotFoundError} from "./error/SchemaNotFoundError";
+import {BroadcasterNotFoundError} from "./error/BroadcasterNotFoundError";
 import {IndexCreator} from "../index-creator/IndexCreator";
 
 /**
@@ -126,7 +126,7 @@ export class Connection {
         let schema = this.getSchema(<Function> documentClassOrName);
         let repository = this.repositories.reduce((found, repository) => repository.schema === schema ? repository : found, null);
         if (!repository)
-            throw new RepositoryNotFoundException(documentClassOrName);
+            throw new RepositoryNotFoundError(documentClassOrName);
 
         return repository;
     }
@@ -137,7 +137,7 @@ export class Connection {
     getSchema(documentClass: Function): DocumentSchema {
         let schema = this.schemas.reduce((found, definition) => definition.documentClass === documentClass ? definition : found, null);
         if (!schema)
-            throw new SchemaNotFoundException(documentClass);
+            throw new SchemaNotFoundError(documentClass);
 
         return schema;
     }
@@ -148,7 +148,7 @@ export class Connection {
     getBroadcaster<Document>(documentClass: Function): OdmBroadcaster<Document> {
         let schema = this.broadcasters.reduce((found, broadcaster) => broadcaster.documentClass === documentClass ? broadcaster : found, null);
         if (!schema)
-            throw new BroadcasterNotFoundException(documentClass);
+            throw new BroadcasterNotFoundError(documentClass);
 
         return schema;
     }

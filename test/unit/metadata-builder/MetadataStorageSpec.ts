@@ -1,16 +1,16 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {RelationWithOne} from "../../../src/annotation/RelationWithOne";
+import {RelationWithOne} from "../../../src/decorator/RelationWithOne";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
-import {WrongAnnotationUsageException} from "../../../src/annotation/exception/WrongAnnotationUsageException";
-import {WrongFieldTypeException} from "../../../src/annotation/exception/WrongFieldTypeException";
+import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
+import {WrongFieldTypeError} from "../../../src/decorator/error/WrongFieldTypeError";
 import {RelationMetadata} from "../../../src/metadata-builder/metadata/RelationMetadata";
-import {BothJoinTypesUsedException} from "../../../src/annotation/exception/BothJoinTypesUsedException";
+import {BothJoinTypesUsedError} from "../../../src/decorator/error/BothJoinTypesUsedError";
 import {MetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
 import {DocumentMetadata} from "../../../src/metadata-builder/metadata/DocumentMetadata";
-import {MetadataAlreadyExistsException} from "../../../src/metadata-builder/exception/MetadataAlreadyExistsException";
-import {MetadataWithSuchNameAlreadyExistsException} from "../../../src/metadata-builder/exception/MetadataWithSuchNameAlreadyExistsException";
+import {MetadataAlreadyExistsError} from "../../../src/metadata-builder/error/MetadataAlreadyExistsError";
+import {MetadataWithSuchNameAlreadyExistsError} from "../../../src/metadata-builder/error/MetadataWithSuchNameAlreadyExistsError";
 import {FieldMetadata} from "../../../src/metadata-builder/metadata/FieldMetadata";
 
 chai.should();
@@ -68,10 +68,10 @@ describe('MetadataStorage', function() {
         let metadataWithName1 = { objectConstructor: SecondTestClass, name: 'Document' };
         let metadataWithName2 = { objectConstructor: ThirdTestClass, name: 'Document' };
 
-        expect(() => metadataStorage.addDocumentMetadata(metadataWithClass)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addDocumentMetadata(metadataWithClass)).to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addDocumentMetadata(metadataWithName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addDocumentMetadata(metadataWithName2)).to.throw(MetadataWithSuchNameAlreadyExistsException);
+        expect(() => metadataStorage.addDocumentMetadata(metadataWithClass)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addDocumentMetadata(metadataWithClass)).to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addDocumentMetadata(metadataWithName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addDocumentMetadata(metadataWithName2)).to.throw(MetadataWithSuchNameAlreadyExistsError);
     });
 
     it('should add a abstract document metadata', function () {
@@ -91,8 +91,8 @@ describe('MetadataStorage', function() {
     it('should throw exception if abstract document with the same constructor is adding twice', function () {
         let metadataWithClass = { objectConstructor: SecondTestClass };
 
-        expect(() => metadataStorage.addAbstractDocumentMetadata(metadataWithClass)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addAbstractDocumentMetadata(metadataWithClass)).to.throw(MetadataAlreadyExistsException);
+        expect(() => metadataStorage.addAbstractDocumentMetadata(metadataWithClass)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addAbstractDocumentMetadata(metadataWithClass)).to.throw(MetadataAlreadyExistsError);
     });
 
     it('should add a odm event subscriber metadata', function () {
@@ -112,8 +112,8 @@ describe('MetadataStorage', function() {
     it('should throw exception if odm event subscriber with the same constructor is adding twice', function () {
         let metadataWithClass = { objectConstructor: SecondTestClass };
 
-        expect(() => metadataStorage.addOdmEventSubscriberMetadata(metadataWithClass)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addOdmEventSubscriberMetadata(metadataWithClass)).to.throw(MetadataAlreadyExistsException);
+        expect(() => metadataStorage.addOdmEventSubscriberMetadata(metadataWithClass)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addOdmEventSubscriberMetadata(metadataWithClass)).to.throw(MetadataAlreadyExistsError);
     });
 
     it('should add a field metadata', function () {
@@ -225,13 +225,13 @@ describe('MetadataStorage', function() {
             propertyName: 'someProperty3'
         };
 
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
     });
 
     it('should throw exception if relation to one metadata with the same property name or name is adding twice', function () {
@@ -345,13 +345,13 @@ describe('MetadataStorage', function() {
             isAlwaysInnerJoin: false
         };
 
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithOneMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
     });
 
     it('should give all relation with many metadatas', function () {
@@ -450,13 +450,13 @@ describe('MetadataStorage', function() {
             propertyName: 'someProperty3'
         };
 
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addFieldMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
     });
 
     it('should throw exception if relation to many metadata with the same property name or name is adding twice', function () {
@@ -560,13 +560,13 @@ describe('MetadataStorage', function() {
             isAlwaysInnerJoin: false
         };
 
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsException);
-        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsException);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty1)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty2)).to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty3)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeProperty4)).not.to.throw(MetadataAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeName1)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeName2)).to.throw(MetadataWithSuchNameAlreadyExistsError);
+        expect(() => metadataStorage.addRelationWithManyMetadata(metadataForSomeName3)).not.to.throw(MetadataWithSuchNameAlreadyExistsError);
     });
 
 });

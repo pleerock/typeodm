@@ -1,7 +1,7 @@
-import {Document} from "../../../src/annotation/Document";
-import {Field} from "../../../src/annotation/Field";
-import {RelationWithMany} from "../../../src/annotation/RelationWithMany";
-import {IdField} from "../../../src/annotation/IdField";
+import {Document} from "../../../src/decorator/Document";
+import {Field} from "../../../src/decorator/Field";
+import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
+import {IdField} from "../../../src/decorator/IdField";
 import {Category} from "./Category";
 
 @Document()

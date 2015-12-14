@@ -5,7 +5,7 @@ import {CascadeOption, DynamicCascadeOptions} from "./../cascade/CascadeOption";
 import {RemoveOperation} from "./../operation/RemoveOperation";
 import {InverseSideUpdateOperation} from "./../operation/InverseSideUpdateOperation";
 import {CascadeOptionUtils} from "../cascade/CascadeOptionUtils";
-import {NoDocumentWithSuchIdException} from "../exception/NoDocumentWithSuchIdException";
+import {NoDocumentWithSuchIdError} from "../error/NoDocumentWithSuchIdError";
 
 /**
  * Helps to remove a document and all its relations by given cascade operations.

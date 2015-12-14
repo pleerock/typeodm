@@ -1,6 +1,6 @@
-import {Document} from "../../../src/annotation/Document";
-import {Field} from "../../../src/annotation/Field";
-import {IdField} from "../../../src/annotation/IdField";
+import {Document} from "../../../src/decorator/Document";
+import {Field} from "../../../src/decorator/Field";
+import {IdField} from "../../../src/decorator/IdField";
 
 @Document()
 export class PostDetails {

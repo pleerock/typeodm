@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {Document} from "../../../src/annotation/Document";
+import {Document} from "../../../src/decorator/Document";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
-import {WrongAnnotationUsageException} from "../../../src/annotation/exception/WrongAnnotationUsageException";
+import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
 
 chai.should();
 chai.use(require("sinon-chai"));
@@ -18,8 +18,8 @@ describe('Document Annotation', function() {
     // -------------------------------------------------------------------------
 
     it('should throw exception if annotation is set to a non constructor object', function () {
-        expect(() => Document()(null)).to.throw(WrongAnnotationUsageException);
-        expect(() => Document()(function() {})).to.throw(WrongAnnotationUsageException);
+        expect(() => Document()(null)).to.throw(WrongAnnotationUsageError);
+        expect(() => Document()(function() {})).to.throw(WrongAnnotationUsageError);
     });
 
     it('should add a new document metadata to the metadata storage', sinon.test(function () {

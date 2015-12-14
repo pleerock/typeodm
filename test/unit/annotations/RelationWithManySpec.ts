@@ -1,12 +1,12 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {RelationWithMany} from "../../../src/annotation/RelationWithMany";
+import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
-import {WrongAnnotationUsageException} from "../../../src/annotation/exception/WrongAnnotationUsageException";
-import {WrongFieldTypeException} from "../../../src/annotation/exception/WrongFieldTypeException";
+import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
+import {WrongFieldTypeError} from "../../../src/decorator/error/WrongFieldTypeError";
 import {RelationMetadata} from "../../../src/metadata-builder/metadata/RelationMetadata";
-import {BothJoinTypesUsedException} from "../../../src/annotation/exception/BothJoinTypesUsedException";
+import {BothJoinTypesUsedError} from "../../../src/decorator/error/BothJoinTypesUsedError";
 
 chai.should();
 chai.use(require("sinon-chai"));
@@ -22,8 +22,8 @@ describe('RelationWithMany Annotation', function() {
     // -------------------------------------------------------------------------
 
     it('should throw exception if annotation is set to non-property', function () {
-        expect(() => RelationWithMany(type => TestClass)(null, 'abc')).to.throw(WrongAnnotationUsageException);
-        expect(() => RelationWithMany(type => TestClass)(new TestClass(), null)).to.throw(WrongAnnotationUsageException);
+        expect(() => RelationWithMany(type => TestClass)(null, 'abc')).to.throw(WrongAnnotationUsageError);
+        expect(() => RelationWithMany(type => TestClass)(new TestClass(), null)).to.throw(WrongAnnotationUsageError);
     });
 
     it('should throw exception if both left join and right join are being set in options', sinon.test(function () {
@@ -32,7 +32,7 @@ describe('RelationWithMany Annotation', function() {
         expect(() => RelationWithMany(typeInFunction, null, {
             alwaysInnerJoin: true,
             alwaysLeftJoin: true
-        })(object, 'someProperty')).to.throw(BothJoinTypesUsedException);
+        })(object, 'someProperty')).to.throw(BothJoinTypesUsedError);
     }));
 
     it('should add a new relation with many metadata to the metadata storage', sinon.test(function () {

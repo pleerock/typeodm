@@ -5,7 +5,7 @@ import {SchemaBuilder} from "../schema/SchemaBuilder";
 import {Driver} from "../driver/Driver";
 import {DefaultNamingStrategy} from "../naming-strategy/DefaultNamingStrategy";
 import {MetadataAggregationBuilder} from "../metadata-builder/MetadataAggregationBuilder";
-import {ConnectionNotFoundException} from "./exception/ConnectionNotFoundException";
+import {ConnectionNotFoundError} from "./error/ConnectionNotFoundError";
 import {IndexCreator} from "../index-creator/IndexCreator";
 
 /**
@@ -73,7 +73,7 @@ export class ConnectionManager {
     getConnection(name: string = 'default'): Connection {
         let foundConnection = this.connections.reduce((found, connection) => connection.name === name ? connection : found, null);
         if (!foundConnection)
-            throw new ConnectionNotFoundException(name);
+            throw new ConnectionNotFoundError(name);
 
         return foundConnection;
     }

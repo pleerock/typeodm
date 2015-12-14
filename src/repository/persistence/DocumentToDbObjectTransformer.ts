@@ -2,9 +2,9 @@ import {DocumentSchema} from "../../schema/DocumentSchema";
 import {Connection} from "../../connection/Connection";
 import {RelationSchema} from "../../schema/RelationSchema";
 import {CascadeOption, DynamicCascadeOptions} from "./../cascade/CascadeOption";
-import {WrongFieldTypeInDocumentException} from "../exception/WrongFieldTypeInDocumentException";
+import {WrongFieldTypeInDocumentError} from "../error/WrongFieldTypeInDocumentError";
 import {DbObjectFieldValidator} from "./DbObjectFieldValidator";
-import {FieldTypeNotSupportedException} from "../exception/FieldTypeNotSupportedException";
+import {FieldTypeNotSupportedError} from "../error/FieldTypeNotSupportedError";
 import {PersistOperation} from "./../operation/PersistOperation";
 import {CascadeOptionUtils} from "../cascade/CascadeOptionUtils";
 
@@ -103,10 +103,10 @@ export class DocumentToDbObjectTransformer<Document> {
             } else {
 
                 if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
-                    throw new FieldTypeNotSupportedException(dbField.type + '[]', propertyName, document);
+                    throw new FieldTypeNotSupportedError(dbField.type + '[]', propertyName, document);
 
                 if (!DbObjectFieldValidator.validateArray(document[propertyName], <string> dbField.type))
-                    throw new WrongFieldTypeInDocumentException(dbField.type + '[]', propertyName, document);
+                    throw new WrongFieldTypeInDocumentError(dbField.type + '[]', propertyName, document);
 
                 dbObject[propertyName] = document[propertyName];
             }
@@ -117,10 +117,10 @@ export class DocumentToDbObjectTransformer<Document> {
         } else {
             if (document[propertyName] !== null && document[propertyName] !== undefined) { // skip validation for properties without value
                 if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
-                    throw new FieldTypeNotSupportedException(dbField.type, propertyName, document);
+                    throw new FieldTypeNotSupportedError(dbField.type, propertyName, document);
 
                 if (!DbObjectFieldValidator.validate(document[propertyName], <string> dbField.type))
-                    throw new WrongFieldTypeInDocumentException(dbField.type, propertyName, document);
+                    throw new WrongFieldTypeInDocumentError(dbField.type, propertyName, document);
             }
 
             dbObject[dbField.name] = document[propertyName];

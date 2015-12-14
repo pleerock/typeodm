@@ -7,7 +7,7 @@ import {JoinFieldOption} from "./hydration/JoinFieldOption";
 import {OdmBroadcaster} from "../subscriber/OdmBroadcaster";
 import {DocumentRemover} from "./removement/DocumentRemover";
 import {CascadeOption, DynamicCascadeOptions} from "./cascade/CascadeOption";
-import {BadDocumentInstanceException} from "./exception/BadDocumentInstanceException";
+import {BadDocumentInstanceError} from "./error/BadDocumentInstanceError";
 import {CascadeOptionUtils} from "./cascade/CascadeOptionUtils";
 import {FieldSchema} from "../schema/FieldSchema";
 import {RelationSchema} from "../schema/RelationSchema";

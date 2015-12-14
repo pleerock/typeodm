@@ -1,5 +1,5 @@
 import {Resolve} from "typedi/Resolve";
-import {OdmRepository} from "../../src/annotation/OdmRepository";
+import {OdmRepository} from "../../src/decorator/OdmRepository";
 import {Repository} from "../../src/repository/Repository";
 import {Post} from "./document/Post";
 import {PostManager} from "./PostManager";

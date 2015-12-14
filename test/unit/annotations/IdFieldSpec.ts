@@ -1,10 +1,10 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {IdField} from "../../../src/annotation/IdField";
+import {IdField} from "../../../src/decorator/IdField";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
-import {WrongAnnotationUsageException} from "../../../src/annotation/exception/WrongAnnotationUsageException";
-import {WrongFieldTypeException} from "../../../src/annotation/exception/WrongFieldTypeException";
+import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
+import {WrongFieldTypeError} from "../../../src/decorator/error/WrongFieldTypeError";
 
 chai.should();
 chai.use(require("sinon-chai"));
@@ -20,16 +20,16 @@ describe('IdField Annotation', function() {
     // -------------------------------------------------------------------------
 
     it('should throw exception if annotation is set to non-property', function () {
-        expect(() => IdField()(null, 'someProperty')).to.throw(WrongAnnotationUsageException);
-        expect(() => IdField()(new TestClass(), null)).to.throw(WrongAnnotationUsageException);
+        expect(() => IdField()(null, 'someProperty')).to.throw(WrongAnnotationUsageError);
+        expect(() => IdField()(new TestClass(), null)).to.throw(WrongAnnotationUsageError);
     });
 
     it('should throw exception if type in function is not given or is not correct', sinon.test(function () {
         let object = new TestClass();
         let nullInFunction = (type: any): any => null;
         let somethingInFunction = (type: any) => 'not-number';
-        expect(() => IdField(nullInFunction)(object, 'someProperty')).to.throw(WrongFieldTypeException);
-        expect(() => IdField(somethingInFunction)(object, 'someProperty')).to.throw(WrongFieldTypeException);
+        expect(() => IdField(nullInFunction)(object, 'someProperty')).to.throw(WrongFieldTypeError);
+        expect(() => IdField(somethingInFunction)(object, 'someProperty')).to.throw(WrongFieldTypeError);
     }));
 
     it('should add a new field metadata to the metadata storage', sinon.test(function () {

@@ -1,9 +1,9 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {OdmEventSubscriber} from "../../../src/annotation/OdmEventSubscriber";
+import {OdmEventSubscriber} from "../../../src/decorator/OdmEventSubscriber";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
-import {WrongAnnotationUsageException} from "../../../src/annotation/exception/WrongAnnotationUsageException";
+import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
 
 chai.should();
 chai.use(require("sinon-chai"));
@@ -18,8 +18,8 @@ describe('OdmEventSubscriber Annotation', function() {
     // -------------------------------------------------------------------------
 
     it('should throw exception if annotation is set to a non constructor object', function () {
-        expect(() => OdmEventSubscriber()(null)).to.throw(WrongAnnotationUsageException);
-        expect(() => OdmEventSubscriber()(function() {})).to.throw(WrongAnnotationUsageException);
+        expect(() => OdmEventSubscriber()(null)).to.throw(WrongAnnotationUsageError);
+        expect(() => OdmEventSubscriber()(function() {})).to.throw(WrongAnnotationUsageError);
     });
 
     it('should add a new document metadata to the metadata storage', sinon.test(function () {

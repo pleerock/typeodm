@@ -1,12 +1,12 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {RelationWithOne} from "../../../src/annotation/RelationWithOne";
+import {RelationWithOne} from "../../../src/decorator/RelationWithOne";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
-import {WrongAnnotationUsageException} from "../../../src/annotation/exception/WrongAnnotationUsageException";
-import {WrongFieldTypeException} from "../../../src/annotation/exception/WrongFieldTypeException";
+import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
+import {WrongFieldTypeError} from "../../../src/decorator/error/WrongFieldTypeError";
 import {RelationMetadata} from "../../../src/metadata-builder/metadata/RelationMetadata";
-import {BothJoinTypesUsedException} from "../../../src/annotation/exception/BothJoinTypesUsedException";
+import {BothJoinTypesUsedError} from "../../../src/decorator/error/BothJoinTypesUsedError";
 
 chai.should();
 chai.use(require("sinon-chai"));
@@ -22,8 +22,8 @@ describe('RelationWithOne Annotation', function() {
     // -------------------------------------------------------------------------
 
     it('should throw exception if annotation is set to non-property', function () {
-        expect(() => RelationWithOne(type => TestClass)(null, 'abc')).to.throw(WrongAnnotationUsageException);
-        expect(() => RelationWithOne(type => TestClass)(new TestClass(), null)).to.throw(WrongAnnotationUsageException);
+        expect(() => RelationWithOne(type => TestClass)(null, 'abc')).to.throw(WrongAnnotationUsageError);
+        expect(() => RelationWithOne(type => TestClass)(new TestClass(), null)).to.throw(WrongAnnotationUsageError);
     });
 
     it('should throw exception if both left join and right join are being set in options', sinon.test(function () {
@@ -32,7 +32,7 @@ describe('RelationWithOne Annotation', function() {
         expect(() => RelationWithOne(typeInFunction, null, {
             alwaysInnerJoin: true,
             alwaysLeftJoin: true
-        })(object, 'someProperty')).to.throw(BothJoinTypesUsedException);
+        })(object, 'someProperty')).to.throw(BothJoinTypesUsedError);
     }));
 
     it('should add a new relation with one metadata to the metadata storage', sinon.test(function () {
