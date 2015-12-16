@@ -14,5 +14,5 @@ export function EmbeddedDocument() {
             objectConstructor: objectConstructor,
             name: ''
         });
-    };
+    }
 }

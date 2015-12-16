@@ -42,5 +42,5 @@ export function IdField(typeFunction?: FieldTypeInFunction): Function {
             isArray: false,
             propertyName: propertyName
         });
-    };
+    }
 }

@@ -15,5 +15,5 @@ export function Document(name?: string) {
             objectConstructor: objectConstructor,
             name: name
         });
-    };
+    }
 }

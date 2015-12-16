@@ -23,5 +23,5 @@ export function CreateDateField(name?: string) {
             isArray: false,
             propertyName: propertyName
         });
-    };
+    }
 }

@@ -21,5 +21,5 @@ export function Index(options?: IndexOptions) {
             hashed: !!(options && options.hashed),
             ttl: options ? options.ttl : undefined
         });
-    };
+    }
 }

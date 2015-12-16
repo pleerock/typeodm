@@ -40,5 +40,5 @@ export function RelationWithOne<T>(name: string|RelationTypeInFunction, typeFunc
             isAlwaysLeftJoin: !!(options && options.alwaysLeftJoin),
             isAlwaysInnerJoin: !!(options && options.alwaysInnerJoin)
         });
-    };
+    }
 }

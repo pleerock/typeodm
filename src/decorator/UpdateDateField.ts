@@ -23,5 +23,5 @@ export function UpdateDateField(name?: string) {
             isArray: false,
             propertyName: propertyName
         });
-    };
+    }
 }

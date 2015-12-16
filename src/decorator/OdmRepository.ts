@@ -21,6 +21,5 @@ export function OdmRepository(className: Function|string, connectionName?: strin
                 return connection.getRepository(<Function> className);
             }
         });
-
     }
 }

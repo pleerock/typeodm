@@ -13,5 +13,5 @@ export function OdmEventSubscriber() {
         defaultMetadataStorage.addOdmEventSubscriberMetadata({
             objectConstructor: objectConstructor
         });
-    };
+    }
 }

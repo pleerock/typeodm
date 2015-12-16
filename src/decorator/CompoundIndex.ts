@@ -21,5 +21,5 @@ export function CompoundIndex(fields: any, options?: IndexOptions) {
             hashed: !!(options && options.hashed),
             ttl: options ? options.ttl : undefined
         });
-    };
+    }
 }

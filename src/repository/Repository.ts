@@ -35,6 +35,7 @@ import {DeleteResult} from "../driver/results/DeleteResult";
 import {UpdateResult} from "../driver/results/UpdateResult";
 import {InsertResult} from "../driver/results/InsertResult";
 import {ObjectID} from "mongodb";
+import {OdmUtils} from "../util/OdmUtils";
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -96,7 +97,7 @@ export class Repository<Document> {
     initialize(json: any, fetchProperty?: boolean): Promise<Document>;
     initialize(json: any, fetchConditions?: Object): Promise<Document>;
     initialize(json: any, fetchOption?: boolean|Object/*, fetchCascadeOptions?: any*/): Promise<Document> {
-        let initializer = new DocumentInitializer<Document>(this.connection);
+        const initializer = new DocumentInitializer<Document>(this.connection);
         return initializer.initialize(json, this.schema, fetchOption);
     }
 
@@ -116,7 +117,7 @@ export class Repository<Document> {
      * Finds a documents that match given conditions.
      */
     find(conditions?: Object, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document[]> {
-        let joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
+        const joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
         return this.connection.driver
             .find(this.schema.name, conditions, options)
             .then(objects => objects ? Promise.all(objects.map(object => this.dbObjectToDocument(object, joinFields))) : [])
@@ -131,7 +132,7 @@ export class Repository<Document> {
      * Finds one document that matches given condition.
      */
     findOne(conditions: Object, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
-        let joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
+        const joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
         return this.connection.driver
             .findOne(this.schema.name, conditions, options)
             .then(i => i ? this.dbObjectToDocument(i, joinFields) : null)
@@ -145,7 +146,7 @@ export class Repository<Document> {
      * Finds a document with given id.
      */
     findById(id: string, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
-        let joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
+        const joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
         return this.connection.driver.findOne(this.schema.name, this.createIdObject(id), options)
             .then(i => i ? this.dbObjectToDocument(i, joinFields) : null)
             .then(document => {
@@ -162,8 +163,8 @@ export class Repository<Document> {
         //if (!this.schema.isDocumentTypeCorrect(document))
         //    throw new BadDocumentInstanceException(document, this.schema.documentClass);
 
-        let remover     = new DocumentRemover<Document>(this.connection);
-        let persister   = new DocumentPersister<Document>(this.connection);
+        const remover     = new DocumentRemover<Document>(this.connection);
+        const persister   = new DocumentPersister<Document>(this.connection);
 
         return remover.computeRemovedRelations(this.schema, document, dynamicCascadeOptions)
             .then(result => persister.persist(this.schema, document, dynamicCascadeOptions))
@@ -179,7 +180,7 @@ export class Repository<Document> {
         //if (!this.schema.isDocumentTypeCorrect(document))
         //    throw new BadDocumentInstanceException(document, this.schema.documentClass);
 
-        let remover = new DocumentRemover<Document>(this.connection);
+        const remover = new DocumentRemover<Document>(this.connection);
         return remover.registerDocumentRemoveOperation(this.schema, this.schema.getDocumentId(document), dynamicCascadeOptions)
             .then(results => remover.executeRemoveOperations())
             .then(results => remover.executeUpdateInverseSideRelationRemoveIds());
@@ -189,7 +190,7 @@ export class Repository<Document> {
      * Updates a document with given id by applying given update options.
      */
     updateById(id: string, updateOptions?: Object): Promise<UpdateResult> {
-        let selectConditions = this.createIdObject(id);
+        const selectConditions = this.createIdObject(id);
         this.broadcaster.broadcastBeforeUpdate({ conditions: selectConditions, options: updateOptions });
 
         return this.connection.driver
@@ -204,7 +205,7 @@ export class Repository<Document> {
      * Removes document by a given id.
      */
     removeById(id: string): Promise<DeleteResult> {
-        let conditions = this.createIdObject(id);
+        const conditions = this.createIdObject(id);
         this.broadcaster.broadcastBeforeRemove({ documentId: id, conditions: conditions });
         return this.connection.driver
             .deleteOne(this.schema.name, conditions)
@@ -499,8 +500,7 @@ export class Repository<Document> {
     /**
      * Drop the collection from the database, removing it permanently. New accesses will create a new collection.
      *
-     * @returns {Promise<T><boolean>} true when successfully drops a collection.
-     *                                false when collection to drop does not exist.
+     * @returns true when successfully drops a collection. false when collection to drop does not exist.
      */
     drop(): Promise<boolean> {
         return this.connection.driver.drop(this.schema.name);
@@ -515,10 +515,10 @@ export class Repository<Document> {
 
     /**
      * Creates array of ObjectId objects from a given objectId strings.
-     */
-    createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
+
+    static createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
         return objectIds.map(id => this.connection.driver.createObjectId(id, true));
-    }
+    }*/
 
     // -------------------------------------------------------------------------
     // Private Methods
@@ -529,9 +529,16 @@ export class Repository<Document> {
     }
 
     private dbObjectToDocument(dbObject: any, joinFields?: JoinFieldOption[]|any[]): Promise<Document> {
-        let hydrator = new DocumentHydrator<Document>(this.connection);
+        const hydrator = new DocumentHydrator<Document>(this.connection);
         return hydrator.hydrate(this.schema, dbObject, joinFields);
     }
 
+    // -------------------------------------------------------------------------
+    // Static Methods
+    // -------------------------------------------------------------------------
+
+    static createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
+        return OdmUtils.createObjectIdsFromStrings(objectIds);
+    }
 
 }

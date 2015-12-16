@@ -11,7 +11,7 @@ import {FieldTypes} from "../metadata-builder/FieldTypes";
  */
 export function Field(typeFunction?: FieldTypeInFunction): Function;
 export function Field(name?: string, typeFunction?: FieldTypeInFunction): Function;
-export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTypeInFunction): Function{
+export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTypeInFunction): Function {
     return function (object: Object, propertyName: string) {
         if (name instanceof Function) {
             typeFunction = <FieldTypeInFunction> name;
@@ -46,5 +46,5 @@ export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTyp
             isArray: false,
             propertyName: propertyName
         });
-    };
+    }
 }

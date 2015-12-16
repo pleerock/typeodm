@@ -34,5 +34,5 @@ export function ArrayField(name: string|FieldTypeInFunction, typeFunction?: Fiel
             isArray: true,
             propertyName: propertyName
         });
-    };
+    }
 }

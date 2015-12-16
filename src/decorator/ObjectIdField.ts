@@ -25,5 +25,5 @@ export function ObjectIdField(): Function {
             isArray: false,
             propertyName: propertyName
         });
-    };
+    }
 }
