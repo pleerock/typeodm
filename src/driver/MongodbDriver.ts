@@ -121,9 +121,9 @@ export class MongodbDriver implements Driver {
             if (options.returnKey)
                 cursor.returnKey(options.returnKey);
             if (options.readPreference)
-                cursor.readPreference(options.readPreference);
+                cursor.setReadPreference(options.readPreference);
             if (options.sort)
-                cursor.readPreference(options.sort);
+                cursor.sort(options.sort);
             if (options.snapshot)
                 cursor.snapshot(options.snapshot);
 
