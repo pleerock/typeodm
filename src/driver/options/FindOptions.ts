@@ -23,4 +23,9 @@ export interface FindOptions {
     raw?: boolean;
     readPreference?: String;
     partial?: boolean;
+
+    /**
+     * Sets a field projection for the query.
+     */
+    project?: Object;
 }

@@ -126,6 +126,8 @@ export class MongodbDriver implements Driver {
                 cursor.sort(options.sort);
             if (options.snapshot)
                 cursor.snapshot(options.snapshot);
+            if (options.project)
+                cursor.project(options.project);
 
             cursor.toArray((err: any, result: Object[]) => err ? fail(err) : ok(result));
         });
