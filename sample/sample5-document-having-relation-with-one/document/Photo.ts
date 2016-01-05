@@ -4,12 +4,13 @@ import {RelationWithOne} from "../../../src/decorator/RelationWithOne";
 import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {PhotoDetails} from "./PhotoDetails";
+import {ObjectID} from "mongodb";
 
 @Document('sample5-photo')
 export class Photo {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     title: string;

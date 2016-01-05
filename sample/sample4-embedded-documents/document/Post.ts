@@ -6,12 +6,13 @@ import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
+import {ObjectID} from "mongodb";
 
 @Document('sample4-post')
 export class Post {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     title: string;

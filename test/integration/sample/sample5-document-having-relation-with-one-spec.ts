@@ -13,6 +13,7 @@ import {VideoDetails} from "../../../sample/sample5-document-having-relation-wit
 import {Vote} from "../../../sample/sample5-document-having-relation-with-one/document/Vote";
 import {VoteDetails} from "../../../sample/sample5-document-having-relation-with-one/document/VoteDetails";
 import {QuestionDetails} from "../../../sample/sample5-document-having-relation-with-one/document/QuestionDetails";
+import {ObjectID} from "mongodb";
 
 chai.should();
 describe('sample5-document-having-relation-with-one', function() {
@@ -102,7 +103,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should insert a post and it should exist in db, but details should be empty since they are not saved to db', function () {
-            let id: string;
+            let id: ObjectID;
             return postRepository.persist(newPost).then(savedPost => {
                 id = savedPost.id;
                 return postRepository.findOne({
@@ -172,7 +173,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should return a post and its details should have id since they are saved to db. fetch it', function () {
-            let postId: string, detailsId: string;
+            let postId: ObjectID, detailsId: ObjectID;
             return postRepository.persist(newPost, postProperties => [{
                 field: postProperties.details,
                 insert: true
@@ -242,7 +243,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should return a question and its details should have id since they are saved to db. fetch it', function () {
-            let questionId: string, detailsId: string;
+            let questionId: ObjectID, detailsId: ObjectID;
             return questionRepository.persist(newQuestion).then(savedQuestion => {
                 questionId = savedQuestion.id;
                 detailsId = savedQuestion.details.id;
@@ -268,7 +269,7 @@ describe('sample5-document-having-relation-with-one', function() {
         });
 
         it('should not insert a details of the question if implicit cascade options given where insert is denied', function () {
-            let questionId: string, detailsId: string;
+            let questionId: ObjectID, detailsId: ObjectID;
             return questionRepository.persist(newQuestion, questionProperties => [{
                 field: questionProperties.details,
                 insert: false
@@ -293,7 +294,7 @@ describe('sample5-document-having-relation-with-one', function() {
     });
 
     describe('load a post depend of cascade options set', function() {
-        let postId: string, detailsId: string, time = new Date().getTime();
+        let postId: ObjectID, detailsId: ObjectID, time = new Date().getTime();
 
         beforeEach(function() {
             let newPostDetails = new PostDetails();
@@ -340,7 +341,7 @@ describe('sample5-document-having-relation-with-one', function() {
     });
 
     describe('load a post depend of inner/left join option set', function() {
-        let postWithoutDetailsId: string, postWithDetailsId: string, detailsId: string, time = new Date().getTime();
+        let postWithoutDetailsId: ObjectID, postWithDetailsId: ObjectID, detailsId: ObjectID, time = new Date().getTime();
 
         beforeEach(function() {
             let newPostDetails = new PostDetails();
@@ -403,7 +404,7 @@ describe('sample5-document-having-relation-with-one', function() {
     });
 
     describe('load a post\'s details depend of extra conditions', function() {
-        let postId: string, detailsId: string, time = new Date().getTime();
+        let postId: ObjectID, detailsId: ObjectID, time = new Date().getTime();
 
         beforeEach(function() {
             let postDetails = new PostDetails();
@@ -477,7 +478,7 @@ describe('sample5-document-having-relation-with-one', function() {
     });
 
     describe('load photo and its details automatically because always left join annotation is set on its properties', function() {
-        let photoId: string, detailsId: string, time = new Date().getTime();
+        let photoId: ObjectID, detailsId: ObjectID, time = new Date().getTime();
 
         beforeEach(function() {
             let photoDetails = new PhotoDetails();

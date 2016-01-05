@@ -5,12 +5,13 @@ import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Photo} from "./Photo";
 import {Video} from "./Video";
+import {ObjectID} from "mongodb";
 
 @Document('sample6-category')
 export class Category {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     name: string;

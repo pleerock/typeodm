@@ -5,12 +5,13 @@ import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Vote} from "./Vote";
+import {ObjectID} from "mongodb";
 
 @Document('sample5-vote-details')
 export class VoteDetails {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @RelationWithOne(type => Vote)
     vote: Vote;

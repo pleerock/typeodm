@@ -6,6 +6,7 @@ import {Repository} from "../../../src/repository/Repository";
 import {Post} from "../../../sample/sample4-embedded-documents/document/Post";
 import {PostTag} from "../../../sample/sample4-embedded-documents/document/PostTag";
 import {PostAuthor} from "../../../sample/sample4-embedded-documents/document/PostAuthor";
+import {ObjectID} from "mongodb";
 
 chai.should();
 describe('sample4-embedded-documents', function() {
@@ -80,7 +81,7 @@ describe('sample4-embedded-documents', function() {
         });
 
         it('should insert a post and it should exist in db', function () {
-            let id: string, authorId: string;
+            let id: ObjectID, authorId: ObjectID;
             return postRepository.persist(newPost).then(savedPost => {
                 id = savedPost.id;
                 authorId = savedPost.author.id;

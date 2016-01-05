@@ -4,6 +4,7 @@ import {OdmFactory} from "../../../src/OdmFactory";
 import {Connection} from "../../../src/connection/Connection";
 import {Post} from "../../../sample/sample1-simple-document/document/Post";
 import {Repository} from "../../../src/repository/Repository";
+import {ObjectID} from "mongodb";
 
 chai.should();
 describe('sample1-simple-document', function() {
@@ -74,7 +75,7 @@ describe('sample1-simple-document', function() {
         });
 
         it('should insert a post and it should exist in db', function () {
-            let id: string;
+            let id: ObjectID;
             return postRepository.persist(newPost).then(savedPost => {
                 id = savedPost.id;
                 return postRepository.findOne({

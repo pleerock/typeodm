@@ -8,12 +8,13 @@ import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
 import {PostCategory} from "./PostCategory";
 import {PostDetails} from "./PostDetails";
+import {ObjectID} from "mongodb";
 
 @Document('sample7-post')
 export class Post {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     title: string;

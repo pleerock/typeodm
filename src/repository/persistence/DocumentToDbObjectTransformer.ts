@@ -69,8 +69,6 @@ export class DocumentToDbObjectTransformer<Document> {
         if (schema.updateDateField)
             document[schema.updateDateField.propertyName] = new Date();
 
-        if (schema.idField)
-            document[schema.idField.propertyName] = this.createObjectId(document[schema.idField.propertyName], schema);
     }
 
     private documentToDbObject(deepness: number,
@@ -136,7 +134,7 @@ export class DocumentToDbObjectTransformer<Document> {
         let embed: any = this.documentToDbObject(deepness + 1, schema, embeddedDocument);
         if (idField) {
             embed[this.connection.driver.getIdFieldName()] = this.createObjectId(embeddedDocument[idField.name], schema);
-            this._postPersistOperations.push(() => embeddedDocument[idField.name] = String(embed[this.connection.driver.getIdFieldName()]));
+            this._postPersistOperations.push(() => embeddedDocument[idField.name] = embed[this.connection.driver.getIdFieldName()]);
         }
         return embed;
     }

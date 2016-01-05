@@ -3,12 +3,13 @@ import {Field} from "../../../src/decorator/Field";
 import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {Category} from "./Category";
+import {ObjectID} from "mongodb";
 
 @Document('sample6-post')
 export class Post {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     title: string;

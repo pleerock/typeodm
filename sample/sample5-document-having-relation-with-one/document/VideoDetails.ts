@@ -5,12 +5,13 @@ import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Video} from "./Video";
+import {ObjectID} from "mongodb";
 
 @Document('sample5-video-details')
 export class VideoDetails {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @RelationWithOne(type => Video)
     video: Video;

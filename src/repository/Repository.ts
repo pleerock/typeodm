@@ -145,7 +145,7 @@ export class Repository<Document> {
     /**
      * Finds a document with given id.
      */
-    findById(id: string, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
+    findById(id: any, options?: FindOptions, joinedFieldsCallback?: (document: Document) => JoinFieldOption[]|any[]): Promise<Document> {
         const joinFields = joinedFieldsCallback ? joinedFieldsCallback(this.schema.createPropertiesMirror()) : [];
         return this.connection.driver.findOne(this.schema.name, this.createIdObject(id), options)
             .then(i => i ? this.dbObjectToDocument(i, joinFields) : null)
@@ -285,7 +285,7 @@ export class Repository<Document> {
             .insertOne(this.schema.name, document, options)
             .then(result => {
                 if (result.insertedId)
-                    (<any>document)[this.schema.idField.name] = String(result.insertedId);
+                    (<any>document)[this.schema.idField.name] = result.insertedId;
                 return result;
             });
     }
@@ -301,7 +301,7 @@ export class Repository<Document> {
             .insertMany(this.schema.name, documents, options)
             .then(result => {
                 result.insertedIds.forEach((id, index) => {
-                    (<any>documents[index])[this.schema.idField.name] = String(id);
+                    (<any>documents[index])[this.schema.idField.name] = id;
                 });
                 return result;
             });

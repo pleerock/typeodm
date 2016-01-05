@@ -179,7 +179,7 @@ export class DocumentSchema {
     }
 
     getIdValue(value: any): any { // todo: implement
-        return this.idField.isObjectId && this.idField.isTypePrimitive() ? String(value) : value;
+        return this.idField.isObjectId && this.idField.isTypePrimitive() ? value : value;
     }
 
     createPropertiesMirror(): any {

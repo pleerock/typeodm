@@ -4,12 +4,13 @@ import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Post} from "./Post";
+import {ObjectID} from "mongodb";
 
 @Document('sample7-post-category')
 export class PostCategory {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     name: string;

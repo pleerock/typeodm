@@ -1,5 +1,6 @@
 import {OdmFactory} from "../../src/OdmFactory";
 import {Post} from "./document/Post";
+import {ObjectID} from "mongodb";
 
 /**
  * This sample is focused to teach on how to:
@@ -15,7 +16,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
 
     // create a new post
     let post = postRepository.create();
-    post.id = 1234;
+    post.id = new ObjectID();
     post.title = 'Hello I am a new post';
     post.text = 'My name is Post and I am glad to see you';
 

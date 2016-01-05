@@ -4,12 +4,13 @@ import {RelationWithOne} from "../../../src/decorator/RelationWithOne";
 import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
+import {ObjectID} from "mongodb";
 
 @Document('sample5-post-details')
 export class PostDetails {
 
     @ObjectIdField()
-    id: string;
+    id: ObjectID;
 
     @Field()
     createTime: number;
