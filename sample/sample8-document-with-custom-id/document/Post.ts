@@ -5,7 +5,7 @@ import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {IdField} from "../../../src/decorator/IdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 
-@Document('post_with_number_id')
+@Document('sample8-post')
 export class Post {
 
     @IdField()

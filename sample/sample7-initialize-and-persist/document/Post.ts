@@ -9,7 +9,7 @@ import {PostAuthor} from "./PostAuthor";
 import {PostCategory} from "./PostCategory";
 import {PostDetails} from "./PostDetails";
 
-@Document()
+@Document('sample7-post')
 export class Post {
 
     @ObjectIdField()

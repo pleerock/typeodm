@@ -5,7 +5,7 @@ import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 
-@Document()
+@Document('sample5-question-details')
 export class QuestionDetails {
 
     @ObjectIdField()

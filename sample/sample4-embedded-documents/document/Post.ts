@@ -7,7 +7,7 @@ import {ArrayField} from "../../../src/decorator/ArrayField";
 import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
 
-@Document()
+@Document('sample4-post')
 export class Post {
 
     @ObjectIdField()

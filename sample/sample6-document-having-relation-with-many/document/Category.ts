@@ -6,7 +6,7 @@ import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Photo} from "./Photo";
 import {Video} from "./Video";
 
-@Document()
+@Document('sample6-category')
 export class Category {
 
     @ObjectIdField()

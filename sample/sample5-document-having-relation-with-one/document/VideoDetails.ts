@@ -6,7 +6,7 @@ import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Video} from "./Video";
 
-@Document()
+@Document('sample5-video-details')
 export class VideoDetails {
 
     @ObjectIdField()

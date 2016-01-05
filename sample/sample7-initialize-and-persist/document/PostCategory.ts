@@ -5,7 +5,7 @@ import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Post} from "./Post";
 
-@Document()
+@Document('sample7-post-category')
 export class PostCategory {
 
     @ObjectIdField()

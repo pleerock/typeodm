@@ -5,7 +5,7 @@ import {MetadataAlreadyExistsError} from "../metadata-builder/error/MetadataAlre
 /**
  * This annotation is used to mark classes that they gonna be Documents.
  */
-export function Document(name?: string) {
+export function Document(name: string) {
     return function (objectConstructor: Function) {
 
         if (!objectConstructor || !objectConstructor.name)

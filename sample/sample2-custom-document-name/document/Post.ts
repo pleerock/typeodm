@@ -6,7 +6,7 @@ import {IdField} from "../../../src/decorator/IdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 
-@Document('blog_post')
+@Document('sample2-post')
 export class Post {
 
     @ObjectIdField()

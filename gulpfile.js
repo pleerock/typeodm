@@ -174,7 +174,7 @@ gulp.task('run:sample11', function (cb) {
 });
 
 gulp.task('run:tests', function (cb) {
-    return runSequence('build', 'tests-unit', 'tests-integration', cb);
+    return runSequence('build', /*'tests-unit', */'tests-integration', cb);
 });
 
 gulp.task('build', function(cb) {

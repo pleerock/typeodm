@@ -4,7 +4,7 @@ import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
 import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {Category} from "./Category";
 
-@Document()
+@Document('sample6-photo')
 export class Photo {
 
     @ObjectIdField()

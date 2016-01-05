@@ -6,7 +6,7 @@ import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
 import {ArrayField} from "../../../src/decorator/ArrayField";
 import {Vote} from "./Vote";
 
-@Document()
+@Document('sample5-vote-details')
 export class VoteDetails {
 
     @ObjectIdField()

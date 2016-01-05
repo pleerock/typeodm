@@ -18,8 +18,8 @@ describe('Document Annotation', function() {
     // -------------------------------------------------------------------------
 
     it('should throw exception if annotation is set to a non constructor object', function () {
-        expect(() => Document()(null)).to.throw(WrongAnnotationUsageError);
-        expect(() => Document()(function() {})).to.throw(WrongAnnotationUsageError);
+        expect(() => Document('test1')(null)).to.throw(WrongAnnotationUsageError);
+        expect(() => Document('test2')(function() {})).to.throw(WrongAnnotationUsageError);
     });
 
     it('should add a new document metadata to the metadata storage', sinon.test(function () {
