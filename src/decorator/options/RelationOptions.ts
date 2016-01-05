@@ -8,6 +8,12 @@ import {WrongAnnotationUsageError} from "../error/WrongAnnotationUsageError";
  * Options that can be used with RelationWithMany annotation.
  */
 export interface RelationOptions {
+
+    /**
+     * Name of the field where to original ids will be saved.
+     */
+    idField?: string;
+
     /**
      * If set to true then it means that related object can be allowed to be inserted to the db.
      */
@@ -32,4 +38,5 @@ export interface RelationOptions {
      * If set to true then it means that related object always will be inner-joined when this object is being loaded.
      */
     alwaysInnerJoin?: boolean;
+
 }

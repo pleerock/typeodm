@@ -22,6 +22,7 @@ import {UpdateResult} from "./results/UpdateResult";
 import {DeleteResult} from "./results/DeleteResult";
 import {BulkWriteOptions} from "./options/BulkWriteOptions";
 import {BulkWriteOperations} from "./operations/BulkWriteOperations";
+import {ObjectID} from "mongodb";
 
 /**
  * Driver communicates with specific database.
@@ -45,14 +46,18 @@ export interface Driver {
 
     /**
      * Creates a object id from the given id string.
-     * @deprecated use this method from utils
      */
-    createObjectId(id: any, isObjectId: boolean): any;
+    createObjectId(id?: string): ObjectID;
+
+    /**
+     * Generates a new string id.
+     */
+    generateId(): string;
 
     /**
      * Creates condition that can be used to query something by id.
      */
-    createIdCondition(id: any, isObjectId: boolean): any;
+    createIdCondition(id: any): Object;
 
     /**
      * Checks if given thing is object id or not.
@@ -76,11 +81,6 @@ export interface Driver {
     findOne(collection: string, query: Object, options?: FindOptions): Promise<Object>;
 
     /**
-     * Finds one document by a given document id.
-     */
-    findOneById(collection: string, id: string, isObjectId: boolean, options?: Object): Promise<Object>;
-
-    /**
      * Runs a multiple aggregated stages function in the given collection.
      */
     aggregate(collection: string, stages: any[]): Promise<any>;
@@ -98,22 +98,22 @@ export interface Driver {
     /**
      * Sets relation of the given document in a given collection with specific related value.
      */
-    setOneRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
+    setOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
 
     /**
      * Sets relation of the given document in a given collection with specific related value.
      */
-    setManyRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
+    setManyRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
 
     /**
      * Unsets relation of the given document in a given collection with specific related value.
      */
-    unsetOneRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
+    unsetOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
 
     /**
      * Unsets relation of the given document in a given collection with specific related value.
      */
-    unsetManyRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
+    unsetManyRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
 
     /**
      * Creates index with given options for the given collection.
@@ -192,14 +192,6 @@ export interface Driver {
      * @param options
      */
     deleteMany(collection: string, query: Object, options?: DeleteOptions): Promise<DeleteResult>;
-
-    /**
-     * Removes document of the given document id.
-     *
-     * @param id Id of the document to be removed
-     * @param options
-     */
-    deleteOneById(collection: string, id: any, isObjectId: boolean, options?: DeleteOptions): Promise<DeleteResult>;
 
     /**
      * The distinct command returns returns a list of distinct values for the given key across a collection.

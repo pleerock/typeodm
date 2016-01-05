@@ -121,6 +121,10 @@ export class DocumentSchema {
         return this.relationWithManies.reduce((found, relation) => relation.name === name ? relation : found, null);
     }
 
+    findRelationByPropertyName(name: string): RelationSchema {
+        return this.findRelationWithOneByPropertyName(name) || this.findRelationWithManyByPropertyName(name);
+    }
+
     hasFieldWithPropertyName(propertyName: string): boolean {
         return !!this.findFieldByPropertyName(propertyName);
     }
@@ -136,6 +140,14 @@ export class DocumentSchema {
 
     hasRelationWithManyWithPropertyName(propertyName: string): boolean {
         return !!this.findRelationWithManyByPropertyName(propertyName);
+    }
+
+    hasRelationWithOneWithName(name: string): boolean {
+        return !!this.findRelationWithOneByDbName(name);
+    }
+
+    hasRelationWithManyWithName(name: string): boolean {
+        return !!this.findRelationWithManyByDbName(name);
     }
 
     getDocumentId(document: Object|any): any {

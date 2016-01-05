@@ -508,10 +508,10 @@ export class Repository<Document> {
 
     /**
      * Creates ObjectId object from a given objectId string.
-     */
+
     createObjectIdFromString(objectId: string): ObjectID {
-        return this.connection.driver.createObjectId(objectId, true);
-    }
+        return this.connection.driver.createObjectId(objectId);
+    }*/
 
     /**
      * Creates array of ObjectId objects from a given objectId strings.
@@ -525,7 +525,7 @@ export class Repository<Document> {
     // -------------------------------------------------------------------------
 
     private createIdObject(id: string): Object {
-        return this.connection.driver.createIdCondition(id, this.schema.idField.isObjectId);
+        return this.connection.driver.createIdCondition(id/*, this.schema.idField.isObjectId*/);
     }
 
     private dbObjectToDocument(dbObject: any, joinFields?: JoinFieldOption[]|any[]): Promise<Document> {
@@ -537,8 +537,8 @@ export class Repository<Document> {
     // Static Methods
     // -------------------------------------------------------------------------
 
-    static createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
+   /* static createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
         return OdmUtils.createObjectIdsFromStrings(objectIds);
-    }
+    }*/
 
 }

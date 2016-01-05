@@ -1,12 +1,13 @@
 import {DocumentSchema} from "../../schema/DocumentSchema";
+import {RelationSchema} from "../../schema/RelationSchema";
 
 /**
  * Represents single inverse side update operation.
  */
 export interface InverseSideUpdateOperation {
     documentSchema: DocumentSchema;
-    documentId: any;
+    getDocumentId: () => any;
     inverseSideDocumentId: any;
     inverseSideDocumentSchema: DocumentSchema;
-    inverseSideDocumentProperty: string;
+    inverseSideDocumentRelation: RelationSchema;
 }

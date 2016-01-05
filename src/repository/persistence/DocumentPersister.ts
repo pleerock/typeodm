@@ -83,7 +83,7 @@ export class DocumentPersister<Document> {
         let broadcaster = this.connection.getBroadcaster(schema.documentClass);
 
         if (documentId) {
-            let conditions = driver.createIdCondition(documentId, schema.idField.isObjectId);
+            let conditions = driver.createIdCondition(documentId/*, schema.idField.isObjectId*/);
             broadcaster.broadcastBeforeUpdate({ document: document, conditions: conditions });
             return driver.replaceOne(schema.name, conditions, dbObject, { upsert: true }).then(saved => {
                 broadcaster.broadcastAfterUpdate({ document: document, conditions: conditions });
@@ -102,17 +102,18 @@ export class DocumentPersister<Document> {
 
     private updateRelationInverseSideIds(relationOperations: InverseSideUpdateOperation[]): Promise<any> {
         let updateInverseSideWithIdPromises = relationOperations
-            .filter(relationOperation => !!relationOperation.inverseSideDocumentProperty)
+            .filter(relationOperation => !!relationOperation.inverseSideDocumentRelation)
             .map(relationOperation => {
 
                 let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
-                let inverseSideProperty = relationOperation.inverseSideDocumentProperty;
-                let id = this.connection.driver.createObjectId(relationOperation.documentId, relationOperation.documentSchema.idField.isObjectId);
+                let inverseSideProperty = relationOperation.inverseSideDocumentRelation.name;
+                let id = relationOperation.getDocumentId();//this.connection.driver.createObjectId(relationOperation.getDocumentId(), relationOperation.documentSchema.idField.isObjectId);
+                let findCondition = this.connection.driver.createIdCondition(relationOperation.inverseSideDocumentId/*, inverseSideSchema.idField.isObjectId*/);
 
-                if (inverseSideSchema.hasRelationWithOneWithPropertyName(inverseSideProperty))
-                    return this.connection.driver.setOneRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
-                if (inverseSideSchema.hasRelationWithManyWithPropertyName(inverseSideProperty))
-                    return this.connection.driver.setManyRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
+                if (inverseSideSchema.hasRelationWithOneWithName(inverseSideProperty))
+                    return this.connection.driver.setOneRelation(inverseSideSchema.name, findCondition, inverseSideProperty, id);
+                if (inverseSideSchema.hasRelationWithManyWithName(inverseSideProperty))
+                    return this.connection.driver.setManyRelation(inverseSideSchema.name, findCondition, inverseSideProperty, id);
             });
 
         return Promise.all(updateInverseSideWithIdPromises);

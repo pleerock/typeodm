@@ -70,8 +70,13 @@ export class MongodbDriver implements Driver {
         });
     }
 
-    createObjectId(id: any, isObjectId: boolean): any {
-        return isObjectId && !this.isObjectId(id) ? new ObjectID(id) : id;
+    createObjectId(id?: string): ObjectID {
+        return new ObjectID(id);
+        //return isObjectId && !this.isObjectId(id) ? new ObjectID(id) : id;
+    }
+
+    generateId(): string {
+        return new ObjectID().toHexString();
     }
 
     isObjectId(id: any): boolean {
@@ -82,8 +87,8 @@ export class MongodbDriver implements Driver {
         return '_id';
     }
 
-    createIdCondition(id: any, isObjectId: boolean): any {
-        return { [this.getIdFieldName()]: this.createObjectId(id, isObjectId) };
+    createIdCondition(id: any): Object {
+        return { [this.getIdFieldName()]: id/*this.createObjectId(id)*/ };
     }
 
     dropDatabase(): Promise<void> {
@@ -138,42 +143,37 @@ export class MongodbDriver implements Driver {
             .then(objects => objects && objects.length ? objects[0] : null);
     }
 
-    findOneById(collection: string, id: string, isObjectId: boolean, options?: FindOptions): Promise<Object> {
-        let idCondition = { [this.getIdFieldName()]: this.createObjectId(id, isObjectId) };
-        return this.findOne(collection, idCondition, options);
-    }
-
     aggregate(collection: string, stages: any[], options?: AggergationOptions): Promise<any> {
         return new Promise<any>((ok, fail) => {
             this.db.collection(collection).aggregate(stages, options).toArray((err: any, result: any) => err ? fail(err) : ok(result));
         });
     }
 
-    setOneRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
-        return new Promise<void>((ok, fail) => {
-            let conditions = { $unset: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(conditions, null, (err: any, result: any) => err ? fail(err) : ok());
-        });
-    }
-
-    setManyRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
-        return new Promise<void>((ok, fail) => {
-            let conditions = { $pull: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(conditions, null, (err: any, result: any) => err ? fail(err) : ok());
-        });
-    }
-
-    unsetOneRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
+    setOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             let conditions = { $set: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(conditions, null, (err: any, result: any) => err ? fail(err) : ok());
+            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
-    unsetManyRelation(collection: string, documentId: any, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
+    setManyRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             let conditions = { $addToSet: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(conditions, null, (err: any, result: any) => err ? fail(err) : ok());
+            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
+        });
+    }
+
+    unsetOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
+        return new Promise<void>((ok, fail) => {
+            let conditions = { $unset: { [relationPropertyName]: relationPropertyValue } };
+            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
+        });
+    }
+
+    unsetManyRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
+        return new Promise<void>((ok, fail) => {
+            let conditions = { $pull: { [relationPropertyName]: relationPropertyValue } };
+            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
@@ -228,13 +228,6 @@ export class MongodbDriver implements Driver {
     deleteMany(collection: string, query: Object, options?: DeleteOptions): Promise<DeleteResult> {
         return new Promise<DeleteResult>((ok, fail) => {
             this.db.collection(collection).deleteMany(query, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
-        }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~deleteWriteOpResult
-    }
-
-    deleteOneById(collection: string, id: any, isObjectId: boolean, options?: DeleteOptions): Promise<DeleteResult> {
-        return new Promise<DeleteResult>((ok, fail) => {
-            let idCondition = this.createIdCondition(id, isObjectId);
-            this.db.collection(collection).deleteOne(idCondition, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~deleteWriteOpResult
     }
 

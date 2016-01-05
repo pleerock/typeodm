@@ -46,7 +46,8 @@ export class DocumentRemover<Document> {
             return Promise.resolve();
 
         // load original document so we can compare and calculate changed set
-        return this.connection.driver.findOneById(schema.name, documentId, schema.idField.isObjectId).then((dbObject: any) => {
+        const query = this.connection.driver.createIdCondition(documentId);
+        return this.connection.driver.findOne(schema.name, query).then((dbObject: any) => {
             if (!dbObject)
                 return Promise.resolve();
                 //throw new NoDocumentWithSuchIdException(documentId, schema.name);
@@ -78,8 +79,9 @@ export class DocumentRemover<Document> {
     executeRemoveOperations(): Promise<void> {
         return Promise.all(this.removeOperations.map(operation => {
             let broadcaster = this.connection.getBroadcaster(operation.schema.documentClass);
+            const query = this.connection.driver.createIdCondition(operation.id);
             broadcaster.broadcastBeforeRemove({ documentId: operation.id });
-            return this.connection.driver.deleteOneById(operation.schema.name, operation.id, operation.schema.idField.isObjectId).then(result => {
+            return this.connection.driver.deleteOne(operation.schema.name, query).then(result => {
                 broadcaster.broadcastAfterRemove({ documentId: operation.id });
             });
         })).then(function() {});
@@ -94,13 +96,14 @@ export class DocumentRemover<Document> {
         let updateInverseSideWithIdPromises = inverseSideUpdates.map(relationOperation => {
 
             let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
-            let inverseSideProperty = relationOperation.inverseSideDocumentProperty;
-            let id = this.connection.driver.createObjectId(relationOperation.documentId, relationOperation.documentSchema.idField.isObjectId);
+            let inverseSideProperty = relationOperation.inverseSideDocumentRelation.name;
+            let id = relationOperation.getDocumentId();//this.connection.driver.createObjectId(relationOperation.getDocumentId());
+            let findCondition = this.connection.driver.createIdCondition(relationOperation.inverseSideDocumentId);
 
-            if (inverseSideSchema.hasRelationWithOneWithPropertyName(inverseSideProperty))
-                return this.connection.driver.unsetOneRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
+            if (inverseSideSchema.hasRelationWithOneWithName(inverseSideProperty))
+                return this.connection.driver.unsetOneRelation(inverseSideSchema.name, findCondition, inverseSideProperty, id);
             if (inverseSideSchema.hasRelationWithManyWithPropertyName(inverseSideProperty))
-                return this.connection.driver.unsetManyRelation(inverseSideSchema.name, relationOperation.inverseSideDocumentId, inverseSideProperty, id);
+                return this.connection.driver.unsetManyRelation(inverseSideSchema.name, findCondition, inverseSideProperty, id);
         });
 
         return Promise.all(updateInverseSideWithIdPromises).then(function() {});
@@ -116,7 +119,8 @@ export class DocumentRemover<Document> {
         let cascadeOptions = CascadeOptionUtils.prepareCascadeOptions(schema, dynamicCascadeOptions);
 
         // load original document so we can compare and calculate which of its relations to remove by cascades
-        return this.connection.driver.findOneById(schema.name, documentId, schema.idField.isObjectId).then((dbObject: any) => {
+        const query = this.connection.driver.createIdCondition(documentId);
+        return this.connection.driver.findOne(schema.name, query).then((dbObject: any) => {
             if (!dbObject)
                 return Promise.resolve();
                 // throw new NoDocumentWithSuchIdException(documentId, schema.name);
@@ -187,14 +191,16 @@ export class DocumentRemover<Document> {
         if (this.isRemoveOperation(id, relatedSchema)) return;
 
         // add new inverse side update operation
-        if (relation.inverseSideProperty)
+        if (relation.inverseSideProperty) {
+            const inverseSideRelationSchema = relatedSchema.findRelationByPropertyName(relation.inverseSideProperty);
             this.inverseSideUpdateOperations.push({
                 inverseSideDocumentId: id,
                 inverseSideDocumentSchema: relatedSchema,
-                inverseSideDocumentProperty: relation.inverseSideProperty,
+                inverseSideDocumentRelation: inverseSideRelationSchema,
                 documentSchema: schema,
-                documentId: documentId
+                getDocumentId: () => documentId
             });
+        }
 
         // register document and its relations for removal if cascade operation is set
         if (CascadeOptionUtils.isCascadeRemove(relation, cascadeOption))
