@@ -564,9 +564,8 @@ describe('sample6-document-having-relation-with-many', function() {
                     field: voteParameters.categories
                 }]);
             }).then(vote => {
-                console.log(vote);
-                //vote.categories[0].name.should.be.equal('Not funny at all');
-               // vote.categories[0].name.should.not.be.equal('Funny');
+                vote.categories[0].name.should.be.equal('Not funny at all');
+                vote.categories[0].name.should.not.be.equal('Funny');
             });
         });
 
@@ -580,7 +579,7 @@ describe('sample6-document-having-relation-with-many', function() {
                     field: voteParameters.categories
                 }]);
             }).then(vote => {
-               // vote.categories[0].name.should.be.equal('Funny');
+                vote.categories[0].name.should.be.equal('Funny');
             });
         });
 

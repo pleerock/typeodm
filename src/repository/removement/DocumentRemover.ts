@@ -6,6 +6,7 @@ import {RemoveOperation} from "./../operation/RemoveOperation";
 import {InverseSideUpdateOperation} from "./../operation/InverseSideUpdateOperation";
 import {CascadeOptionUtils} from "../cascade/CascadeOptionUtils";
 import {NoDocumentWithSuchIdError} from "../error/NoDocumentWithSuchIdError";
+import {ObjectID} from "mongodb";
 
 /**
  * Helps to remove a document and all its relations by given cascade operations.
@@ -168,7 +169,11 @@ export class DocumentRemover<Document> {
         // if related document with given id does exists in the document then it means that nothing is removed from document and we dont have to remove anything from the db
         let isThisIdInDocumentsRelation = !!document[relation.propertyName];
         if (document[relation.propertyName] instanceof Array)
-            isThisIdInDocumentsRelation = document[relation.propertyName].filter((item: any) => relatedSchema.getDocumentId(item) === id).length > 0;
+            isThisIdInDocumentsRelation = document[relation.propertyName].filter((item: any) => {
+                const idFieldValue = relatedSchema.getDocumentId(item);
+                return idFieldValue instanceof ObjectID ? idFieldValue.equals(id) : idFieldValue === id;
+            }).length > 0;
+
         if (isThisIdInDocumentsRelation) return;
 
         return this.registerDocumentRemoveOperation(relatedSchema, id, subCascades);
@@ -203,8 +208,9 @@ export class DocumentRemover<Document> {
         }
 
         // register document and its relations for removal if cascade operation is set
-        if (CascadeOptionUtils.isCascadeRemove(relation, cascadeOption))
+        if (CascadeOptionUtils.isCascadeRemove(relation, cascadeOption)) {
             return this.registerDocumentRemoveOperation(relatedSchema, id, subCascades);
+        }
     }
 
     /**
