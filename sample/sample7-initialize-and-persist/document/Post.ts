@@ -28,7 +28,7 @@ export class Post {
     @ArrayField(type => PostTag)
     tags: PostTag[] = [];
 
-    @RelationWithOne<PostDetails>(type => PostDetails, null, { cascadeInsert: true, cascadeRemove: true })
+    @RelationWithOne<PostDetails>(type => PostDetails, { cascadeInsert: true, cascadeRemove: true })
     details: PostDetails;
 
     @RelationWithMany<PostCategory>(type => PostCategory, postCategory => postCategory.posts, { cascadeInsert: true })

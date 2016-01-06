@@ -18,7 +18,7 @@ export class Vote {
     @Field()
     text: string;
 
-    @RelationWithOne(type => VoteDetails, null, {
+    @RelationWithOne(type => VoteDetails, {
         cascadeInsert: true,
         cascadeUpdate: true,
         cascadeRemove: true

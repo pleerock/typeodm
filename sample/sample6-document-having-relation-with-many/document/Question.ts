@@ -17,7 +17,7 @@ export class Question {
     @Field()
     text: string;
 
-    @RelationWithMany(type => Category, null, {
+    @RelationWithMany(type => Category, {
         cascadeInsert: true
     })
     categories: Category[] = [];

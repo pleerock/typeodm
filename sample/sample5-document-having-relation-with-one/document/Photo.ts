@@ -18,7 +18,7 @@ export class Photo {
     @Field()
     text: string;
 
-    @RelationWithOne(type => PhotoDetails, null, {
+    @RelationWithOne(type => PhotoDetails, {
         cascadeInsert: true,
         alwaysLeftJoin: true
     })

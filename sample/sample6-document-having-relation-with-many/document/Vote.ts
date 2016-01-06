@@ -17,7 +17,7 @@ export class Vote {
     @Field()
     text: string;
 
-    @RelationWithMany(type => Category, null, {
+    @RelationWithMany(type => Category, {
         cascadeInsert: true,
         cascadeUpdate: true,
         cascadeRemove: true

@@ -17,7 +17,7 @@ export class Photo {
     @Field()
     text: string;
 
-    @RelationWithMany(type => Category, null, {
+    @RelationWithMany(type => Category, {
         cascadeInsert: true,
         alwaysLeftJoin: true
     })

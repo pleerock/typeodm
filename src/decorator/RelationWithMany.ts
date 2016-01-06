@@ -8,15 +8,25 @@ import {RelationOptions} from "./options/RelationOptions";
 /**
  * Class properties marked with this annotation used to create a many-to-many, many-to-one relation with other documents.
  */
+export function RelationWithMany<T>(typeFunction: RelationTypeInFunction, options?: RelationOptions): Function;
 export function RelationWithMany<T>(typeFunction: RelationTypeInFunction, inverseSide?: PropertyTypeInFunction<T>, options?: RelationOptions): Function;
 export function RelationWithMany<T>(name: string, typeFunction: RelationTypeInFunction, inverseSide?: PropertyTypeInFunction<T>, options?: RelationOptions): Function;
-export function RelationWithMany<T>(name: string|RelationTypeInFunction, typeFunction: RelationTypeInFunction, inverseSide?: PropertyTypeInFunction<T>|RelationOptions, options?: RelationOptions): Function {
+export function RelationWithMany<T>(name: string|RelationTypeInFunction,
+                                    typeFunctionOrInverseSideOrOptions: RelationTypeInFunction|PropertyTypeInFunction<T>|RelationOptions,
+                                    inverseSideOrOptions?: PropertyTypeInFunction<T>|RelationOptions,
+                                    options?: RelationOptions): Function {
     return function (object: Object, propertyName: string) {
+        let typeFunction: RelationTypeInFunction;
         if (name instanceof Function) {
-            options = <RelationOptions> inverseSide;
-            inverseSide = typeFunction;
+            options = <RelationOptions> inverseSideOrOptions;
+            inverseSideOrOptions = <PropertyTypeInFunction<T>> typeFunctionOrInverseSideOrOptions;
             typeFunction = <RelationTypeInFunction> name;
             name = null;
+        } else {
+            typeFunction = <RelationTypeInFunction> typeFunctionOrInverseSideOrOptions;
+        }
+        if (typeof typeFunctionOrInverseSideOrOptions === 'object') {
+            options = <RelationOptions> typeFunctionOrInverseSideOrOptions;
         }
 
         if (!object || !propertyName || !object.constructor)
@@ -33,7 +43,7 @@ export function RelationWithMany<T>(name: string|RelationTypeInFunction, typeFun
             name: name ? <string> name : undefined,
             type: typeFunction,
             propertyName: propertyName,
-            inverseSide: <PropertyTypeInFunction<T>> inverseSide,
+            inverseSide: <PropertyTypeInFunction<T>> inverseSideOrOptions,
             isCascadeInsert: !!(options && options.cascadeInsert),
             isCascadeUpdate: !!(options && options.cascadeUpdate),
             isCascadeRemove: !!(options && options.cascadeRemove),

@@ -18,7 +18,7 @@ export class Question {
     @Field()
     text: string;
 
-    @RelationWithOne(type => QuestionDetails, null, {
+    @RelationWithOne(type => QuestionDetails, {
         cascadeInsert: true
     })
     details: QuestionDetails;
