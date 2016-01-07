@@ -13,4 +13,9 @@ export interface ConnectionOptions {
      */
     collectionPrefix?: string;
 
+    /**
+     * If set to true then odm will automatically run ensureIndex for all defined indices on creation.
+     */
+    autoIndex?: boolean;
+
 }

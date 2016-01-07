@@ -88,10 +88,14 @@ export class Connection {
      * Performs connection to the database.
      */
     connect(options: ConnectionOptions): Promise<Connection> {
-        let indexCreator = new IndexCreator(this);
+        const indexCreator = new IndexCreator(this);
         return this._driver.connect(options)
-            .then(_ => indexCreator.create())
-            .then(_ => this);
+            .then(() => {
+                if (options.autoIndex === true)
+                    indexCreator.create();
+
+                return this;
+            });
     }
 
     /**
