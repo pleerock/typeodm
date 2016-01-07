@@ -8,12 +8,14 @@ import {Author} from "./document/Author";
  *  - create a field with a custom field name
  * */
 
-OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', [__dirname + '/document']).then(connection => {
+OdmFactory.createMongodbConnection({
+    url: 'mongodb://localhost:27017/typeodm-samples',
+    collectionPrefix: 'super-prefix-'
+}, [__dirname + '/document']).then(connection => {
     console.log('Connection to mongodb is established');
 
     // get a post repository
     let postRepository = connection.getRepository<Post>(Post);
-    let authorRepository = connection.getRepository<Author>(Author);
 
     // create a new author
     let author = new Author();
@@ -32,6 +34,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         return postRepository.findById(savedPost.id);
 
     }).then(foundPost => {
+
         console.log('Found a saved post:');
         console.log(foundPost);
 

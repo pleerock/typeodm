@@ -162,6 +162,17 @@ gulp.task('run:sample9', function (cb) {
     return runSequence('build', 'run-sample9', cb);
 });
 
+gulp.task('run-sample10', function() {
+    return gulp.src('*.js', { read: false })
+        .pipe(shell([
+            'node ./built/es5/sample/sample10-collections-prefix/app.js'
+        ]));
+});
+
+gulp.task('run:sample10', function (cb) {
+    return runSequence('build', 'run-sample10', cb);
+});
+
 gulp.task('run-sample11', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([

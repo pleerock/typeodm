@@ -25,6 +25,7 @@ import {InsertResult} from "./results/InsertResult";
 import {DeleteResult} from "./results/DeleteResult";
 import {BulkWriteOptions} from "./options/BulkWriteOptions";
 import {BulkWriteOperations} from "./operations/BulkWriteOperations";
+import {Collection} from "mongodb";
 
 /**
  * This driver organizes work with mongodb database.
@@ -36,6 +37,7 @@ export class MongodbDriver implements Driver {
     // -------------------------------------------------------------------------
 
     private db: any;
+    private options: ConnectionOptions;
 
     // -------------------------------------------------------------------------
     // Getter Methods
@@ -50,6 +52,7 @@ export class MongodbDriver implements Driver {
     // -------------------------------------------------------------------------
 
     connect(options: ConnectionOptions): Promise<any> {
+        this.options = options;
         return new Promise<any>((ok, fail) => {
             MongoClient.connect(options.url, (err: any, db: any) => {
                 if (err) {
@@ -99,14 +102,14 @@ export class MongodbDriver implements Driver {
 
     drop(collection: string): Promise<boolean> {
         return new Promise<boolean>((ok, fail) => {
-            this.db.collection(collection).drop((err: any, result: boolean) => err ? fail(err) : ok(result));
+            this.getCollection(collection).drop((err: any, result: boolean) => err ? fail(err) : ok(result));
         });
     }
 
     find(collection: string, conditions: Object, options?: FindOptions): Promise<Object[]> {
         if (!options) options = {};
         return new Promise<Object[]>((ok, fail) => {
-            let cursor = this.db.collection(collection)
+            let cursor = this.getCollection(collection)
                 .find(conditions);
 
             if (options.skip)
@@ -147,137 +150,137 @@ export class MongodbDriver implements Driver {
 
     aggregate(collection: string, stages: any[], options?: AggergationOptions): Promise<any> {
         return new Promise<any>((ok, fail) => {
-            this.db.collection(collection).aggregate(stages, options).toArray((err: any, result: any) => err ? fail(err) : ok(result));
+            this.getCollection(collection).aggregate(stages, options).toArray((err: any, result: any) => err ? fail(err) : ok(result));
         });
     }
 
     setOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             let conditions = { $set: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
+            this.getCollection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
     setManyRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             let conditions = { $addToSet: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
+            this.getCollection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
     unsetOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             let conditions = { $unset: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
+            this.getCollection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
     unsetManyRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
             let conditions = { $pull: { [relationPropertyName]: relationPropertyValue } };
-            this.db.collection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
+            this.getCollection(collection).updateOne(query, conditions, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
     createIndex(collection: string, keys: any, options: any): Promise<void> {
         return new Promise<void>((ok, fail) => {
-            this.db.collection(collection).createIndex(keys, options, (err: any, result: any) => err ? fail(err) : ok());
+            this.getCollection(collection).createIndex(keys, options, (err: any, result: any) => err ? fail(err) : ok());
         });
     }
 
     count(collection: string, criteria: any): Promise<number> {
         return new Promise<number>((ok, fail) => {
-            this.db.collection(collection).count(criteria, (err: any, result: number) => err ? fail(err) : ok(result));
+            this.getCollection(collection).count(criteria, (err: any, result: number) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~countCallback
     }
 
     insertOne(collection: string, document: any, options?: InsertOptions): Promise<InsertOneResult> {
         return new Promise<InsertOneResult>((ok, fail) => {
-            this.db.collection(collection).insertOne(document, options, (err: any, result: InsertOneResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).insertOne(document, options, (err: any, result: InsertOneResult) => err ? fail(err) : ok(result));
         });
     } // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~insertOneWriteOpResult
 
     insertMany(collection: string, document: any, options?: InsertOptions): Promise<InsertResult> {
         return new Promise<InsertResult>((ok, fail) => {
-            this.db.collection(collection).insertMany(document, options, (err: any, result: InsertResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).insertMany(document, options, (err: any, result: InsertResult) => err ? fail(err) : ok(result));
         });
     } // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~insertWriteOpCallback
 
     updateOne(collection: string, query: Object, update: Object, options?: UpdateOptions): Promise<UpdateResult> {
         return new Promise<UpdateResult>((ok, fail) => {
-            this.db.collection(collection).updateOne(query, update, options, (err: any, result: UpdateResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).updateOne(query, update, options, (err: any, result: UpdateResult) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~updateWriteOpResult
     }
 
     updateMany(collection: string, query: Object, update: Object, options?: UpdateOptions): Promise<UpdateResult> {
         return new Promise<UpdateResult>((ok, fail) => {
-            this.db.collection(collection).updateMany(query, update, options, (err: any, result: UpdateResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).updateMany(query, update, options, (err: any, result: UpdateResult) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~updateWriteOpResult
     }
 
     replaceOne(collection: string, conditions: Object, newObject: Object, options?: ReplaceOptions): Promise<UpdateResult> {
         return new Promise<UpdateResult>((ok, fail) => {
-            this.db.collection(collection).replaceOne(conditions, newObject, options, (err: any, result: UpdateResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).replaceOne(conditions, newObject, options, (err: any, result: UpdateResult) => err ? fail(err) : ok(result));
         });
     } // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~updateWriteOpResult
 
     deleteOne(collection: string, query: Object, options?: DeleteOptions): Promise<DeleteResult> {
         return new Promise<DeleteResult>((ok, fail) => {
-            this.db.collection(collection).deleteOne(query, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).deleteOne(query, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~deleteWriteOpResult
     }
 
     deleteMany(collection: string, query: Object, options?: DeleteOptions): Promise<DeleteResult> {
         return new Promise<DeleteResult>((ok, fail) => {
-            this.db.collection(collection).deleteMany(query, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
+            this.getCollection(collection).deleteMany(query, options, (err: any, result: DeleteResult) => err ? fail(err) : ok(result));
         }); // http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~deleteWriteOpResult
     }
 
     distinct(collection: string, key: string, query: Object, options?: DistinctOptions): Promise<any[]> {
         return new Promise<any[]>((ok, fail) => {
-            this.db.collection(collection).distinct(key, query, options, (err: any, result: any[]) => err ? fail(err) : ok(result));
+            this.getCollection(collection).distinct(key, query, options, (err: any, result: any[]) => err ? fail(err) : ok(result));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~resultCallback
     }
 
     findOneAndDelete(collection: string, query: Object, options?: FindOneAndDeleteOptions): Promise<Object> {
         return new Promise<Object>((ok, fail) => {
-            this.db.collection(collection).findOneAndDelete(query, options, (err: any, result: any) => err ? fail(err) : ok(result.value));
+            this.getCollection(collection).findOneAndDelete(query, options, (err: any, result: any) => err ? fail(err) : ok(result.value));
         });  // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~findAndModifyWriteOpResult
     }
 
     findOneAndReplace(collection: string, query: Object, replacement: Object, options?: FindOneAndReplaceOptions): Promise<Object> {
         return new Promise<Object>((ok, fail) => {
-            this.db.collection(collection).findOneAndReplace(query, replacement, options, (err: any, result: any) => err ? fail(err) : ok(result.value));
+            this.getCollection(collection).findOneAndReplace(query, replacement, options, (err: any, result: any) => err ? fail(err) : ok(result.value));
         });  // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~findAndModifyWriteOpResult
     }
 
     findOneAndUpdate(collection: string, query: Object, update: Object, options?: FindOneAndUpdateOptions): Promise<Object> {
         return new Promise<Object>((ok, fail) => {
-            this.db.collection(collection).findOneAndUpdate(query, update, options, (err: any, result: any) => err ? fail(err) : ok(result.value));
+            this.getCollection(collection).findOneAndUpdate(query, update, options, (err: any, result: any) => err ? fail(err) : ok(result.value));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~findAndModifyWriteOpResult
     }
 
     geoHaystackSearch(collection: string, x: number, y: number, options?: GeoHaystackSearchOptions): Promise<Object[]> {
         return new Promise<Object[]>((ok, fail) => {
-            this.db.collection(collection).geoHaystackSearch(x, y, options, (err: any, result: any) => err ? fail(err) : ok(result));
+            this.getCollection(collection).geoHaystackSearch(x, y, options, (err: any, result: any) => err ? fail(err) : ok(result));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~resultCallback
     }
 
     geoNear(collection: string, x: number, y: number, options?: GeoNearOptions): Promise<Object[]> {
         return new Promise<Object[]>((ok, fail) => {
-            this.db.collection(collection).geoNear(x, y, options, (err: any, result: any) => err ? fail(err) : ok(result));
+            this.getCollection(collection).geoNear(x, y, options, (err: any, result: any) => err ? fail(err) : ok(result));
             // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~resultCallback
         });
     }
 
     group(collection: string, keys: Object, condition: Object, initial: Object, reduce: Function, finalize: Function, command: boolean, options?: GroupOptions): Promise<any> {
         return new Promise<any>((ok, fail) => {
-            this.db.collection(collection).group(keys, condition, initial, reduce, finalize, command, options, (err: any, result: any) => err ? fail(err) : ok(result));
+            this.getCollection(collection).group(keys, condition, initial, reduce, finalize, command, options, (err: any, result: any) => err ? fail(err) : ok(result));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~resultCallback
     }
 
     executeOrderedOperations(collection: string, operations: Function, options?: BulkOperationOptions): Promise<BulkWriteResult> {
-        let batch = this.db.collection(collection).initializeOrderedBulkOp(options);
+        let batch = this.getCollection(collection).initializeOrderedBulkOp(options);
         operations();
         return new Promise<BulkWriteResult>((ok, fail) => {
             batch.execute((err: any, result: BulkWriteResult) => err ? fail(err) : ok(result));
@@ -285,7 +288,7 @@ export class MongodbDriver implements Driver {
     }
 
     executeUnorderedOperations(collection: string, operations: Function, options?: BulkOperationOptions): Promise<BulkWriteResult> {
-        let batch = this.db.collection(collection).initializeUnorderedBulkOp(options);
+        let batch = this.getCollection(collection).initializeUnorderedBulkOp(options);
         operations();
         return new Promise<BulkWriteResult>((ok, fail) => {
             batch.execute((err: any, result: BulkWriteResult) => err ? fail(err) : ok(result));
@@ -294,16 +297,24 @@ export class MongodbDriver implements Driver {
 
     bulkWrite(collection: string, operations: BulkWriteOperations, options?: BulkWriteOptions): Promise<any> {
         return new Promise<any>((ok, fail) => {
-            this.db.collection(collection).bulkWrite(operations, options, (err: any, result: any) => err ? fail(err) : ok(result));
+            this.getCollection(collection).bulkWrite(operations, options, (err: any, result: any) => err ? fail(err) : ok(result));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~bulkWriteOpCallback
     }
 
     mapReduce(collection: string, map: Function, reduce: Function, options?: MapReduceOptions): Promise<any> {
         return new Promise<any>((ok, fail) => {
-            this.db.collection(collection).mapReduce(map, reduce, options, (err: any, result: any) => err ? fail(err) : ok(result));
+            this.getCollection(collection).mapReduce(map, reduce, options, (err: any, result: any) => err ? fail(err) : ok(result));
         }); // result http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#~resultCallback
     }
 
+    getCollection(documentCollectionName: string): any {
+        return this.db.collection(this.getCollectionName(documentCollectionName));
+    }
+
+    getCollectionName(documentCollectionName: string): string {
+        return this.options.collectionPrefix + documentCollectionName;
+    }
+    
 }
 
 /**
