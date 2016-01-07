@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {OdmEventSubscriber} from "../../../src/decorator/OdmEventSubscriber";
+import {OdmEventSubscriber} from "../../../src/decorator/OdmDecorators";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
 import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
 

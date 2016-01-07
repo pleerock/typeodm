@@ -1,7 +1,6 @@
 import {Document} from "../../../src/decorator/Document";
-import {Field} from "../../../src/decorator/Field";
-import {RelationWithMany} from "../../../src/decorator/RelationWithMany";
-import {ObjectIdField} from "../../../src/decorator/ObjectIdField";
+import {Field, ObjectIdField} from "../../../src/decorator/Field";
+import {RelationWithMany} from "../../../src/decorator/Relation";
 import {Category} from "./Category";
 import {ObjectID} from "mongodb";
 

@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {AbstractDocument} from "../../../src/decorator/AbstractDocument";
+import {AbstractDocument} from "../../../src/decorator/Document";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
 import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
 

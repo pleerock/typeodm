@@ -1,10 +1,10 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {IdField} from "../../../src/decorator/IdField";
-import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
+import {IdField} from "../../../src/decorator/Field";
 import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
 import {WrongFieldTypeError} from "../../../src/decorator/error/WrongFieldTypeError";
+import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
 
 chai.should();
 chai.use(require("sinon-chai"));
