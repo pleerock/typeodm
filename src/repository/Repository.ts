@@ -503,7 +503,17 @@ export class Repository<Document> {
      *                                false when collection to drop does not exist.
      */
     drop(): Promise<boolean> {
-        return this.connection.driver.drop(this.schema.name);
+        return this.isExist()
+            .then(exists => exists ? this.connection.driver.drop(this.schema.name) : Promise.resolve(false));
+    }
+
+    /**
+     * Checks the collection for existence.
+     *
+     * @returns {Promise<T><boolean>} true if the collection exists, otherwise false.
+     */
+    isExist(): Promise<boolean> {
+        return this.connection.driver.isExist(this.schema.name);
     }
 
     /**

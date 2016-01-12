@@ -98,6 +98,13 @@ export class MongodbDriver implements Driver {
         });
     }
 
+    isExist(collection: string): Promise<boolean> {
+        return new Promise<boolean>((ok, fail) => {
+            this.db.listCollections({ name: collection })
+                .next((err: any, result: any) => err ? fail(err) : ok(result !== null));
+        });
+    }
+
     find(collection: string, conditions: Object, options?: FindOptions): Promise<Object[]> {
         if (!options) options = {};
         return new Promise<Object[]>((ok, fail) => {
