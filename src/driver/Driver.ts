@@ -96,6 +96,11 @@ export interface Driver {
     drop(collection: string): Promise<boolean>;
 
     /**
+     * Checks the given collection for existence.
+     */
+    isExist(collection: string): Promise<boolean>;
+
+    /**
      * Sets relation of the given document in a given collection with specific related value.
      */
     setOneRelation(collection: string, query: Object, relationPropertyName: string, relationPropertyValue: any): Promise<void>;
