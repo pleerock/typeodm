@@ -36,6 +36,7 @@ import {UpdateResult} from "../driver/results/UpdateResult";
 import {InsertResult} from "../driver/results/InsertResult";
 import {ObjectID} from "mongodb";
 import {OdmUtils} from "../util/OdmUtils";
+import Doc = Mocha.reporters.Doc;
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -87,7 +88,7 @@ export class Repository<Document> {
      * Checks if document has id.
      */
     hasId(document: Document): boolean {
-        return document && this.schema.idField && document.hasOwnProperty(this.schema.idField.name);
+        return document && this.schema.idField && document.hasOwnProperty(this.schema.idField.propertyName);
     }
 
     /**
@@ -108,9 +109,14 @@ export class Repository<Document> {
     initializeMany(objects: any[], fetchProperties?: boolean[]): Promise<Document[]>;
     initializeMany(objects: any[], fetchConditions?: Object[]): Promise<Document[]>;
     initializeMany(objects: any[], fetchOption?: boolean[]|Object[]/*, fetchCascadeOptions?: any*/): Promise<Document[]> {
-        return Promise.all(objects.map((object, key) => {
-            return this.initialize(object, (fetchOption && fetchOption[key]) ? fetchOption[key] : undefined);
-        }));
+        // reduce here will guarantee order of initialized documents whenever Promise.all used with map will not
+        const initializedDocuments: Document[] = [];
+        return objects.reduce((prevPromise, object, key) => {
+            const fetchConditions = (fetchOption && fetchOption[key]) ? fetchOption[key] : undefined;
+            return prevPromise
+                .then(() => this.initialize(object, fetchConditions))
+                .then((initializedDocument: Document) => initializedDocuments.push(initializedDocument));
+        }, Promise.resolve()).then(() => initializedDocuments);
     }
 
     /**

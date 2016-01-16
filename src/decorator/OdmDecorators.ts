@@ -29,7 +29,7 @@ export function OdmRepository(className: Function|string, connectionName?: strin
             throw new Error('OdmRepository cannot be used because typedi extension is not installed.');
         }
 
-        container.registerCustomParamHandler({
+        container.registerParamHandler({
             type: target,
             index: index,
             getValue: () => {

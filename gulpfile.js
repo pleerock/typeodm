@@ -8,7 +8,7 @@ var babel = require('gulp-babel');
 var shell = require('gulp-shell');
 
 gulp.task('clean', function (cb) {
-    return del(['./built/**'], cb);
+    return del(['./build/**'], cb);
 });
 
 gulp.task('compile', function() {
@@ -20,7 +20,7 @@ gulp.task('compile', function() {
         .pipe(plumber())
         .pipe(ts(tsProject))
         .js
-        .pipe(gulp.dest('./built/es6'));
+        .pipe(gulp.dest('./build/es6'));
 });
 
 gulp.task('tsd', function() {
@@ -33,13 +33,13 @@ gulp.task('tsd', function() {
 });
 
 gulp.task('build-package-copy-src', function() {
-    return gulp.src('./built/es5/src/**/*')
-        .pipe(gulp.dest('./built/package'));
+    return gulp.src('./build/es5/src/**/*')
+        .pipe(gulp.dest('./build/package'));
 });
 
 gulp.task('build-package-copy-files', function() {
     return gulp.src(['./package.json', './README.md'])
-        .pipe(gulp.dest('./built/package'));
+        .pipe(gulp.dest('./build/package'));
 });
 
 gulp.task('build-package-generate-dts', function () {
@@ -58,37 +58,37 @@ gulp.task('build-package-generate-dts', function () {
         return files;
     }
 
-    var dtsGenerator = require('dts-generator');
+    var dtsGenerator = require('dts-generator').default;
     var name = require('./package.json').name;
     var files = getFiles('./src');
-    dtsGenerator.generate({
+    dtsGenerator({
         name: name,
         baseDir: './src',
         files: files,
-        out: './built/package/' + name + '.d.ts'
+        out: './build/package/index.d.ts'
     });
 });
 
 gulp.task('tests-integration', function () {
-    return gulp.src('./built/es5/test/integration/**/*.js')
+    return gulp.src('./build/es5/test/integration/**/*.js')
         .pipe(mocha())
 });
 
 gulp.task('tests-unit', function () {
-    return gulp.src('./built/es5/test/unit/**/*.js')
+    return gulp.src('./build/es5/test/unit/**/*.js')
         .pipe(mocha())
 });
 
 gulp.task('toes5', function () {
-    return gulp.src('./built/es6/**/*.js')
+    return gulp.src('./build/es6/**/*.js')
         .pipe(babel())
-        .pipe(gulp.dest('./built/es5'));
+        .pipe(gulp.dest('./build/es5'));
 });
 
 gulp.task('run-sample1', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample1-simple-document/app.js'
+            'node ./build/es5/sample/sample1-simple-document/app.js'
         ]));
 });
 
@@ -99,7 +99,7 @@ gulp.task('run:sample1', function (cb) {
 gulp.task('run-sample2', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample2-custom-document-name/app.js'
+            'node ./build/es5/sample/sample2-custom-document-name/app.js'
         ]));
 });
 
@@ -110,7 +110,7 @@ gulp.task('run:sample2', function (cb) {
 gulp.task('run-sample3', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample3-working-with-documents/app.js'
+            'node ./build/es5/sample/sample3-working-with-documents/app.js'
         ]));
 });
 
@@ -121,7 +121,7 @@ gulp.task('run:sample3', function (cb) {
 gulp.task('run-sample4', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample4-embedded-documents/app.js'
+            'node ./build/es5/sample/sample4-embedded-documents/app.js'
         ]));
 });
 
@@ -132,7 +132,7 @@ gulp.task('run:sample4', function (cb) {
 gulp.task('run-sample7', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample7-initialize-and-persist/app.js'
+            'node ./build/es5/sample/sample7-initialize-and-persist/app.js'
         ]));
 });
 
@@ -143,7 +143,7 @@ gulp.task('run:sample7', function (cb) {
 gulp.task('run-sample8', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample8-document-with-custom-id/app.js'
+            'node ./build/es5/sample/sample8-document-with-custom-id/app.js'
         ]));
 });
 
@@ -154,7 +154,7 @@ gulp.task('run:sample8', function (cb) {
 gulp.task('run-sample9', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample9-mapped-ids/app.js'
+            'node ./build/es5/sample/sample9-mapped-ids/app.js'
         ]));
 });
 
@@ -165,7 +165,7 @@ gulp.task('run:sample9', function (cb) {
 gulp.task('run-sample10', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample10-collections-prefix/app.js'
+            'node ./build/es5/sample/sample10-collections-prefix/app.js'
         ]));
 });
 
@@ -176,7 +176,7 @@ gulp.task('run:sample10', function (cb) {
 gulp.task('run-sample11', function() {
     return gulp.src('*.js', { read: false })
         .pipe(shell([
-            'node ./built/es5/sample/sample11-using-container/app.js'
+            'node ./build/es5/sample/sample11-using-container/app.js'
         ]));
 });
 

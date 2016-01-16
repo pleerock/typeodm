@@ -1,10 +1,10 @@
-import {Resolve} from "typedi/Resolve";
+import {Service} from "typedi/Decorators";
 import {OdmRepository} from "../../src/decorator/OdmDecorators";
 import {Repository} from "../../src/repository/Repository";
 import {Post} from "./document/Post";
 import {PostManager} from "./PostManager";
 
-@Resolve()
+@Service()
 export class PostController {
 
     constructor(private postManager: PostManager) {

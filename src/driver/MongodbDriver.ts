@@ -319,7 +319,7 @@ export class MongodbDriver implements Driver {
     }
 
     getCollectionName(documentCollectionName: string): string {
-        return this.options.collectionPrefix + documentCollectionName;
+        return this.options.collectionPrefix ? this.options.collectionPrefix + documentCollectionName : documentCollectionName;
     }
     
 }
