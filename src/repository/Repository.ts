@@ -523,7 +523,8 @@ export class Repository<Document> {
     // -------------------------------------------------------------------------
 
     private createIdObject(id: string): Object {
-        return this.connection.driver.createIdCondition(id/*, this.schema.idField.isObjectId*/);
+        return this.schema.createIdCondition(id);
+        //return this.connection.driver.createIdCondition(this.schema.createIdCondition(id)/*, this.schema.idField.isObjectId*/);
     }
 
     private dbObjectToDocument(dbObject: any, joinFields?: JoinFieldOption[]|any[]): Promise<Document> {

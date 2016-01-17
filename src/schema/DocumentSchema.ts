@@ -1,6 +1,7 @@
 import {RelationSchema} from "./RelationSchema";
 import {FieldSchema} from "./FieldSchema";
 import {CompoundIndexSchema} from "./CompoundIndexSchema";
+import {ObjectID} from "mongodb";
 
 /**
  * Document schema represents a document's structure and all its fields and relations.
@@ -93,8 +94,9 @@ export class DocumentSchema {
         }
     }
 
-    createIdCondition(): any {
-        return {  };
+    createIdCondition(id: any) { // todo: should this method be here or in driver?
+        const dbId = this.idField.isObjectId && this.idField.isObjectIdString ? new ObjectID(id) : id;
+        return { _id: dbId };
     }
 
     findFieldByPropertyName(propertyName: string): FieldSchema {

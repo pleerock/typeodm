@@ -83,7 +83,8 @@ export class DocumentPersister<Document> {
         let broadcaster = this.connection.getBroadcaster(schema.documentClass);
 
         if (documentId) {
-            let conditions = driver.createIdCondition(documentId/*, schema.idField.isObjectId*/);
+            //let conditions = driver.createIdCondition(schema.getIdValue(documentId)/*, schema.idField.isObjectId*/);
+            let conditions = schema.createIdCondition(documentId);
             broadcaster.broadcastBeforeUpdate({ document: document, conditions: conditions });
             return driver.replaceOne(schema.name, conditions, dbObject, { upsert: true }).then(saved => {
                 broadcaster.broadcastAfterUpdate({ document: document, conditions: conditions });
@@ -108,7 +109,8 @@ export class DocumentPersister<Document> {
                 let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
                 let inverseSideProperty = relationOperation.inverseSideDocumentRelation.name;
                 let id = relationOperation.getDocumentId();//this.connection.driver.createObjectId(relationOperation.getDocumentId(), relationOperation.documentSchema.idField.isObjectId);
-                let findCondition = this.connection.driver.createIdCondition(relationOperation.inverseSideDocumentId/*, inverseSideSchema.idField.isObjectId*/);
+                //let findCondition = this.connection.driver.createIdCondition(inverseSideSchema.getIdValue(relationOperation.inverseSideDocumentId)/*, inverseSideSchema.idField.isObjectId*/);
+                let findCondition = inverseSideSchema.createIdCondition(relationOperation.inverseSideDocumentId);
 
                 if (inverseSideSchema.hasRelationWithOneWithName(inverseSideProperty))
                     return this.connection.driver.setOneRelation(inverseSideSchema.name, findCondition, inverseSideProperty, id);
