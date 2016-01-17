@@ -184,6 +184,17 @@ gulp.task('run:sample11', function (cb) {
     return runSequence('build', 'run-sample11', cb);
 });
 
+gulp.task('run-sample12', function() {
+    return gulp.src('*.js', { read: false })
+        .pipe(shell([
+            'node ./build/es5/sample/sample12-stringified-object-id/app.js'
+        ]));
+});
+
+gulp.task('run:sample12', function (cb) {
+    return runSequence('build', 'run-sample12', cb);
+});
+
 gulp.task('run:tests', function (cb) {
     return runSequence('build', /*'tests-unit', */'tests-integration', cb);
 });

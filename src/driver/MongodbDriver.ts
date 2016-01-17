@@ -82,10 +82,6 @@ export class MongodbDriver implements Driver {
         return new ObjectID().toHexString();
     }
 
-    isObjectId(id: any): boolean {
-        return id instanceof ObjectID;
-    }
-
     getIdFieldName(): string {
         return '_id';
     }

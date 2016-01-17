@@ -60,12 +60,6 @@ export interface Driver {
     createIdCondition(id: any): Object;
 
     /**
-     * Checks if given thing is object id or not.
-     * @deprecated use this method from utils
-     */
-    isObjectId(id: any): boolean;
-
-    /**
      * Gets the id field name in the document reserved by database (like "_id").
      */
     getIdFieldName(): string;
@@ -300,5 +294,10 @@ export interface Driver {
      * @param options Optional settings.
      */
     mapReduce(collection: string, map: Function, reduce: Function, options?: MapReduceOptions): Promise<any>;
+
+    /**
+     * Returns mongodb collection with the given collection name.
+     */
+    getCollection(name: string): any;
 
 }

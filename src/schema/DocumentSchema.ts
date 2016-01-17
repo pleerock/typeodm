@@ -178,8 +178,8 @@ export class DocumentSchema {
             return relationWithMany.type;
     }
 
-    getIdValue(value: any): any { // todo: implement
-        return this.idField.isObjectId && this.idField.isTypePrimitive() ? value : value;
+    getIdValue(value: any): any {
+        return this.idField.isObjectId && this.idField.isObjectIdString ? String(value) : value;
     }
 
     createPropertiesMirror(): any {

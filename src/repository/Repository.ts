@@ -1,16 +1,11 @@
 import {DocumentSchema} from "../schema/DocumentSchema";
-import {Driver} from "../driver/Driver";
 import {Connection} from "../connection/Connection";
 import {DocumentPersister} from "./persistence/DocumentPersister";
 import {DocumentHydrator} from "./hydration/DocumentHydrator";
 import {JoinFieldOption} from "./hydration/JoinFieldOption";
 import {OdmBroadcaster} from "../subscriber/OdmBroadcaster";
 import {DocumentRemover} from "./removement/DocumentRemover";
-import {CascadeOption, DynamicCascadeOptions} from "./cascade/CascadeOption";
-import {BadDocumentInstanceError} from "./error/BadDocumentInstanceError";
-import {CascadeOptionUtils} from "./cascade/CascadeOptionUtils";
-import {FieldSchema} from "../schema/FieldSchema";
-import {RelationSchema} from "../schema/RelationSchema";
+import {DynamicCascadeOptions} from "./cascade/CascadeOption";
 import {DocumentInitializer} from "./initializer/DocumentInitializer";
 import {FindOptions} from "../driver/options/FindOptions";
 import {InsertOptions} from "../driver/options/InsertOptions";
@@ -34,9 +29,7 @@ import {BulkWriteResult} from "../driver/results/BulkWriteResult";
 import {DeleteResult} from "../driver/results/DeleteResult";
 import {UpdateResult} from "../driver/results/UpdateResult";
 import {InsertResult} from "../driver/results/InsertResult";
-import {ObjectID} from "mongodb";
 import {OdmUtils} from "../util/OdmUtils";
-import Doc = Mocha.reporters.Doc;
 
 /**
  * Repository is supposed to work with your document objects. Find documents, insert, update, delete, etc.
@@ -47,6 +40,7 @@ export class Repository<Document> {
     // Properties
     // -------------------------------------------------------------------------
 
+    private _utils = new OdmUtils();
     private _connection: Connection;
     private _schema: DocumentSchema;
     private broadcaster: OdmBroadcaster<Document>;
@@ -71,6 +65,10 @@ export class Repository<Document> {
 
     get connection(): Connection {
         return this._connection;
+    }
+
+    get utils(): OdmUtils {
+        return this._utils;
     }
 
     // -------------------------------------------------------------------------
@@ -515,26 +513,10 @@ export class Repository<Document> {
 
     /**
      * Checks the collection for existence.
-     *
-     * @returns {Promise<T><boolean>} true if the collection exists, otherwise false.
      */
     isExist(): Promise<boolean> {
         return this.connection.driver.isExist(this.schema.name);
     }
-
-    /**
-     * Creates ObjectId object from a given objectId string.
-
-    createObjectIdFromString(objectId: string): ObjectID {
-        return this.connection.driver.createObjectId(objectId);
-    }*/
-
-    /**
-     * Creates array of ObjectId objects from a given objectId strings.
-
-    static createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
-        return objectIds.map(id => this.connection.driver.createObjectId(id, true));
-    }*/
 
     // -------------------------------------------------------------------------
     // Private Methods
@@ -548,13 +530,5 @@ export class Repository<Document> {
         const hydrator = new DocumentHydrator<Document>(this.connection);
         return hydrator.hydrate(this.schema, dbObject, joinFields);
     }
-
-    // -------------------------------------------------------------------------
-    // Static Methods
-    // -------------------------------------------------------------------------
-
-   /* static createObjectIdsFromStrings(objectIds: string[]): ObjectID[] {
-        return OdmUtils.createObjectIdsFromStrings(objectIds);
-    }*/
 
 }
