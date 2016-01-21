@@ -1,5 +1,5 @@
-import {Document} from "../../../src/decorator/Document";
-import {Field, ObjectIdField} from "../../../src/decorator/Field";
+import {Document} from "../../../src/decorator/Documents";
+import {Field, ObjectIdField} from "../../../src/decorator/Fields";
 import {ObjectID} from "mongodb";
 
 @Document('sample2-post')

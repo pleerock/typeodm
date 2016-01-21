@@ -1,7 +1,7 @@
 import {Post} from "./Post";
-import {Document} from "../../../src/decorator/Document";
-import {Field, ArrayField, GeneratedIdField} from "../../../src/decorator/Field";
-import {RelationWithMany} from "../../../src/decorator/Relation";
+import {Document} from "../../../src/decorator/Documents";
+import {Field, ArrayField, GeneratedIdField} from "../../../src/decorator/Fields";
+import {RelationWithMany} from "../../../src/decorator/Relations";
 
 @Document('sample10-author')
 export class Author {

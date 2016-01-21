@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import {expect} from "chai";
 import * as sinon from "sinon";
-import {Field} from "../../../src/decorator/Field";
+import {Field} from "../../../src/decorator/Fields";
 import {defaultMetadataStorage} from "../../../src/metadata-builder/MetadataStorage";
 import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnotationUsageError";
 import {WrongFieldTypeError} from "../../../src/decorator/error/WrongFieldTypeError";

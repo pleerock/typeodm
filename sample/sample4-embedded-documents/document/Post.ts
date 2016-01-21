@@ -1,5 +1,5 @@
-import {Document} from "../../../src/decorator/Document";
-import {Field, ObjectIdField, ArrayField} from "../../../src/decorator/Field";
+import {Document} from "../../../src/decorator/Documents";
+import {Field, ObjectIdField, ArrayField} from "../../../src/decorator/Fields";
 import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
 import {ObjectID} from "mongodb";

@@ -1,5 +1,5 @@
-import {EmbeddedDocument} from "../../../src/decorator/Document";
-import {Field, ObjectIdField} from "../../../src/decorator/Field";
+import {EmbeddedDocument} from "../../../src/decorator/Documents";
+import {Field, ObjectIdField} from "../../../src/decorator/Fields";
 import {ObjectID} from "mongodb";
 
 @EmbeddedDocument()

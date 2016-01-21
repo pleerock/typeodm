@@ -1,5 +1,5 @@
-import {EmbeddedDocument} from "../../../src/decorator/Document";
-import {Field} from "../../../src/decorator/Field";
+import {EmbeddedDocument} from "../../../src/decorator/Documents";
+import {Field} from "../../../src/decorator/Fields";
 
 @EmbeddedDocument()
 export class PostTag {

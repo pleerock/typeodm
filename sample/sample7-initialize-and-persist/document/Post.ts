@@ -1,7 +1,7 @@
-import {Document} from "../../../src/decorator/Document";
-import {Field, ObjectIdField, ArrayField} from "../../../src/decorator/Field";
-import {RelationWithOne} from "../../../src/decorator/Relation";
-import {RelationWithMany} from "../../../src/decorator/Relation";
+import {Document} from "../../../src/decorator/Documents";
+import {Field, ObjectIdField, ArrayField} from "../../../src/decorator/Fields";
+import {RelationWithOne} from "../../../src/decorator/Relations";
+import {RelationWithMany} from "../../../src/decorator/Relations";
 import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
 import {PostCategory} from "./PostCategory";
