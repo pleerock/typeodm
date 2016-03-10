@@ -5,7 +5,7 @@ import {Photo} from "./Photo";
 import {Video} from "./Video";
 import {ObjectID} from "mongodb";
 
-@Document('sample6-category')
+@Document("sample6-category")
 export class Category {
 
     @ObjectIdField()

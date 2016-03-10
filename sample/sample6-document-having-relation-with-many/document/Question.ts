@@ -4,7 +4,7 @@ import {RelationWithMany} from "../../../src/decorator/Relations";
 import {Category} from "./Category";
 import {ObjectID} from "mongodb";
 
-@Document('sample6-question')
+@Document("sample6-question")
 export class Question {
 
     @ObjectIdField()

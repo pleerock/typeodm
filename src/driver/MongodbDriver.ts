@@ -75,7 +75,7 @@ export class MongodbDriver implements Driver {
 
     createObjectId(id?: string): ObjectID {
         return new ObjectID(id);
-        //return isObjectId && !this.isObjectId(id) ? new ObjectID(id) : id;
+        // return isObjectId && !this.isObjectId(id) ? new ObjectID(id) : id;
     }
 
     generateId(): string {
@@ -83,7 +83,7 @@ export class MongodbDriver implements Driver {
     }
 
     getIdFieldName(): string {
-        return '_id';
+        return "_id";
     }
 
     createIdCondition(id: any): Object {
@@ -317,7 +317,7 @@ export class MongodbDriver implements Driver {
     getCollectionName(documentCollectionName: string): string {
         return this.options.collectionPrefix ? this.options.collectionPrefix + documentCollectionName : documentCollectionName;
     }
-    
+
 }
 
 /**

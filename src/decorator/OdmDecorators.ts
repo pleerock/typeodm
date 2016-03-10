@@ -8,13 +8,13 @@ import {ConnectionManager} from "../connection/ConnectionManager";
 export function OdmEventSubscriber() {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name)
-            throw new WrongAnnotationUsageError('OdmEventSubscriber', 'class', objectConstructor);
+        if (!objectConstructor || !(<any> objectConstructor).name)
+            throw new WrongAnnotationUsageError("OdmEventSubscriber", "class", objectConstructor);
 
         defaultMetadataStorage.addOdmEventSubscriberMetadata({
             objectConstructor: objectConstructor
         });
-    }
+    };
 }
 
 export function OdmRepository(className: Function, connectionName?: string): Function;
@@ -24,9 +24,9 @@ export function OdmRepository(className: Function|string, connectionName?: strin
 
         let container: any;
         try {
-            container = require('typedi/Container').Container;
+            container = require("typedi/Container").Container;
         } catch (err) {
-            throw new Error('OdmRepository cannot be used because typedi extension is not installed.');
+            throw new Error("OdmRepository cannot be used because typedi extension is not installed.");
         }
 
         container.registerParamHandler({
@@ -38,5 +38,5 @@ export function OdmRepository(className: Function|string, connectionName?: strin
                 return connection.getRepository(<Function> className);
             }
         });
-    }
+    };
 }

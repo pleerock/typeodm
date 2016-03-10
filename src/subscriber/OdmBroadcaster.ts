@@ -85,7 +85,7 @@ export class OdmBroadcaster<Document> {
             .filter(subscriber => this.isAllowedSubscribers(subscriber))
             .filter(subscriber => !!subscriber.afterLoad)
             .forEach(subscriber => {
-                documents.forEach(document => subscriber.afterLoad(document))
+                documents.forEach(document => subscriber.afterLoad(document));
             });
     }
 

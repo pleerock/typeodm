@@ -29,7 +29,7 @@ export class DocumentPersister<Document> {
     // -------------------------------------------------------------------------
 
     persist(schema: DocumentSchema, document: Document, cascadeOptions?: DynamicCascadeOptions<Document>): Promise<Document> {
-        var transformer = new DocumentToDbObjectTransformer<Document>(this.connection);
+        let transformer = new DocumentToDbObjectTransformer<Document>(this.connection);
         let dbObject = transformer.transform(schema, document, cascadeOptions);
         let groupedPersistOperations = this.groupPersistOperationsByDeepness(transformer.persistOperations);
         groupedPersistOperations = groupedPersistOperations.sort(groupedOperation => groupedOperation.deepness * -1);
@@ -43,7 +43,7 @@ export class DocumentPersister<Document> {
                         if (persistOperation.afterExecution) {
                             persistOperation.afterExecution.forEach(afterExecution => {
                                 relationWithOneDocumentIdsToBeUpdated.push(afterExecution(document));
-                            })
+                            });
                         }
                         return document;
                     })
@@ -83,7 +83,7 @@ export class DocumentPersister<Document> {
         let broadcaster = this.connection.getBroadcaster(schema.documentClass);
 
         if (documentId) {
-            //let conditions = driver.createIdCondition(schema.getIdValue(documentId)/*, schema.idField.isObjectId*/);
+            // let conditions = driver.createIdCondition(schema.getIdValue(documentId)/*, schema.idField.isObjectId*/);
             let conditions = schema.createIdCondition(documentId);
             broadcaster.broadcastBeforeUpdate({ document: document, conditions: conditions });
             return driver.replaceOne(schema.name, conditions, dbObject, { upsert: true }).then(saved => {
@@ -94,7 +94,7 @@ export class DocumentPersister<Document> {
             broadcaster.broadcastBeforeInsert({ document: document });
             return driver.insertOne(schema.name, dbObject).then(result => {
                 if (result.insertedId)
-                    document[schema.idField.name] = schema.getIdValue(result.insertedId);// String(result.insertedId);
+                    document[schema.idField.name] = schema.getIdValue(result.insertedId); // String(result.insertedId);
                 broadcaster.broadcastAfterInsert({ document: document });
                 return document;
             });
@@ -108,8 +108,8 @@ export class DocumentPersister<Document> {
 
                 let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
                 let inverseSideProperty = relationOperation.inverseSideDocumentRelation.name;
-                let id = relationOperation.getDocumentId();//this.connection.driver.createObjectId(relationOperation.getDocumentId(), relationOperation.documentSchema.idField.isObjectId);
-                //let findCondition = this.connection.driver.createIdCondition(inverseSideSchema.getIdValue(relationOperation.inverseSideDocumentId)/*, inverseSideSchema.idField.isObjectId*/);
+                let id = relationOperation.getDocumentId(); // this.connection.driver.createObjectId(relationOperation.getDocumentId(), relationOperation.documentSchema.idField.isObjectId);
+                // let findCondition = this.connection.driver.createIdCondition(inverseSideSchema.getIdValue(relationOperation.inverseSideDocumentId)/*, inverseSideSchema.idField.isObjectId*/);
                 let findCondition = inverseSideSchema.createIdCondition(relationOperation.inverseSideDocumentId);
 
                 if (inverseSideSchema.hasRelationWithOneWithName(inverseSideProperty))

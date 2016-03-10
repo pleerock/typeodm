@@ -5,7 +5,11 @@ ODM for MongoDB that works in Typescript.
 ## Usage
 
 ODM development is in progress. Readme and documentations expected to be soon.
-For now you can take a look on samples in `./sample` for more examples of usages.
+
+## Samples
+
+Take a look on samples in [./sample](https://github.com/pleerock/typeodm/tree/master/sample) for more examples of
+usages.
 
 ## Todos
 

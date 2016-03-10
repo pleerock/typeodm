@@ -5,7 +5,7 @@ import {RelationWithMany} from "../../../src/decorator/Relations";
 import {VideoDetails} from "./VideoDetails";
 import {ObjectID} from "mongodb";
 
-@Document('sample5-video')
+@Document("sample5-video")
 export class Video {
 
     @ObjectIdField()

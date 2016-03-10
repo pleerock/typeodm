@@ -12,14 +12,14 @@ import {PostController} from "./PostController";
 let connectionManager = Container.get<ConnectionManager>(ConnectionManager);
 connectionManager.container = Container;
 connectionManager.addConnection(new MongodbDriver());
-connectionManager.importDocumentsFromDirectories([__dirname + '/document']);
-console.log('connection is added!');
+connectionManager.importDocumentsFromDirectories([__dirname + "/document"]);
+console.log("connection is added!");
 
-connectionManager.getConnection().connect({ url: 'mongodb://localhost:27017/typeodm-samples'}).then(connection => {
-    console.log('Connection to mongodb is established');
+connectionManager.getConnection().connect({ url: "mongodb://localhost:27017/typeodm-samples"}).then(connection => {
+    console.log("Connection to mongodb is established");
 
     // we need to execute start point this way to make everything to work properly:
-    Container.get<any>(require('./PostController').PostController).action();
+    Container.get<any>(require("./PostController").PostController).action();
 
 
-}).catch(e => console.log('Error during connection to mongodb: ' + e));
+}).catch(e => console.log("Error during connection to mongodb: " + e));

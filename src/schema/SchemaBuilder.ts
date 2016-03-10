@@ -78,7 +78,7 @@ export class SchemaBuilder {
         );
     }
 
-    private createIndexSchemaFromMetadata(metadata: IndexMetadata): IndexSchema{
+    private createIndexSchemaFromMetadata(metadata: IndexMetadata): IndexSchema {
         return new IndexSchema(metadata.name, metadata.unique, metadata.sparse, metadata.descendingSort, metadata.hashed, metadata.ttl);
     }
 
@@ -111,18 +111,18 @@ export class SchemaBuilder {
     }
 
     private generateDocumentSchemaName(documentMetadata: DocumentMetadata): string {
-        return documentMetadata.name || this.namingStrategy.documentName(documentMetadata.objectConstructor.name);
+        return documentMetadata.name || this.namingStrategy.documentName((<any> documentMetadata.objectConstructor).name);
     }
 
     private convertType(typeInFunction: FieldTypeInFunction): string|Function {
         // todo: throw exception if no type in type function
         let type: Function|string = typeInFunction();
         if (type instanceof Function) {
-            let typeName = (<Function>type).name.toLowerCase();
+            let typeName = (<any>type).name.toLowerCase();
             switch (typeName) {
-                case 'number':
-                case 'boolean':
-                case 'string':
+                case "number":
+                case "boolean":
+                case "string":
                     return typeName;
             }
         }
@@ -138,9 +138,9 @@ export class SchemaBuilder {
     }
 
     private computeInverseSide(documentPropertiesMap: any, inverseSide: PropertyTypeInFunction<any>): string {
-        if (typeof inverseSide === 'function')
+        if (typeof inverseSide === "function")
             return (<Function> inverseSide)(documentPropertiesMap);
-        if (typeof inverseSide === 'string')
+        if (typeof inverseSide === "string")
             return <string> inverseSide;
 
         return null;

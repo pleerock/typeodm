@@ -9,7 +9,7 @@ export function Index(options?: IndexOptions) {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('UpdateDate', 'class property', object);
+            throw new WrongAnnotationUsageError("UpdateDate", "class property", object);
 
         defaultMetadataStorage.addIndexMetadata({
             object: object,
@@ -21,7 +21,7 @@ export function Index(options?: IndexOptions) {
             hashed: !!(options && options.hashed),
             ttl: options ? options.ttl : undefined
         });
-    }
+    };
 }
 
 /**
@@ -30,8 +30,8 @@ export function Index(options?: IndexOptions) {
 export function CompoundIndex(fields: any, options?: IndexOptions) {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name)
-            throw new WrongAnnotationUsageError('CompoundIndex', 'class', objectConstructor);
+        if (!objectConstructor || !(<any>objectConstructor).name)
+            throw new WrongAnnotationUsageError("CompoundIndex", "class", objectConstructor);
 
         defaultMetadataStorage.addCompoundIndexMetadata({
             objectConstructor: objectConstructor,
@@ -43,5 +43,5 @@ export function CompoundIndex(fields: any, options?: IndexOptions) {
             hashed: !!(options && options.hashed),
             ttl: options ? options.ttl : undefined
         });
-    }
+    };
 }

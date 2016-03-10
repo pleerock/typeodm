@@ -44,7 +44,7 @@ export class IndexCreator {
 
             let fieldIndexiesCreation = schema.fields.filter(field => !!field.index).map((field: FieldSchema) => {
                 let index = field.index;
-                let key = { [field.name]: index.hashed ? 'hashed' : index.descendingSort ? -1 : 1 };
+                let key = { [field.name]: index.hashed ? "hashed" : index.descendingSort ? -1 : 1 };
                 return this.connection.driver.createIndex(schema.name, key, {
                     unique: index.unique,
                     name: index.name,

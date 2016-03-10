@@ -22,8 +22,8 @@ import {Vote} from "./document/Vote";
  *  - perform cascade updates and removes
  * */
 
-OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', [__dirname + '/document']).then(connection => {
-    console.log('Connection to mongodb is established');
+OdmFactory.createMongodbConnection("mongodb://localhost:27017/typeodm-samples", [__dirname + "/document"]).then(connection => {
+    console.log("Connection to mongodb is established");
 
     // ----------------------------------------------------------------------
     // Insert related document. Example1 (regular hard way):
@@ -41,27 +41,27 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     let videoDetails = new PostDetails();
     videoDetails.createTime = new Date().getTime();
     videoDetails.updateTime  = new Date().getTime();
-    videoDetails.searchDescription = 'Great post where you find everything you want';
-    videoDetails.searchKeywords = 'post,typescript,odm,mongodb,javascript,es6,programming';
+    videoDetails.searchDescription = "Great post where you find everything you want";
+    videoDetails.searchKeywords = "post,typescript,odm,mongodb,javascript,es6,programming";
 
     // create a new post
     let post = postRepository.create(); // alternatively you can use: let post = new Post();
-    post.title = 'Hello I am a new post';
-    post.text = 'My name is Post and I am glad to see you';
+    post.title = "Hello I am a new post";
+    post.text = "My name is Post and I am glad to see you";
     post.details = videoDetails;
 
     // save a post
     postRepository.persist(post).then(savedPost => {
-        console.log('Post is saved, but post details are not saved, because we didn\'t setup relation savings:');
+        console.log("Post is saved, but post details are not saved, because we didn\"t setup relation savings:");
         console.log(savedPost);
 
         // if you want to save a PostDetails you need to manually save it:
         return postDetailsRepository.persist(videoDetails);
 
     }).then(savedPostDetails => {
-        console.log('Saved post details: ');
+        console.log("Saved post details: ");
         console.log(savedPostDetails);
-        console.log('Saved post: ');
+        console.log("Saved post: ");
         console.log(post);
 
         // we saved a post details, but relation between details and post is not set yet
@@ -71,7 +71,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         return postRepository.persist(post);
 
     }).then(savedPost => {
-        console.log('Now we have a post with attached post details: ');
+        console.log("Now we have a post with attached post details: ");
         console.log(savedPost);
 
         // now you probably wonder why it is so complicated? can I do it simply?
@@ -84,12 +84,12 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         let postDetails2 = new PostDetails();
         postDetails2.createTime = new Date().getTime();
         postDetails2.updateTime  = new Date().getTime();
-        postDetails2.searchDescription = 'Second post where you find everything you want';
-        postDetails2.searchKeywords = 'second-post,typescript,odm,mongodb,javascript';
+        postDetails2.searchDescription = "Second post where you find everything you want";
+        postDetails2.searchKeywords = "second-post,typescript,odm,mongodb,javascript";
 
         let post2 = postRepository.create(); // alternatively you can use: let post = new Post();
-        post2.title = 'Hello I am a second post';
-        post2.text = 'My name is Second Post and I am glad to see you';
+        post2.title = "Hello I am a second post";
+        post2.text = "My name is Second Post and I am glad to see you";
         post2.details = postDetails2;
 
         return postRepository.persist(post2, postProperties => [{
@@ -99,7 +99,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // return postRepository.persist(post2, { details: { insert: true } });
 
     }).then(savedSecondPost => {
-        console.log('Now both post2 and postDetails2 are saved to the database:');
+        console.log("Now both post2 and postDetails2 are saved to the database:");
         console.log(savedSecondPost);
 
         // easy, yeah? you can make it even easier if you setup cascade operations on annotations of the document
@@ -112,19 +112,19 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         let questionDetails = new QuestionDetails();
         questionDetails.createTime = new Date().getTime();
         questionDetails.updateTime  = new Date().getTime();
-        questionDetails.searchDescription = 'question where you find everything you want';
-        questionDetails.searchKeywords = 'question,typescript,odm,mongodb,javascript';
+        questionDetails.searchDescription = "question where you find everything you want";
+        questionDetails.searchKeywords = "question,typescript,odm,mongodb,javascript";
 
         let question = new Question();
-        question.title = 'Hello I am a question';
-        question.text = 'My name is question and I am glad to see you';
+        question.title = "Hello I am a question";
+        question.text = "My name is question and I am glad to see you";
         question.details = questionDetails;
 
         return questionRepository.persist(question);
         // see, no cascade operations are specified, because they are specified on annotations. Take a look on Question.ts
 
     }).then(savedQuestion => {
-        console.log('Question is saved and its details too:');
+        console.log("Question is saved and its details too:");
         console.log(savedQuestion);
 
         // but sometimes you don't want your relation to be persisted
@@ -137,12 +137,12 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         let questionDetails2 = new QuestionDetails();
         questionDetails2.createTime = new Date().getTime();
         questionDetails2.updateTime  = new Date().getTime();
-        questionDetails2.searchDescription = 'Second question where you find everything you want';
-        questionDetails2.searchKeywords = 'second-question,typescript,odm,mongodb,javascript';
+        questionDetails2.searchDescription = "Second question where you find everything you want";
+        questionDetails2.searchKeywords = "second-question,typescript,odm,mongodb,javascript";
 
         let question2 = new Question();
-        question2.title = 'Hello I am a second question';
-        question2.text = 'My name is Second question and I am glad to see you';
+        question2.title = "Hello I am a second question";
+        question2.text = "My name is Second question and I am glad to see you";
         question2.details = questionDetails2;
 
         return questionRepository.persist(question2, questionProperties => [{
@@ -151,7 +151,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         }]);
 
     }).then(savedSecondQuestion => {
-        console.log('Your question is saved but details are not:');
+        console.log("Your question is saved but details are not:");
         console.log(savedSecondQuestion);
 
         // lets now switch to examples that loads our documents with relations
@@ -160,47 +160,47 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // Loading related documents. Example1 (using joins)
         // ----------------------------------------------------------------------
 
-        return postRepository.findOne({ title: 'Hello I am a new post' });
+        return postRepository.findOne({ title: "Hello I am a new post" });
 
     }).then(post => {
-        console.log('Post is loaded, but details are not:');
+        console.log("Post is loaded, but details are not:");
         console.log(post);
 
         // but we want to load post with details. How to do that? Simply using joins syntax:
 
-        return postRepository.findOne({ title: 'Hello I am a new post' }, null, postParameters => [{
+        return postRepository.findOne({ title: "Hello I am a new post" }, null, postParameters => [{
             field: postParameters.details
         }]);
 
     }).then(post => {
-        console.log('Post is loaded, and this time with details:');
+        console.log("Post is loaded, and this time with details:");
         console.log(post);
 
         // good, now we can use joins and load our posts with related documents
         // what about "inner join" ability? YES, you can do it, just by adding "inner": true to the join field option:
 
-        return questionRepository.findOne({ title: 'Hello I am a second question' }, null, questionParameters => [{
+        return questionRepository.findOne({ title: "Hello I am a second question" }, null, questionParameters => [{
             field: questionParameters.details,
             inner: true
         }]);
         // questionRepository.findOne({ title: 'Hello I am a second question' }, { details: { inner: true } }
 
     }).then(question => {
-        console.log('Question is not loaded, because it does not have details:');
+        console.log("Question is not loaded, because it does not have details:");
         console.log(question);
 
         // nice, feel yourself like working with powerful relation database, hah?
         // now lets try to add condition to our joined relation
 
-        return questionRepository.findOne({ text: 'My name is question and I am glad to see you' }, null, questionParameters => [{
+        return questionRepository.findOne({ text: "My name is question and I am glad to see you" }, null, questionParameters => [{
             field: questionParameters.details,
             condition: {
-                title: 'Hello I am a third question'
+                title: "Hello I am a third question"
             }
         }]);
 
     }).then(question => {
-        console.log('Question is loaded, but details are not because no details found that matching that condition:');
+        console.log("Question is loaded, but details are not because no details found that matching that condition:");
         console.log(question);
 
         // ----------------------------------------------------------------------
@@ -216,22 +216,22 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         let photoDetails = new PhotoDetails();
         photoDetails.createTime = new Date().getTime();
         photoDetails.updateTime  = new Date().getTime();
-        photoDetails.searchDescription = 'question where you find everything you want';
-        photoDetails.searchKeywords = 'question,typescript,odm,mongodb,javascript';
+        photoDetails.searchDescription = "question where you find everything you want";
+        photoDetails.searchKeywords = "question,typescript,odm,mongodb,javascript";
 
         let photo = new Photo();
-        photo.title = 'Hello I am a photo';
-        photo.text = 'My name is photo and I am glad to see you';
+        photo.title = "Hello I am a photo";
+        photo.text = "My name is photo and I am glad to see you";
         photo.details = photoDetails;
 
         return photoRepository.persist(photo); // no need to setup cascade operations because it already set in the Photo document
 
     }).then(savedPhoto => {
         // Now when we have saved photo, lets load it from the db:
-        return photoRepository.findOne({ title: 'Hello I am a photo' });
+        return photoRepository.findOne({ title: "Hello I am a photo" });
 
     }).then(photo => {
-        console.log('Photo is loaded and details are loaded too because we set alwaysLeftJoin to true:');
+        console.log("Photo is loaded and details are loaded too because we set alwaysLeftJoin to true:");
         console.log(photo);
 
         // hint: you can use the same technique with alwaysRightJoin set to true if you want right joins
@@ -246,14 +246,14 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         // and joins from the both sides
 
         let video = new Video();
-        video.title = 'Hello I am a new video';
-        video.text = 'My name is video and I am glad to see you';
+        video.title = "Hello I am a new video";
+        video.text = "My name is video and I am glad to see you";
 
         let videoDetails = new VideoDetails();
         videoDetails.createTime = new Date().getTime();
         videoDetails.updateTime  = new Date().getTime();
-        videoDetails.searchDescription = 'Great video where you find everything you want';
-        videoDetails.searchKeywords = 'video,typescript,odm,mongodb,javascript,es6,programming';
+        videoDetails.searchDescription = "Great video where you find everything you want";
+        videoDetails.searchKeywords = "video,typescript,odm,mongodb,javascript,es6,programming";
         videoDetails.video = video;
 
         // save a video details
@@ -263,7 +263,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         }]);
 
     }).then(videoDetails => {
-        console.log('Video details is saved and its video is saved too:');
+        console.log("Video details is saved and its video is saved too:");
         console.log(videoDetails);
 
         // ----------------------------------------------------------------------
@@ -277,7 +277,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         }]);
 
     }).then(videoDetails => {
-        console.log('Video details is loaded with its video:');
+        console.log("Video details is loaded with its video:");
         console.log(videoDetails);
 
         // ----------------------------------------------------------------------
@@ -287,12 +287,12 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         let details = new VideoDetails();
         details.createTime = new Date().getTime();
         details.updateTime  = new Date().getTime();
-        details.searchDescription = 'Great video where you find everything you want';
-        details.searchKeywords = 'video,typescript,odm,mongodb,javascript,es6,programming';
+        details.searchDescription = "Great video where you find everything you want";
+        details.searchKeywords = "video,typescript,odm,mongodb,javascript,es6,programming";
 
         let video = new Video();
-        video.title = 'Hello I am a new video';
-        video.text = 'My name is video and I am glad to see you';
+        video.title = "Hello I am a new video";
+        video.text = "My name is video and I am glad to see you";
         video.details = details;
 
         // first save a new video with its details
@@ -304,7 +304,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     }).then(savedVideo => {
 
         // now lets try to update its details and save using cascade options
-        savedVideo.details.searchDescription = 'I am updated video title';
+        savedVideo.details.searchDescription = "I am updated video title";
         return videoRepository.persist(savedVideo, videoDetailsProperties => [{
             field: videoDetailsProperties.details,
             isUpdate: true
@@ -318,7 +318,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         }]);
 
     }).then(video => {
-        console.log('Updated video: ');
+        console.log("Updated video: ");
         console.log(video);
 
         // ----------------------------------------------------------------------
@@ -333,7 +333,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         }]);
 
     }).then(videoWithoutDetails => {
-        console.log('Video is updated and video details are removed from db: ');
+        console.log("Video is updated and video details are removed from db: ");
         console.log(videoWithoutDetails);
 
         // ----------------------------------------------------------------------
@@ -343,12 +343,12 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         let details = new VoteDetails();
         details.createTime = new Date().getTime();
         details.updateTime  = new Date().getTime();
-        details.searchDescription = 'Great vote where you find everything you want';
-        details.searchKeywords = 'vote,typescript,odm,mongodb,javascript,es6,programming';
+        details.searchDescription = "Great vote where you find everything you want";
+        details.searchKeywords = "vote,typescript,odm,mongodb,javascript,es6,programming";
 
         let vote = new Vote();
-        vote.title = 'Hello I am a new vote';
-        vote.text = 'My name is vote and I am glad to see you';
+        vote.title = "Hello I am a new vote";
+        vote.text = "My name is vote and I am glad to see you";
         vote.details = details;
 
         // first save a new vote with its details
@@ -357,7 +357,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
     }).then(savedVote => {
 
         // now lets try to update its details and save it
-        savedVote.details.searchDescription = 'I am updated vote title';
+        savedVote.details.searchDescription = "I am updated vote title";
         return voteRepository.persist(savedVote);
 
     }).then(updatedVote => {
@@ -368,7 +368,7 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         }]);
 
     }).then(vote => {
-        console.log('Updated vote: ');
+        console.log("Updated vote: ");
         console.log(vote);
 
         // ----------------------------------------------------------------------
@@ -380,9 +380,9 @@ OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', 
         return voteRepository.persist(vote);
 
     }).then(video => {
-        console.log('Vote is updated and vote details are removed from db: ');
+        console.log("Vote is updated and vote details are removed from db: ");
         console.log(video);
 
-    }).catch(error => console.log('Error: ' + error));
+    }).catch(error => console.log("Error: " + error));
 
-}).catch(e => console.log('Error during connection to mongodb: ' + e));
+}).catch(e => console.log("Error during connection to mongodb: " + e));

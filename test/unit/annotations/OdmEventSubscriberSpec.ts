@@ -8,7 +8,7 @@ import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnot
 chai.should();
 chai.use(require("sinon-chai"));
 
-describe('OdmEventSubscriber Annotation', function() {
+describe("OdmEventSubscriber Annotation", function() {
 
     class TestClass {
     }
@@ -17,13 +17,13 @@ describe('OdmEventSubscriber Annotation', function() {
     // Specifications
     // -------------------------------------------------------------------------
 
-    it('should throw exception if annotation is set to a non constructor object', function () {
+    it("should throw exception if annotation is set to a non constructor object", function () {
         expect(() => OdmEventSubscriber()(null)).to.throw(WrongAnnotationUsageError);
         expect(() => OdmEventSubscriber()(function() {})).to.throw(WrongAnnotationUsageError);
     });
 
-    it('should add a new document metadata to the metadata storage', sinon.test(function () {
-        var addOdmEventSubscriberMetadata = this.mock(defaultMetadataStorage).expects('addOdmEventSubscriberMetadata');
+    it("should add a new document metadata to the metadata storage", sinon.test(function () {
+        let addOdmEventSubscriberMetadata = this.mock(defaultMetadataStorage).expects("addOdmEventSubscriberMetadata");
 
         let object = new TestClass();
         OdmEventSubscriber()(object.constructor);

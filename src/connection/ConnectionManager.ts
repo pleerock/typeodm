@@ -60,9 +60,9 @@ export class ConnectionManager {
     addConnection(driver: Driver): void;
     addConnection(name: string, driver: Driver): void;
     addConnection(name: any, driver?: Driver): void {
-        if (typeof name === 'object') {
+        if (typeof name === "object") {
             driver = <Driver> name;
-            name = 'default';
+            name = "default";
         }
         this.connections.push(new Connection(name, driver));
     }
@@ -70,7 +70,7 @@ export class ConnectionManager {
     /**
      * Gets the specific connection.
      */
-    getConnection(name: string = 'default'): Connection {
+    getConnection(name: string = "default"): Connection {
         let foundConnection = this.connections.reduce((found, connection) => connection.name === name ? connection : found, null);
         if (!foundConnection)
             throw new ConnectionNotFoundError(name);
@@ -79,38 +79,56 @@ export class ConnectionManager {
     }
 
     /**
-     * Imports documents from the given paths.
+     * Imports documents to the given connection.
      */
-    importDocumentsFromDirectories(pathes: string[]): void;
-    importDocumentsFromDirectories(connectionName: string, pathes: string[]): void;
-    importDocumentsFromDirectories(connectionName: any, pathes?: string[]): void {
-        if (typeof connectionName === 'object') {
-            pathes = connectionName;
-            connectionName = 'default';
+    importDocuments(documents: Function[]): void;
+    importDocuments(connectionName: string, documents: Function[]): void;
+    importDocuments(connectionNameOrDocuments: string|Function[], documents?: Function[]): void {
+        let connectionName = "default";
+        if (typeof connectionNameOrDocuments === "string") {
+            connectionName = <string> connectionNameOrDocuments;
+        } else {
+            documents = <Function[]> connectionNameOrDocuments;
         }
 
-        let documentsInFiles = OdmUtils.requireAll(pathes);
-        let allDocuments = documentsInFiles.reduce((allDocuments, documents) => {
-            return allDocuments.concat(Object.keys(documents).map(key => documents[key]));
-        }, []);
-
-        let schemas = this.schemaBuilder.build(this.metadataAggregator.build(allDocuments));
+        let schemas = this.schemaBuilder.build(this.metadataAggregator.build(documents));
         if (schemas.length > 0)
             this.getConnection(connectionName).addSchemas(schemas);
     }
 
     /**
-     * Imports subscribers from the given paths.
+     * Imports documents from the given paths.
      */
-    importSubscribersFromDirectories(pathes: string[]): void;
-    importSubscribersFromDirectories(connectionName: string, pathes: string[]): void;
-    importSubscribersFromDirectories(connectionName: any, pathes?: string[]): void{
-        if (typeof connectionName === 'object') {
-            pathes = connectionName;
-            connectionName = 'default';
+    importDocumentsFromDirectories(paths: string[]): void;
+    importDocumentsFromDirectories(connectionName: string, paths: string[]): void;
+    importDocumentsFromDirectories(connectionNameOrPaths: string|string[], paths?: string[]): void {
+        let connectionName = "default";
+        if (typeof connectionNameOrPaths === "string") {
+            connectionName = <string> connectionNameOrPaths;
+        } else {
+            paths = <string[]> connectionNameOrPaths;
         }
 
-        let subscribersInFiles = OdmUtils.requireAll(pathes);
+        let documentsInFiles = OdmUtils.requireAll(paths);
+        let allDocuments = documentsInFiles.reduce((allDocuments, documents) => {
+            return allDocuments.concat(Object.keys(documents).map(key => documents[key]));
+        }, []);
+        
+        this.importDocuments(connectionName, allDocuments);
+    }
+
+    /**
+     * Imports subscribers from the given paths.
+     */
+    importSubscribersFromDirectories(paths: string[]): void;
+    importSubscribersFromDirectories(connectionName: string, paths: string[]): void;
+    importSubscribersFromDirectories(connectionName: any, paths?: string[]): void {
+        if (typeof connectionName === "object") {
+            paths = connectionName;
+            connectionName = "default";
+        }
+
+        let subscribersInFiles = OdmUtils.requireAll(paths);
         let allSubscriberClasses = subscribersInFiles.reduce((all, subscriberInFile) => {
             return all.concat(Object.keys(subscriberInFile).map(key => subscriberInFile[key]));
         }, []);
@@ -119,7 +137,7 @@ export class ConnectionManager {
                                         .filter(metadata => allSubscriberClasses.indexOf(metadata.constructor) !== -1)
                                         .map(metadata => {
             let constructor: any = metadata.constructor;
-            return this._container ? this._container.get(constructor) : new constructor()
+            return this._container ? this._container.get(constructor) : new constructor();
         });
         if (subscribers.length > 0)
             this.getConnection(connectionName).addSubscribers(subscribers);

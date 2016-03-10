@@ -1,53 +1,47 @@
+import {Document} from "../../src/decorator/Documents";
+import {Field, IdField} from "../../src/decorator/Fields";
 import {OdmFactory} from "../../src/OdmFactory";
-import {Post} from "./document/Post";
 
-/**
- * This sample is focused to teach on how to:
- *  - setup a connection with database
- *  - create a simple document
- *  - work with repositories:
- *      - create a new document
- *      - save a document
- *      - find one document
- *      - find multiple documents
- *
- * */
+@Document("user")
+export class User {
 
-OdmFactory.createMongodbConnection('mongodb://localhost:27017/typeodm-samples', [__dirname + '/document']).then(connection => {
-    console.log('Connection to mongodb is established');
+    @IdField()
+    id: string;
 
-    // NOTE: note that all operations in this example are asynchronous and order of console.log may be different
-    // depending of what will finish execution first (for example insert usually takes more time then simple find
-    // that's why its result console.logged the last, however in this example it is first console.logged).
-    // We can create a right order by using chained promise syntax, but to simplify this example we didn't make it
+    @Field()
+    email: string;
 
-    // get a post repository
-    let postRepository = connection.getRepository<Post>(Post);
+    @Field()
+    firstName: string;
 
-    // create a new post
-    let post = postRepository.create(); // alternatively you can use: let post = new Post();
-    post.title = 'Hello I am a new post';
-    post.text = 'My name is Post and I am glad to see you';
+    @Field()
+    lastName: string;
 
-    // save a post
-    postRepository.persist(post).then(savedPost => {
-        console.log('Post saved successfully: ');
-        console.log(savedPost);
+    @Field()
+    age: number;
 
-    }, error => console.log('Error during persisting: ' + error));
+    @Field()
+    isActive: boolean;
+}
 
-    // find a saved post
-    postRepository.findOne({ title: 'Hello I am a new post' }).then(foundPost => {
-        console.log('Found a saved post:');
-        console.log(foundPost);
+// first create a connection
+OdmFactory.createMongodbConnection("mongodb://localhost:27017/testdb", [User]).then(connection => {
 
-    }, error => console.log('Error during finding one: ' + error));
+    // now create a new object
+    let user = new User();
+    user.id = "first-1";
+    user.email = "johny@mail.com";
+    user.firstName = "Johny";
+    user.lastName = "Cage";
+    user.age = 27;
+    user.isActive = true;
 
-    // find all posts that exist in database
-    postRepository.find().then(posts => {
-        console.log('All posts:');
-        console.log(posts);
+    // finally save it
+    let userRepository = connection.getRepository<User>(User);
 
-    }, error => console.log('Error during find: ' + error));
+    userRepository
+        .persist(user)
+        .then(user => console.log("User has been saved"))
+        .catch(error => console.log("Cannot save. Error: ", error));
 
-}).catch(e => console.log('Error during connection to mongodb: ' + e));
+}, error => console.log("Cannot connect: ", error));

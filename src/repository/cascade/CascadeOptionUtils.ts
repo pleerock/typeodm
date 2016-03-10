@@ -10,7 +10,7 @@ export class CascadeOptionUtils {
 
     static prepareCascadeOptions(schema: DocumentSchema, cascadeOptions: DynamicCascadeOptions<any>): CascadeOption[] {
         if (cascadeOptions instanceof Function) {
-            return (<((document:Document) => CascadeOption[])> cascadeOptions)(schema.createPropertiesMirror());
+            return (<((document: Document) => CascadeOption[])> cascadeOptions)(schema.createPropertiesMirror());
 
         } else if (cascadeOptions instanceof Object && !(cascadeOptions instanceof Array)) {
             return CascadeOptionUtils.convertFromObjectMap(cascadeOptions);
@@ -69,9 +69,9 @@ export class CascadeOptionUtils {
             return [];
 
         return Object.keys(object).map(key => {
-            let subCascadeKeys = Object.keys(object).filter(k => k.substr(0, key.length + 1) === key + '.');
+            let subCascadeKeys = Object.keys(object).filter(k => k.substr(0, key.length + 1) === key + ".");
             let subCascades = subCascadeKeys.reduce((v: any, k: string) => { v[k.substr(key.length + 1)] = object[k]; return v; }, {});
-            if (key.indexOf('.') !== -1) return null;
+            if (key.indexOf(".") !== -1) return null;
 
             return <CascadeOption> {
                 field: key,

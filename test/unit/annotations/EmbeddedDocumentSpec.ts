@@ -8,7 +8,7 @@ import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnot
 chai.should();
 chai.use(require("sinon-chai"));
 
-describe('EmbeddedDocument Annotation', function() {
+describe("EmbeddedDocument Annotation", function() {
 
     class TestClass {
     }
@@ -17,19 +17,19 @@ describe('EmbeddedDocument Annotation', function() {
     // Specifications
     // -------------------------------------------------------------------------
 
-    it('should throw exception if annotation is set to a non constructor object', function () {
+    it("should throw exception if annotation is set to a non constructor object", function () {
         expect(() => EmbeddedDocument()(null)).to.throw(WrongAnnotationUsageError);
         expect(() => EmbeddedDocument()(function() {})).to.throw(WrongAnnotationUsageError);
     });
 
-    it('should add a new document metadata to the metadata storage', sinon.test(function () {
-        var addDocumentMetadata = this.mock(defaultMetadataStorage).expects('addDocumentMetadata');
+    it("should add a new document metadata to the metadata storage", sinon.test(function () {
+        let addDocumentMetadata = this.mock(defaultMetadataStorage).expects("addDocumentMetadata");
 
         let object = new TestClass();
         EmbeddedDocument()(object.constructor);
         addDocumentMetadata.should.have.been.calledWith({
             objectConstructor: object.constructor,
-            name: ''
+            name: ""
         });
     }));
 

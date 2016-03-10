@@ -8,7 +8,7 @@ import {PostCategory} from "./PostCategory";
 import {PostDetails} from "./PostDetails";
 import {ObjectID} from "mongodb";
 
-@Document('sample7-post')
+@Document("sample7-post")
 export class Post {
 
     @ObjectIdField()

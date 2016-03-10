@@ -69,74 +69,74 @@ export class MetadataStorage {
 
     addDocumentMetadata(metadata: DocumentMetadata) {
         if (this.hasDocumentMetadataWithObjectConstructor(metadata.objectConstructor))
-            throw new MetadataAlreadyExistsError('Document', metadata.objectConstructor);
+            throw new MetadataAlreadyExistsError("Document", metadata.objectConstructor);
 
         if (metadata.name && this.hasDocumentMetadataWithName(metadata.name))
-            throw new MetadataWithSuchNameAlreadyExistsError('Document', metadata.name);
+            throw new MetadataWithSuchNameAlreadyExistsError("Document", metadata.name);
 
         this.documentMetadatas.push(metadata);
     }
 
     addAbstractDocumentMetadata(metadata: AbstractDocumentMetadata) {
         if (this.hasAbstractDocumentMetadataWithObjectConstructor(metadata.objectConstructor))
-            throw new MetadataAlreadyExistsError('AbstractDocument', metadata.objectConstructor);
+            throw new MetadataAlreadyExistsError("AbstractDocument", metadata.objectConstructor);
 
         this.abstractDocumentMetadatas.push(metadata);
     }
 
     addOdmEventSubscriberMetadata(metadata: OdmEventSubscriberMetadata) {
         if (this.hasOdmEventSubscriberWithObjectConstructor(metadata.objectConstructor))
-            throw new MetadataAlreadyExistsError('OdmEventSubscriber', metadata.objectConstructor);
+            throw new MetadataAlreadyExistsError("OdmEventSubscriber", metadata.objectConstructor);
 
         this.odmEventSubscriberMetadatas.push(metadata);
     }
 
     addFieldMetadata(metadata: FieldMetadata) {
         if (this.hasFieldMetadataOnProperty(metadata.object.constructor, metadata.propertyName))
-            throw new MetadataAlreadyExistsError('Field', metadata.object.constructor);
+            throw new MetadataAlreadyExistsError("Field", metadata.object.constructor);
 
         if (metadata.name && this.hasFieldMetadataWithName(metadata.object.constructor, metadata.name))
-            throw new MetadataWithSuchNameAlreadyExistsError('Field', metadata.name);
+            throw new MetadataWithSuchNameAlreadyExistsError("Field", metadata.name);
 
         this.fieldMetadatas.push(metadata);
     }
 
     addRelationWithOneMetadata(metadata: RelationMetadata) {
         if (this.hasRelationWithOneMetadataOnProperty(metadata.object.constructor, metadata.propertyName))
-            throw new MetadataAlreadyExistsError('RelationWithOne', metadata.object.constructor, metadata.propertyName);
+            throw new MetadataAlreadyExistsError("RelationWithOne", metadata.object.constructor, metadata.propertyName);
 
         if (metadata.name && this.hasRelationWithOneMetadataWithName(metadata.object.constructor, metadata.name))
-            throw new MetadataWithSuchNameAlreadyExistsError('RelationWithOne', metadata.name);
+            throw new MetadataWithSuchNameAlreadyExistsError("RelationWithOne", metadata.name);
 
         this.relationWithOneMetadatas.push(metadata);
     }
 
     addRelationWithManyMetadata(metadata: RelationMetadata) {
         if (this.hasRelationWithManyMetadataOnProperty(metadata.object.constructor, metadata.propertyName))
-            throw new MetadataAlreadyExistsError('RelationWithMany', metadata.object.constructor, metadata.propertyName);
+            throw new MetadataAlreadyExistsError("RelationWithMany", metadata.object.constructor, metadata.propertyName);
 
         if (metadata.name && this.hasRelationWithManyMetadataWithName(metadata.object.constructor, metadata.name))
-            throw new MetadataWithSuchNameAlreadyExistsError('RelationWithMany', metadata.name);
+            throw new MetadataWithSuchNameAlreadyExistsError("RelationWithMany", metadata.name);
 
         this.relationWithManyMetadatas.push(metadata);
     }
 
     addIndexMetadata(metadata: IndexMetadata) {
         if (this.hasFieldMetadataOnProperty(metadata.object.constructor, metadata.propertyName))
-            throw new MetadataAlreadyExistsError('Index', metadata.object.constructor);
+            throw new MetadataAlreadyExistsError("Index", metadata.object.constructor);
 
         if (metadata.name && this.hasFieldMetadataWithName(metadata.object.constructor, metadata.name))
-            throw new MetadataWithSuchNameAlreadyExistsError('Index', metadata.name);
+            throw new MetadataWithSuchNameAlreadyExistsError("Index", metadata.name);
 
         this.indexMetadatas.push(metadata);
     }
 
     addCompoundIndexMetadata(metadata: CompoundIndexMetadata) {
         if (this.hasCompoundIndexMetadataWithObjectConstructor(metadata.objectConstructor))
-            throw new MetadataAlreadyExistsError('CompoundIndex', metadata.objectConstructor);
+            throw new MetadataAlreadyExistsError("CompoundIndex", metadata.objectConstructor);
 
         if (metadata.name && this.hasCompoundIndexMetadataWithName(metadata.name))
-            throw new MetadataWithSuchNameAlreadyExistsError('CompoundIndex', metadata.name);
+            throw new MetadataWithSuchNameAlreadyExistsError("CompoundIndex", metadata.name);
 
         this.compoundIndexMetadatas.push(metadata);
     }
@@ -221,19 +221,19 @@ export class MetadataStorage {
 
     private hasFieldMetadataWithName(constructor: Function, name: string): boolean {
         return this.fieldMetadatas.reduce((found, metadata) => {
-            return metadata.object.constructor === constructor && metadata.name === name ? metadata : found
+            return metadata.object.constructor === constructor && metadata.name === name ? metadata : found;
         }, null) !== null;
     }
 
     private hasRelationWithOneMetadataWithName(constructor: Function, name: string): boolean {
         return this.relationWithOneMetadatas.reduce((found, metadata) => {
-                return metadata.object.constructor === constructor && metadata.name === name ? metadata : found
+                return metadata.object.constructor === constructor && metadata.name === name ? metadata : found;
             }, null) !== null;
     }
 
     private hasRelationWithManyMetadataWithName(constructor: Function, name: string): boolean {
         return this.relationWithManyMetadatas.reduce((found, metadata) => {
-            return metadata.object.constructor === constructor && metadata.name === name ? metadata : found
+            return metadata.object.constructor === constructor && metadata.name === name ? metadata : found;
         }, null) !== null;
     }
 

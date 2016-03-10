@@ -3,7 +3,7 @@ import {Document} from "../../../src/decorator/Documents";
 import {Field, GeneratedIdField} from "../../../src/decorator/Fields";
 import {RelationWithOne} from "../../../src/decorator/Relations";
 
-@Document('sample10-post')
+@Document("sample10-post")
 export class Post {
 
     @GeneratedIdField()
@@ -15,7 +15,7 @@ export class Post {
     @Field()
     text: string;
 
-    @RelationWithOne<Author>('authorId', type => Author, author => author.posts, {
+    @RelationWithOne<Author>("authorId", type => Author, author => author.posts, {
         cascadeInsert: true
     })
     author: Author;

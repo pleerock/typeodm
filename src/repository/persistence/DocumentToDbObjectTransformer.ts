@@ -55,7 +55,7 @@ export class DocumentToDbObjectTransformer<Document> {
 
         this._persistOperations = [];
         this._postPersistOperations = [];
-        return this.documentToDbObject(0, schema, document, cascadeOptionsInCallback)
+        return this.documentToDbObject(0, schema, document, cascadeOptionsInCallback);
     }
 
     // -------------------------------------------------------------------------
@@ -79,8 +79,8 @@ export class DocumentToDbObjectTransformer<Document> {
                                cascadeOptionsInCallback?: DynamicCascadeOptions<Document>): Object {
 
         this.prepareDocumentValues(schema, document);
-        let cascadeOptions = CascadeOptionUtils.prepareCascadeOptions(schema, cascadeOptionsInCallback);
-        var dbObject = {};
+        const cascadeOptions = CascadeOptionUtils.prepareCascadeOptions(schema, cascadeOptionsInCallback);
+        const dbObject = {};
         Object.keys(document).forEach(propertyName => {
             let cascadeOption = CascadeOptionUtils.find(cascadeOptions, propertyName);
 
@@ -108,11 +108,12 @@ export class DocumentToDbObjectTransformer<Document> {
             } else {
 
                 if (!DbObjectFieldValidator.isTypeSupported(<string> dbField.type)) // todo: this should not be possible. type check should be on schema build
-                    throw new FieldTypeNotSupportedError(dbField.type + '[]', propertyName, document);
+                    throw new FieldTypeNotSupportedError(dbField.type + "[]", propertyName, document);
 
                 if (!DbObjectFieldValidator.validateArray(document[propertyName], <string> dbField.type))
-                    throw new WrongFieldTypeInDocumentError(dbField.type + '[]', propertyName, document);
+                    throw new WrongFieldTypeInDocumentError(dbField.type + "[]", propertyName, document);
 
+                // todo: shouldn't it be dbObject[dbField.name] instead of dbObject[propertyName] ???
                 dbObject[propertyName] = document[propertyName];
             }
 
@@ -232,8 +233,8 @@ export class DocumentToDbObjectTransformer<Document> {
             return this.connection.driver.createObjectId(id);
         }
 
-        throw new Error('Cannot create object id');
-        //return this.connection.driver.createObjectId(id, schema.idField.isObjectId);
+        throw new Error("Cannot create object id");
+        // return this.connection.driver.createObjectId(id, schema.idField.isObjectId);
     }
 
 }

@@ -108,7 +108,7 @@ export class DocumentHydrator<Document> {
                 let subCondition = this.getSubFieldCondition(joinFields, relation.name);
                 if (subCondition)
                     Object.keys(subCondition).forEach(key => conditions[key] = subCondition[key]);
-                return relatedRepo.findOne(conditions, null, subFields)
+                return relatedRepo.findOne(conditions, null, subFields);
             });
 
             allPromises.push(Promise.all(findPromises).then(foundRelations => {
@@ -164,7 +164,7 @@ export class DocumentHydrator<Document> {
         }, null);
     }
 
-    private getSubFieldCondition(joinFields: JoinFieldOption[]|any[], key: string) : any {
+    private getSubFieldCondition(joinFields: JoinFieldOption[]|any[], key: string): any {
         return joinFields.reduce((sub, field) => {
             if (field instanceof Array && field[0] === key)
                 return field[2];

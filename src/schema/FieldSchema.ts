@@ -104,7 +104,7 @@ export class FieldSchema {
     // -------------------------------------------------------------------------
 
     isTypePrimitive(): boolean {
-        return typeof this._type === 'string';
+        return typeof this._type === "string";
     }
 
     isTypeDocument(): boolean {

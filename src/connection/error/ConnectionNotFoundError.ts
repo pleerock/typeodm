@@ -1,9 +1,9 @@
 export class ConnectionNotFoundError extends Error {
-    name = 'ConnectionNotFoundError';
+    name = "ConnectionNotFoundError";
 
     constructor(name: string) {
         super();
-        this.message = 'No connection "' + name + '" found.';
+        this.message = `No connection ${name} found.`;
     }
 
 }

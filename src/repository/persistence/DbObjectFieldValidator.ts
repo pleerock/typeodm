@@ -2,7 +2,7 @@
  * Validates given type.
  */
 export class DbObjectFieldValidator {
-    private static supportedTypes = ['string', 'number', 'boolean', 'date'];
+    private static supportedTypes = ["string", "number", "boolean", "date"];
 
     static isTypeSupported(type: string) {
         return this.supportedTypes.indexOf(type) !== -1;
@@ -15,7 +15,7 @@ export class DbObjectFieldValidator {
     static validate(value: any, type: string): boolean {
         let foundTypeToCheckIndex = this.supportedTypes.indexOf(type);
         return typeof value === this.supportedTypes[foundTypeToCheckIndex] ||
-            (type === 'date' && (value instanceof Date || !isNaN(Date.parse(value))));
+            (type === "date" && (value instanceof Date || !isNaN(Date.parse(value))));
     }
 
     // private static

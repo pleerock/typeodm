@@ -3,7 +3,7 @@ import {Document} from "../../../src/decorator/Documents";
 import {Field, ArrayField, GeneratedIdField} from "../../../src/decorator/Fields";
 import {RelationWithMany} from "../../../src/decorator/Relations";
 
-@Document('sample10-author')
+@Document("sample10-author")
 export class Author {
 
     @GeneratedIdField()
@@ -12,12 +12,12 @@ export class Author {
     @Field()
     name: string;
 
-    @RelationWithMany<Post>('postIds', type => Post, post => post.author, {
+    @RelationWithMany<Post>("postIds", type => Post, post => post.author, {
         alwaysLeftJoin: true
     })
     posts: Post[] = [];
 
-    @ArrayField(type => 'string')
+    @ArrayField(type => "string")
     postIds: string[];
 
 }

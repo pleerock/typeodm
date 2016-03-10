@@ -4,7 +4,7 @@ import {PostTag} from "./PostTag";
 import {PostAuthor} from "./PostAuthor";
 import {ObjectID} from "mongodb";
 
-@Document('sample4-post')
+@Document("sample4-post")
 export class Post {
 
     @ObjectIdField()
@@ -22,7 +22,7 @@ export class Post {
     @ArrayField(type => PostTag)
     tags: PostTag[] = [];
 
-    @ArrayField(type => 'string')
+    @ArrayField(type => "string")
     links: string[] = [];
 
 }

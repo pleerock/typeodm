@@ -20,20 +20,20 @@ export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTyp
         }
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('Field', 'class property', object);
+            throw new WrongAnnotationUsageError("Field", "class property", object);
 
         // check only if type is given because otherwise we are trying to guess a type here
         if (typeFunction && !FieldTypes.validateTypeInFunction(typeFunction))
-            throw new WrongFieldTypeError(typeFunction, object.constructor.name, propertyName);
+            throw new WrongFieldTypeError(typeFunction, (<any> object.constructor).name, propertyName);
 
         // temporary fix for date type. need better implementation
-        const type = Reflect.getMetadata('design:type', object, propertyName);
-        if (!typeFunction && type && type.name && type.name.toLowerCase() === 'date')
-            typeFunction = () => 'date';
+        const type = Reflect.getMetadata("design:type", object, propertyName);
+        if (!typeFunction && type && type.name && type.name.toLowerCase() === "date")
+            typeFunction = () => "date";
 
         // if type is not given then try to guess it using metadata
         if (!typeFunction)
-            typeFunction = () => Reflect.getMetadata('design:type', object, propertyName);
+            typeFunction = () => Reflect.getMetadata("design:type", object, propertyName);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
@@ -47,7 +47,7 @@ export function Field(name?: string|FieldTypeInFunction, typeFunction?: FieldTyp
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -63,10 +63,10 @@ export function ArrayField(name: string|FieldTypeInFunction, typeFunction?: Fiel
         }
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('ArrayField', 'class property', object);
+            throw new WrongAnnotationUsageError("ArrayField", "class property", object);
 
         if (!FieldTypes.validateTypeInFunction(typeFunction))
-            throw new WrongFieldTypeError(typeFunction, object.constructor.name, propertyName);
+            throw new WrongFieldTypeError(typeFunction, (<any> object.constructor).name, propertyName);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
@@ -80,7 +80,7 @@ export function ArrayField(name: string|FieldTypeInFunction, typeFunction?: Fiel
             isArray: true,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -90,15 +90,15 @@ export function IdField(typeFunction?: FieldTypeInFunction): Function {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('IdField', 'class property', object);
+            throw new WrongAnnotationUsageError("IdField", "class property", object);
 
         // check only if type is given because otherwise we are trying to guess a type here
         if (typeFunction && !FieldTypes.validateTypeInFunction(typeFunction))
-            throw new WrongFieldTypeError(typeFunction, object.constructor.name, propertyName);
+            throw new WrongFieldTypeError(typeFunction, (<any> object.constructor).name, propertyName);
 
         // if type is not given then try to guess it using metadata
         if (!typeFunction)
-            typeFunction = () => Reflect.getMetadata('design:type', object, propertyName);
+            typeFunction = () => Reflect.getMetadata("design:type", object, propertyName);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
@@ -112,7 +112,7 @@ export function IdField(typeFunction?: FieldTypeInFunction): Function {
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -122,9 +122,9 @@ export function ObjectIdField(): Function {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('ObjectIdField', 'class property', object);
+            throw new WrongAnnotationUsageError("ObjectIdField", "class property", object);
 
-        const typeFunction = () => Reflect.getMetadata('design:type', object, propertyName);
+        const typeFunction = () => Reflect.getMetadata("design:type", object, propertyName);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
@@ -138,7 +138,7 @@ export function ObjectIdField(): Function {
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -148,9 +148,9 @@ export function ObjectIdStringField(): Function {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('ObjectIdStringField', 'class property', object);
+            throw new WrongAnnotationUsageError("ObjectIdStringField", "class property", object);
 
-        const typeFunction = () => Reflect.getMetadata('design:type', object, propertyName);
+        const typeFunction = () => Reflect.getMetadata("design:type", object, propertyName);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
@@ -165,7 +165,7 @@ export function ObjectIdStringField(): Function {
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -175,20 +175,20 @@ export function GeneratedIdField(typeFunction?: FieldTypeInFunction): Function {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('GeneratedIdField', 'class property', object);
+            throw new WrongAnnotationUsageError("GeneratedIdField", "class property", object);
 
         // check only if type is given because otherwise we are trying to guess a type here
         if (typeFunction && !FieldTypes.validateTypeInFunction(typeFunction))
-            throw new WrongFieldTypeError(typeFunction, object.constructor.name, propertyName);
+            throw new WrongFieldTypeError(typeFunction, (<any> object.constructor).name, propertyName);
 
         // if type is not given then try to guess it using metadata
         if (!typeFunction)
-            typeFunction = () => Reflect.getMetadata('design:type', object, propertyName);
+            typeFunction = () => Reflect.getMetadata("design:type", object, propertyName);
 
         // if auto generation set to true then make sure that given type is string, because auto generated value gonna be a string
         let type: Function|string = typeFunction();
         if (type instanceof Function)
-            type = (<Function> type).name.toLowerCase();
+            type = (<any> type).name.toLowerCase();
         if (type !== FieldTypes.STRING)
             throw new WrongAutoGeneratedIdFieldTypeError(object, propertyName, type);
 
@@ -204,7 +204,7 @@ export function GeneratedIdField(typeFunction?: FieldTypeInFunction): Function {
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -215,12 +215,12 @@ export function CreateDateField(name?: string) {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('CreateDate', 'class property', object);
+            throw new WrongAnnotationUsageError("CreateDate", "class property", object);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
             name: name ? <string> name : undefined,
-            type: type => 'date',
+            type: type => "date",
             isId: false,
             isObjectId: false,
             isAutoGenerated: false,
@@ -229,7 +229,7 @@ export function CreateDateField(name?: string) {
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }
 
 /**
@@ -240,12 +240,12 @@ export function UpdateDateField(name?: string) {
     return function (object: Object, propertyName: string) {
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('UpdateDate', 'class property', object);
+            throw new WrongAnnotationUsageError("UpdateDate", "class property", object);
 
         defaultMetadataStorage.addFieldMetadata({
             object: object,
             name: name ? <string> name : undefined,
-            type: type => 'date',
+            type: type => "date",
             isId: false,
             isObjectId: false,
             isAutoGenerated: false,
@@ -254,5 +254,5 @@ export function UpdateDateField(name?: string) {
             isArray: false,
             propertyName: propertyName
         });
-    }
+    };
 }

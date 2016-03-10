@@ -47,12 +47,12 @@ export class DocumentRemover<Document> {
             return Promise.resolve();
 
         // load original document so we can compare and calculate changed set
-        //const query = this.connection.driver.createIdCondition(schema.getIdValue(documentId));
+        // const query = this.connection.driver.createIdCondition(schema.getIdValue(documentId));
         const query = schema.createIdCondition(documentId);
         return this.connection.driver.findOne(schema.name, query).then((dbObject: any) => {
             if (!dbObject)
                 return Promise.resolve();
-                //throw new NoDocumentWithSuchIdException(documentId, schema.name);
+                // throw new NoDocumentWithSuchIdException(documentId, schema.name);
 
             // iterate throw each key in the document and find relations to compute removals of
             let promises = Object.keys(dbObject).map(originalDocumentProperty => {
@@ -100,7 +100,7 @@ export class DocumentRemover<Document> {
 
             let inverseSideSchema = relationOperation.inverseSideDocumentSchema;
             let inverseSideProperty = relationOperation.inverseSideDocumentRelation.name;
-            let id = relationOperation.getDocumentId();//this.connection.driver.createObjectId(relationOperation.getDocumentId());
+            let id = relationOperation.getDocumentId(); // this.connection.driver.createObjectId(relationOperation.getDocumentId());
             // let findCondition = this.connection.driver.createIdCondition(inverseSideSchema.getIdValue(relationOperation.inverseSideDocumentId));
             const findCondition = inverseSideSchema.createIdCondition(relationOperation.inverseSideDocumentId);
 
@@ -123,7 +123,7 @@ export class DocumentRemover<Document> {
         let cascadeOptions = CascadeOptionUtils.prepareCascadeOptions(schema, dynamicCascadeOptions);
 
         // load original document so we can compare and calculate which of its relations to remove by cascades
-        //const query = this.connection.driver.createIdCondition(schema.getIdValue(documentId));
+        // const query = this.connection.driver.createIdCondition(schema.getIdValue(documentId));
         const query = schema.createIdCondition(documentId);
         return this.connection.driver.findOne(schema.name, query).then((dbObject: any) => {
             if (!dbObject)

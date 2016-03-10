@@ -8,14 +8,14 @@ import {MetadataAlreadyExistsError} from "../metadata-builder/error/MetadataAlre
 export function Document(name: string) {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name)
-            throw new WrongAnnotationUsageError('Document', 'class', objectConstructor);
+        if (!objectConstructor || !(<any> objectConstructor).name)
+            throw new WrongAnnotationUsageError("Document", "class", objectConstructor);
 
         defaultMetadataStorage.addDocumentMetadata({
             objectConstructor: objectConstructor,
             name: name
         });
-    }
+    };
 }
 
 /**
@@ -24,14 +24,14 @@ export function Document(name: string) {
 export function EmbeddedDocument() {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name)
-            throw new WrongAnnotationUsageError('EmbeddedDocument', 'class', objectConstructor);
+        if (!objectConstructor || !(<any> objectConstructor).name)
+            throw new WrongAnnotationUsageError("EmbeddedDocument", "class", objectConstructor);
 
         defaultMetadataStorage.addDocumentMetadata({
             objectConstructor: objectConstructor,
-            name: ''
+            name: ""
         });
-    }
+    };
 }
 
 /**
@@ -41,11 +41,11 @@ export function EmbeddedDocument() {
 export function AbstractDocument() {
     return function (objectConstructor: Function) {
 
-        if (!objectConstructor || !objectConstructor.name)
-            throw new WrongAnnotationUsageError('AbstractDocument', 'class', objectConstructor);
+        if (!objectConstructor || !(<any> objectConstructor).name)
+            throw new WrongAnnotationUsageError("AbstractDocument", "class", objectConstructor);
 
         defaultMetadataStorage.addAbstractDocumentMetadata({
             objectConstructor: objectConstructor
         });
-    }
+    };
 }

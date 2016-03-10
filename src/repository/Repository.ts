@@ -164,7 +164,7 @@ export class Repository<Document> {
      * If document already inserted then performs its update.
      */
     persist(document: Document, dynamicCascadeOptions?: DynamicCascadeOptions<Document>): Promise<Document> {
-        //if (!this.schema.isDocumentTypeCorrect(document))
+        // if (!this.schema.isDocumentTypeCorrect(document))
         //    throw new BadDocumentInstanceException(document, this.schema.documentClass);
 
         const remover     = new DocumentRemover<Document>(this.connection);
@@ -181,7 +181,7 @@ export class Repository<Document> {
      * Removes a given document.
      */
     remove(document: Document, dynamicCascadeOptions?: DynamicCascadeOptions<Document>): Promise<void> {
-        //if (!this.schema.isDocumentTypeCorrect(document))
+        // if (!this.schema.isDocumentTypeCorrect(document))
         //    throw new BadDocumentInstanceException(document, this.schema.documentClass);
 
         const remover = new DocumentRemover<Document>(this.connection);
@@ -524,7 +524,7 @@ export class Repository<Document> {
 
     private createIdObject(id: string): Object {
         return this.schema.createIdCondition(id);
-        //return this.connection.driver.createIdCondition(this.schema.createIdCondition(id)/*, this.schema.idField.isObjectId*/);
+        // return this.connection.driver.createIdCondition(this.schema.createIdCondition(id)/*, this.schema.idField.isObjectId*/);
     }
 
     private dbObjectToDocument(dbObject: any, joinFields?: JoinFieldOption[]|any[]): Promise<Document> {

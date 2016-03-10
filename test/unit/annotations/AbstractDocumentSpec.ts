@@ -8,7 +8,7 @@ import {WrongAnnotationUsageError} from "../../../src/decorator/error/WrongAnnot
 chai.should();
 chai.use(require("sinon-chai"));
 
-describe('AbstractDocument Annotation', function() {
+describe("AbstractDocument Annotation", function() {
 
     class TestClass {
     }
@@ -17,13 +17,13 @@ describe('AbstractDocument Annotation', function() {
     // Specifications
     // -------------------------------------------------------------------------
 
-    it('should throw exception if annotation is set to a non constructor object', function () {
+    it("should throw exception if annotation is set to a non constructor object", function () {
         expect(() => AbstractDocument()(null)).to.throw(WrongAnnotationUsageError);
         expect(() => AbstractDocument()(function() {})).to.throw(WrongAnnotationUsageError);
     });
 
-    it('should add a new abstract document metadata to the metadata storage', sinon.test(function () {
-        var addAbstractDocumentMetadata = this.mock(defaultMetadataStorage).expects('addAbstractDocumentMetadata');
+    it("should add a new abstract document metadata to the metadata storage", sinon.test(function () {
+        let addAbstractDocumentMetadata = this.mock(defaultMetadataStorage).expects("addAbstractDocumentMetadata");
 
         let object = new TestClass();
         AbstractDocument()(object.constructor);

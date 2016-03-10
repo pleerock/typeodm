@@ -25,18 +25,18 @@ export function RelationWithOne<T>(name: string|RelationTypeInFunction,
         } else {
             typeFunction = <RelationTypeInFunction> typeFunctionOrInverseSideOrOptions;
         }
-        if (typeof typeFunctionOrInverseSideOrOptions === 'object') {
+        if (typeof typeFunctionOrInverseSideOrOptions === "object") {
             options = <RelationOptions> typeFunctionOrInverseSideOrOptions;
         }
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('RelationWithOne', 'class property', object);
+            throw new WrongAnnotationUsageError("RelationWithOne", "class property", object);
 
-        if (!typeFunction || !(typeof typeFunction === 'function'))
-            throw new WrongFieldTypeError(null, object.constructor.name, propertyName);
+        if (!typeFunction || !(typeof typeFunction === "function"))
+            throw new WrongFieldTypeError(null, (<any> object.constructor).name, propertyName);
 
         if (options && options.alwaysLeftJoin && options.alwaysInnerJoin)
-            throw new BothJoinTypesUsedError(object.constructor.name, propertyName);
+            throw new BothJoinTypesUsedError((<any> object.constructor).name, propertyName);
 
         defaultMetadataStorage.addRelationWithOneMetadata({
             object: object,
@@ -50,7 +50,7 @@ export function RelationWithOne<T>(name: string|RelationTypeInFunction,
             isAlwaysLeftJoin: !!(options && options.alwaysLeftJoin),
             isAlwaysInnerJoin: !!(options && options.alwaysInnerJoin)
         });
-    }
+    };
 }
 
 /**
@@ -73,18 +73,18 @@ export function RelationWithMany<T>(name: string|RelationTypeInFunction,
         } else {
             typeFunction = <RelationTypeInFunction> typeFunctionOrInverseSideOrOptions;
         }
-        if (typeof typeFunctionOrInverseSideOrOptions === 'object') {
+        if (typeof typeFunctionOrInverseSideOrOptions === "object") {
             options = <RelationOptions> typeFunctionOrInverseSideOrOptions;
         }
 
         if (!object || !propertyName || !object.constructor)
-            throw new WrongAnnotationUsageError('RelationWithMany', 'class property', object);
+            throw new WrongAnnotationUsageError("RelationWithMany", "class property", object);
 
-        if (!typeFunction || !(typeof typeFunction === 'function'))
-            throw new WrongFieldTypeError(null, object.constructor.name, propertyName);
+        if (!typeFunction || !(typeof typeFunction === "function"))
+            throw new WrongFieldTypeError(null, (<any> object.constructor).name, propertyName);
 
         if (options && options.alwaysLeftJoin && options.alwaysInnerJoin)
-            throw new BothJoinTypesUsedError(object.constructor.name, propertyName);
+            throw new BothJoinTypesUsedError((<any> object.constructor).name, propertyName);
 
         defaultMetadataStorage.addRelationWithManyMetadata({
             object: object,
@@ -98,5 +98,5 @@ export function RelationWithMany<T>(name: string|RelationTypeInFunction,
             isAlwaysLeftJoin: !!(options && options.alwaysLeftJoin),
             isAlwaysInnerJoin: !!(options && options.alwaysInnerJoin)
         });
-    }
+    };
 }
