@@ -1,6 +1,8 @@
 # TypeODM
 
-ODM for MongoDB that works in Typescript.
+ODM for MongoDB that works in TypeScript.
+
+This project is deprecated. TypeODM functionality is part of [TypeORM](http://typeorm.io) now, please use TypeORM instead.
 
 ## Usage
 
